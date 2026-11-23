@@ -15,6 +15,10 @@ MAX_TOP = 50
 MIN_WORD = 2
 
 
+SURVIVORSHIP = ("Only funds that are still running today are in this data (active Direct Growth plans), so funds that were closed or merged "
+                "away are missing. That makes past rankings look better than what an investor in the whole category experienced.")
+
+
 class ScreenError(ValueError):
     pass
 
@@ -60,8 +64,13 @@ def screen(engine: Engine, codes, names, text: str, metric: str, years: int, top
             continue
         rows.append(dict(code=code, fund=name, value=res.value, start=start, end=end))
     rows.sort(key=lambda r: (r["value"] if metric in LOWER_IS_BETTER else -r["value"], r["fund"]))
+    n = len(rows)
     for i, r in enumerate(rows, 1):
         r["rank"] = i
+        r["better_than_pct"] = round(100 * (n - i) / (n - 1)) if n > 1 else None   # share of the OTHER ranked funds this one beats
+    vals = sorted(r["value"] for r in rows)
+    median = float(np.median(vals)) if vals else None
     return dict(status="OK", metric=metric, years=years, text=text, matched=len(cands), verified=len(rows), too_short=short,
                 not_updated=stale, withheld=withheld, withheld_reasons=reasons, order="lowest first" if metric in LOWER_IS_BETTER else "highest first",
-                rows=rows[:top], note="Funds are chosen by the words in their name, not an official category. Past figures only; not advice.")
+                rows=rows[:top], all_rows=rows, median=median,
+                survivorship=SURVIVORSHIP, note="Funds are chosen by the words in their name, not an official category. Past figures only; not advice.")

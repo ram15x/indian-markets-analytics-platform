@@ -27,3 +27,6 @@ lab/results/*.parquet
 # Docker was dropped (never built)
 Dockerfile
 .dockerignore
+
+# synthetic demo data, rebuilt by: python serve.py --demo
+demo_data/

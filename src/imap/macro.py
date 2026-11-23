@@ -402,7 +402,8 @@ def load_series(root: Path = ROOT):
     m = C.check(C.METALS, pd.read_parquet(d / "metals_monthly.parquet")); fx = C.check(C.FX, pd.read_parquet(d / "usd_inr_daily.parquet"))
     rep = json.loads((d / "report.json").read_text())
     last = pd.Timestamp(m.month.max()).strftime("%b %Y")
-    mnote = (f"Monthly average prices from the RBI Handbook (each month is dated on its 1st); latest month available: {last}. "
+    synth = "SYNTHETIC DEMO DATA, not RBI data. " if rep.get("synthetic") else ""
+    mnote = (synth + f"Monthly average prices from the RBI Handbook (each month is dated on its 1st); latest month available: {last}. "
              "The fall and rise within a month are not visible in averages.")
     out: dict[int, Series] = {}; rows = []
     for code, col in ((GOLD, "gold_inr_10g"), (SILVER, "silver_inr_kg")):
@@ -413,7 +414,7 @@ def load_series(root: Path = ROOT):
     for g in rep["fx"]["gaps_over_10_days"]:
         a, b = g.split(" (")[0].split(" to ")
         gaps.append((np.datetime64(a), np.datetime64(b)))
-    fnote = f"RBI reference rate; latest day available: {pd.Timestamp(fx.date.max()):%d %b %Y}. RBI's archive has no rates from {gaps[-1][0]} to {gaps[-1][1]} (FBIL published the reference rate then)." if gaps else "RBI reference rate."
+    fnote = synth + f"RBI reference rate; latest day available: {pd.Timestamp(fx.date.max()):%d %b %Y}. RBI's archive has no rates from {gaps[-1][0]} to {gaps[-1][1]} (FBIL published the reference rate then)." if gaps else synth + "RBI reference rate."
     out[USDINR] = Series(USDINR, fd, fx.usd_inr.to_numpy(float), kind="daily_fx", gaps=tuple(gaps), notes=(fnote,))
     rows.append(pd.DataFrame(dict(scheme_code=USDINR, date=fx.date, nav=fx.usd_inr.astype(float))))
     return out, pd.concat(rows, ignore_index=True)

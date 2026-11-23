@@ -238,6 +238,7 @@
   #scrout table.rank th:nth-child(1){width:44px} #scrout table.rank th:nth-child(3){width:38%} #scrout table.rank th:nth-child(4){width:96px}
   #scrout tbody tr{cursor:pointer}
   .rk{color:var(--faint);font:600 .8rem var(--mono)}
+  .demobar{background:color-mix(in srgb,var(--note) 18%,var(--sheet));color:var(--ink);border-bottom:2px solid var(--note);padding:9px 18px;font-size:.9rem;text-align:center} .demobar b{color:var(--note)}
   /* shared-window comparison */
   .cmpf{display:grid;grid-template-columns:1fr 1fr 1.4fr .9fr .6fr auto;gap:10px;align-items:end;padding:12px 14px}
   .cmpf label{margin-bottom:4px} .cmpf .sum{grid-column:1/-1;margin:0}
@@ -275,6 +276,7 @@
 </header>
 <div class="tape" aria-label="Watchlist ticker: 1 year CAGR, end of day data, not live"><div class="track" id="track"><span class="empty">Loading verified figures…</span></div></div>
 
+<div class="demobar" id="demobar" hidden role="note"><b>DEMO DATA.</b> Every fund, price, gold, silver and dollar rate here is invented by a random-number generator. Nothing on this page is real market data, and none of it says anything about real funds.</div>
 <div class="shell">
   <aside class="col">
     <section class="panel">
@@ -361,6 +363,16 @@
         <p class="hint sum" id="chint">Gold and silver (RBI monthly) end months before fund prices, so the shared period ends where the shortest series ends, and every figure is computed twice on that same period. Type gold, silver, usd/inr or a fund name.</p>
       </div>
     </section>
+    <section class="panel" aria-label="Learn" id="learnpanel">
+      <div class="hd"><span>LEARN · HOW TO READ THESE NUMBERS</span></div>
+      <div class="cmpf" style="display:block">
+        <label for="lvl">Your level</label>
+        <select id="lvl"><option value="new">New to investing</option><option value="mid">Some experience</option><option value="expert">Expert</option></select>
+        <div id="learnstart" class="recent" style="margin:8px 0"></div>
+        <div id="learntopics"></div>
+        <p class="hint" id="learnnote"></p>
+      </div>
+    </section>
     <section id="out" aria-live="polite"><div class="empty"><b>Ask a question, or click a row in the watchlist.</b>Every figure is computed twice by separate code and shown only if both agree.</div></section>
     <div id="portfolio"><div id="gout"></div><div id="casout"></div></div>
   </main>
@@ -407,6 +419,7 @@ async function copy(text, msg){
 }
 fetch("/api/health").then(r => { $("health").classList.add(r.ok ? "on" : "off"); $("healthtxt").textContent = r.ok ? "local server online" : "server problem"; })
   .catch(() => { $("health").classList.add("off"); $("healthtxt").textContent = "server not reachable"; });
+fetch("/api/health").then(r => r.json()).then(j => { if (j.demo) { $("demobar").hidden = false; document.title = "DEMO DATA · " + document.title; } }).catch(() => {});
 document.addEventListener("pointerdown", e => {
   const b = e.target.closest("button:not(.icon)"); if (!b || REDUCED || b.disabled) return;
   const r = b.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2, s = document.createElement("span");
@@ -667,6 +680,10 @@ function show(r){
     if (r.skipped && r.skipped.length) h += `<div class="skip"><b>Left out of this comparison:</b><ul>${r.skipped.map(x => `<li>${esc(x.fund)}: ${esc(x.reason)}</li>`).join("")}</ul></div>`;
     h += `<div id="chartHost"></div>`;
     h += `<p class="matched">Matched: ${r.facts.map(f => `${esc(f.fund)} (${f.code < 0 ? "RBI series" : "scheme " + f.code})`).join("; ")}. Check these are what you meant.</p>`;
+    h += `<details class="how"><summary>Numbers behind this answer</summary>` + r.facts.map(f => { const b = f.behind || {}, n = b.numbers || {};
+      return `<p style="margin:8px 0 2px"><b>${esc(f.fund)}</b>, ${esc(f.label)}</p>` + (b.formula ? `<p class="hint" style="margin:0">Formula: ${esc(b.formula)}</p>` : "") +
+        `<table class="rank"><tbody>` + Object.entries(n).map(([k, v]) => `<tr><td>${esc(k.replace(/_/g, " "))}</td><td class="n">${esc(typeof v === "number" ? String(+v.toPrecision(10)) : String(v))}</td></tr>`).join("") + `</tbody></table>` +
+        (b.reading ? `<p class="hint" style="margin:4px 0 0"><b>In plain words:</b> ${esc(b.reading)}</p>` : ""); }).join("") + `</details>`;
     h += `<div class="glossary"><h2>What ${r.glossary.entries.length > 1 ? "these measures mean" : "this measure means"}</h2><dl>` +
       r.glossary.entries.map(g => `<dt>${esc(g.label)}</dt><dd>${esc(g.text)}</dd>`).join("") + `</dl><p class="hint">Glossary version ${esc(r.glossary.version)}</p></div>`;
   }
@@ -742,10 +759,13 @@ async function runScreen(){
     const left = [j.too_short ? `${j.too_short} too new for a ${years}-year window` : "", j.not_updated ? `${j.not_updated} not updated recently` : "", j.withheld ? `${j.withheld} withheld by the checks` : ""].filter(Boolean).join(" · ");
     o.innerHTML = `<p class="hint" style="margin:0 0 6px"><b>${j.verified}</b> of ${j.matched} funds ranked by ${SM[metric]}, ${years} years, ${j.order}${left ? ` (${esc(left)})` : ""}. Click a row for the full answer and chart.</p>
       <table class="rank"><thead><tr><th></th><th>Fund</th><th></th><th style="text-align:right">${SM[metric]}</th></tr></thead><tbody>` +
-      j.rows.map((x, k) => `<tr tabindex="0" data-name="${esc(x.fund)}"><td class="rk">${x.rank}</td><td title="${esc(x.fund)}">${esc(x.fund)}</td><td class="meter"><i class="${x.value < 0 ? "neg" : ""}" style="width:${(Math.abs(x.value) / mx * 100).toFixed(1)}%;animation-delay:${k * 40}ms"></i></td><td class="n">${fm(x.value)}</td></tr>`).join("") +
-      `</tbody></table><p class="hint" style="margin:0 0 10px">As of ${esc(j.rows[0] ? j.rows[0].end : "")}. ${esc(j.note)}</p>`;
-    $("scrcopy").innerHTML = `<button class="quiet" type="button" id="scrcsv">Copy as CSV</button>`;
-    $("scrcsv").onclick = () => copy("rank,fund,value,start,end\n" + j.rows.map(x => `${x.rank},"${String(x.fund).replace(/"/g, '""')}",${x.value},${x.start},${x.end}`).join("\n"), "Screen copied");
+      j.rows.map((x, k) => `<tr tabindex="0" data-name="${esc(x.fund)}"><td class="rk">${x.rank}</td><td title="${esc(x.fund)}">${esc(x.fund)}</td><td class="meter"><i class="${x.value < 0 ? "neg" : ""}" style="width:${(Math.abs(x.value) / mx * 100).toFixed(1)}%;animation-delay:${k * 40}ms"></i></td><td class="n">${fm(x.value)}${x.better_than_pct === null ? "" : `<span class="hint" style="display:block;font-size:.72rem">beats ${x.better_than_pct}%</span>`}</td></tr>`).join("") +
+      `</tbody></table><p class="hint" style="margin:0 0 6px">${j.median === null ? "" : `Median of the ${j.verified} ranked funds: <b>${fm(j.median)}</b>. “Beats x%” in a row = share of the other ranked funds it beat.`} As of ${esc(j.rows[0] ? j.rows[0].end : "")}. ${esc(j.note)}</p>
+      <p class="hint" style="margin:0 0 10px"><b>Survivorship bias.</b> ${esc(j.survivorship)}</p>`;
+    $("scrcopy").innerHTML = `<button class="quiet" type="button" id="scrcsv">Copy as CSV</button> <button class="quiet" type="button" id="scrdl">Download all ${j.verified} as CSV</button>`;
+    const csvOf = rows => "rank,fund,value,better_than_pct,start,end\n" + rows.map(x => `${x.rank},"${String(x.fund).replace(/"/g, '""')}",${x.value},${x.better_than_pct ?? ""},${x.start},${x.end}`).join("\n");
+    $("scrcsv").onclick = () => copy(csvOf(j.rows), "Screen copied");
+    $("scrdl").onclick = () => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csvOf(j.all_rows)], {type: "text/csv"})); a.download = `screen_${text.replace(/\W+/g, "_")}_${metric}_${years}y.csv`; document.body.appendChild(a); a.click(); a.remove(); };
     o.querySelectorAll("tbody tr").forEach(tr => { const go = () => { const q = `${years} year ${SM[metric]} of ${tr.dataset.name}`; $("q").value = q; ask(q); }; tr.onclick = go; tr.onkeydown = e => { if (e.key === "Enter") go(); }; });
     ledgerRaw("v", "VERIFIED", `Screen: ${text} · ${SM[metric]} ${years}y`);
   } catch (e) { o.innerHTML = `<div class="err" style="margin-bottom:12px">could not reach the local server</div>`; }
@@ -753,6 +773,17 @@ async function runScreen(){
 }
 $("srun").onclick = runScreen;
 $("sname").addEventListener("keydown", e => { if (e.key === "Enter") runScreen(); });
+
+/* ---------- Learn: fixed, versioned text from /api/learn (nothing written by a model) ---------- */
+(async function(){
+  let L; try { L = await (await fetch("/api/learn")).json(); } catch (e) { $("learnpanel").hidden = true; return; }
+  const draw = () => { const lv = $("lvl").value, rank = {new: 0, mid: 1, expert: 2};
+    $("learnstart").innerHTML = ""; L.starters[lv].forEach(q => { const a = document.createElement("a"); a.className = "chip"; a.tabIndex = 0; a.setAttribute("role", "button"); a.textContent = q; a.title = q;
+      const go = () => { $("q").value = q; ask(q); }; a.onclick = go; a.onkeydown = e => { if (e.key === "Enter") go(); }; $("learnstart").appendChild(a); });
+    $("learntopics").innerHTML = L.topics.filter(t => rank[t.level] <= rank[lv]).map(t => `<details class="key"><summary>${esc(t.title)}</summary><p>${esc(t.text)}</p></details>`).join("");
+    $("learnnote").textContent = `${L.disclaimer} Text version ${L.version}.`; };
+  $("lvl").onchange = draw; draw();
+})();
 
 /* ---------- SIP calculator: builds an ordinary question, so the same plan, validator and engines run ---------- */
 function ordinal(n){ const v = n % 100; return n + (v >= 11 && v <= 13 ? "th" : ["th","st","nd","rd"][n % 10 < 4 ? n % 10 : 0]); }

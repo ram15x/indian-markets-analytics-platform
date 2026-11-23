@@ -11,7 +11,8 @@ from pathlib import Path
 from .app import App
 from .planners import RulePlanner, ChatPlanner
 from .plan import PlanError
-from . import execute, common
+from . import execute, common, learn
+from .learn import FORMULA, READING
 from .answer import LABEL, NOTICE, WARN, render, sentence
 from .explain import GLOSSARY, GLOSSARY_VERSION
 from . import screen as screener
@@ -47,6 +48,9 @@ def outcome_json(o, planner_name: str, plan, series=None) -> dict:
                 d["chart"] = charts.for_outcome(o, series)
             except ValueError:
                 d["chart"] = None
+        for f_json, f in zip(d["facts"], o.facts, strict=True):
+            f_json["behind"] = dict(formula=FORMULA.get(f["metric"]), reading=READING.get(f["metric"]),
+                                    numbers={k: v for k, v in f["detail"].items() if k != "value"})
         if getattr(o, "window", None):
             d["window"] = dict(start=o.window[0], end=o.window[1]); d["skipped"] = o.skipped
     elif o.status == "CLARIFY":
@@ -96,8 +100,11 @@ def make_handler(app: App):
                 return self._send(200, PAGE.read_bytes(), "text/html; charset=utf-8")
             if self.path == "/favicon.ico":
                 return self._send(200, FAVICON, "image/svg+xml")
+            if self.path == "/api/learn":
+                return self._json(200, learn.payload())
             if self.path == "/api/health":
-                return self._json(200, dict(ok=True, schemes=len(app.resolver.codes)))
+                from .demo import is_demo
+                return self._json(200, dict(ok=True, schemes=len(app.resolver.codes), demo=is_demo(getattr(app, "manifest", None))))
             self._json(404, dict(error="not found"))
 
         def _local_only(self) -> str | None:
@@ -260,8 +267,8 @@ def bind_address() -> str:
     return "0.0.0.0" if os.environ.get("IMAP_IN_CONTAINER") == "1" else "127.0.0.1"   # noqa: S104 - container only
 
 
-def main(port: int = 8765):
-    app = App(RulePlanner())
+def main(port: int = 8765, root: Path | None = None):
+    app = App(RulePlanner(), root=root) if root else App(RulePlanner())
     srv = LocalServer((bind_address(), port), make_handler(app))
     import urllib.request; srv.groww_opener = urllib.request.urlopen   # read by handlers via the server object
     from .portfolio.cas import read_pdf; srv.cas_reader = read_pdf

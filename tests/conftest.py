@@ -5,7 +5,7 @@ import pytest
 
 DATA = Path(__file__).resolve().parents[1] / "data"
 NEEDS_DATA = {"test_charts", "test_contracts", "test_engine_c", "test_explain", "test_planner", "test_server",
-              "test_manifest", "test_mcp", "test_refresh", "test_macro"}
+              "test_manifest", "test_mcp", "test_refresh", "test_macro", "test_common"}
 HAVE_DATA = (DATA / "nav_raw.parquet").exists()
 
 

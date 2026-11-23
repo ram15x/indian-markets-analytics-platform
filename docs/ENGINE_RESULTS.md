@@ -51,3 +51,18 @@ drawdown, SIP XIRR, rolling returns, other AMCs, debt funds, direct plans.
 Random series with irregular gaps (150 cases): A and B agree on all five metrics. The first run found A's
 Newton-only XIRR failing to converge on falling series (B answered); A now falls back to Brent's method.
 Universe run after the fix: 27,095 agree, 0 disagree, 35 infeasible (unchanged).
+
+## More external checks (2026-11-23; scripts/check_published_nippon.py, check_published_axis.py, tests/test_xirr_external.py)
+All read from the fund houses' own documents by automated fetch; nothing was tuned to them.
+- **Nippon India Small Cap, Direct, product notes as on 31 Jul, 31 Aug, 30 Sep 2026:** 9 of 9 returns (1y, 3y, 5y) match to two
+  decimals, 3 of 3 NAVs match to four decimals. Since-inception is withheld by design (the archive's first NAV is later than the
+  plan's 1 Jan 2013 inception); the first run used total return for 1y and one row differed by 0.09, so 1y uses actual days/365 like the AMC.
+- **Axis Small Cap, Direct, leaflet as on 31 Aug 2026:** 3y and 5y return and all four rupee values (Rs 10,000 grown) match
+  exactly. 1y: the Rs value matches exactly (11,547) but our return is 15.47% against a printed 15.38%. 15.47% is what that
+  rupee value implies, so the printed percentage looks like a different convention or a leaflet inconsistency; we do not know which.
+  Since inception (22.84%, Rs 138,131) matches only when computed from the Rs 10 allotment price on 29 Nov 2013 (Rs 138,130, a Rs 1
+  rounding difference); from the archive's first NAV (5 Dec 2013) it is 22.87%. The leaflet rows were unlabelled in the extraction,
+  so they were matched by size.
+- **XIRR:** both solvers reproduce Microsoft's documented example (0.373362535, tolerance 1e-8) and the lump-sum identity.
+  This checks the solver, not the SIP dates used by any particular AMC or app.
+Still no outside check for volatility, max drawdown, Sharpe/Sortino, rolling returns, debt funds or Regular plans beyond HDFC.
