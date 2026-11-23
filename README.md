@@ -28,6 +28,11 @@ A local, offline web terminal. The watchlist and ticker are verified answers com
 |---|---|
 | ![A withheld answer](docs/img/ui_withheld.png) | ![Growth chart for two funds](docs/img/ui_chart.png) |
 
+## Use it from Claude Desktop
+The same verified engine runs as an MCP server, so an AI assistant calls it as a tool instead of searching the web. Here Claude Desktop answers a question by calling the server (the "Used" line above the answer); setup is in `docs/MCP.md`, or run `python add_to_claude_desktop.py`. This was tried once, on one machine.
+
+![Claude Desktop calling the verified engine for a 3-year CAGR](docs/img/mcp_claude_desktop.png)
+
 ## Why it is different
 | Most finance chatbots | This project |
 |---|---|
