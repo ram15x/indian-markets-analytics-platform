@@ -42,4 +42,4 @@ Add this to `claude_desktop_config.json`, adjusting the paths to your machine:
 ## Status
 
 - **Tested:** the tools in-process, plus a real stdio round trip in the sandbox, using `mcp` 2.3.0.
-- **Not yet tried:** Claude Desktop on Ram's machine.
+- **Tried 2026-11-23, Claude Desktop (Microsoft Store install) on Windows:** the server connected, and the question "3 year CAGR of SBI Small Cap" in a new chat called the tool instead of web search. It answered 10.89% a year (20 Nov 2023 to 20 Nov 2026, NAV 153.99 to 210.02), matching the platform's own figure. `python add_to_claude_desktop.py` writes the config entry, including for the Store install, whose config lives under `%LOCALAPPDATA%\Packages\Claude_*\LocalCache\Roaming\Claude`. One run on one machine.

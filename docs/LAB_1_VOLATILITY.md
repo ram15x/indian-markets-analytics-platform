@@ -53,3 +53,6 @@ No claim about returns. Volatility forecasts say nothing about direction. Result
 
 ## Verdict
 GARCH(1,1)-t is the best method of those tested, but the margin over a simple EWMA is small and not statistically reliable month to month. The honest claim is "GARCH was best on average in this back-test and passed the rule; it is not clearly better than EWMA". LightGBM did not help. No claim about any fund's future.
+
+## Deviations and later notes
+- 2026-11-23: GARCH(1,1)-t passed the pre-registered rule, so the platform may show it. It is shown only as an opt-in "Volatility estimate (model)" next to a fund's verified answer, labelled as not verified, with the EWMA and last-21-day figures beside it and the post-hoc caveats above stated. It is offered only for funds the Lab tested (daily series, at least 750 returns, volatility above 8% a year). LightGBM remains hidden. Code: `src/imap/estimate.py`.

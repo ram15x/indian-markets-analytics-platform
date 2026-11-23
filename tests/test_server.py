@@ -95,3 +95,44 @@ def test_cas_endpoint_reads_in_memory_and_never_echoes_password(base):
     assert code == 400 and "WRONGPASS1" not in json.dumps(j) and "password" in j["error"]
     assert post(base, "/api/cas", {"pdf_base64": base64.b64encode(b"not a pdf").decode(), "cas_password": "x"})[0] == 400
     assert post(base, "/api/cas", {"cas_password": "x"})[0] == 400
+
+
+def test_many_questions_at_once_all_answer(base):
+    """Regression: parallel requests used to share one DuckDB connection and some got a 500."""
+    from concurrent.futures import ThreadPoolExecutor
+    qs = ["1 year CAGR of SBI Small Cap", "1 year CAGR of HDFC Flexi Cap", "1 year CAGR of Quant Small Cap", "3 year CAGR of SBI Small Cap"] * 3
+    with ThreadPoolExecutor(8) as ex:
+        out = list(ex.map(lambda q: post(base, "/api/ask", {"question": q}), qs))
+    assert all(code == 200 and j["status"] == "ANSWERED" for code, j in out)
+
+
+def test_screener_rows_match_single_answers_and_are_sorted(base):
+    code, j = post(base, "/api/screen", {"text": "small cap", "metric": "cagr", "years": 3, "top": 5})
+    assert code == 200 and j["status"] == "OK" and len(j["rows"]) == 5
+    vals = [r["value"] for r in j["rows"]]
+    assert vals == sorted(vals, reverse=True) and [r["rank"] for r in j["rows"]] == [1, 2, 3, 4, 5]
+    assert j["matched"] == j["verified"] + j["too_short"] + j["not_updated"] + j["withheld"]
+    top = j["rows"][0]                                   # the same fund asked as a plain question must give the same figure
+    code2, a = post(base, "/api/ask", {"question": f"3 year CAGR of {top['fund']}"})
+    assert code2 == 200 and a["status"] == "ANSWERED" and a["facts"][0]["code"] == top["code"]
+    assert a["facts"][0]["value"] == top["value"]
+
+
+def test_screener_volatility_is_lowest_first_and_bad_input_is_refused(base):
+    _, j = post(base, "/api/screen", {"text": "small cap", "metric": "volatility", "years": 5, "top": 5})
+    v = [r["value"] for r in j["rows"]]; assert v == sorted(v) and j["order"] == "lowest first"
+    for body in ({"text": "", "metric": "cagr", "years": 3}, {"text": "small cap", "metric": "alpha", "years": 3},
+                 {"text": "small cap", "metric": "cagr", "years": 99}, {"text": "small cap", "metric": "cagr", "years": "3"},
+                 {"text": "fund", "metric": "cagr", "years": 3}):
+        code, j = post(base, "/api/screen", body); assert code == 400 and "error" in j, body
+    code, j = post(base, "/api/screen", {"text": "zzzzqq", "metric": "cagr", "years": 3}); assert code == 200 and j["status"] == "NONE"
+
+
+def test_estimate_is_labelled_and_refuses_unknown_or_untested_series(base):
+    pytest.importorskip("arch")
+    _, a = post(base, "/api/ask", {"question": "3 year CAGR of SBI Small Cap"})
+    code, j = post(base, "/api/estimate", {"code": a["facts"][0]["code"]})
+    assert code == 200 and j["status"] == "ESTIMATE" and "not verified" in j["label"].lower() and 0.05 < j["garch"] < 0.6
+    assert post(base, "/api/estimate", {"code": 99999999})[0] == 400 and post(base, "/api/estimate", {"code": "1"})[0] == 400
+    _, g = post(base, "/api/ask", {"question": "1 year CAGR of gold"})
+    assert post(base, "/api/estimate", {"code": g["facts"][0]["code"]})[0] == 400      # negative codes are not funds

@@ -4,7 +4,7 @@ Binds to 127.0.0.1 only. A pasted key is read from the request body, used for th
 dropped: it is not written to disk, logs or the response.
 """
 from __future__ import annotations
-import json, sys, time
+import json, sys, threading, time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any, Callable, cast
 from pathlib import Path
@@ -14,6 +14,8 @@ from .plan import PlanError
 from . import execute
 from .answer import LABEL, NOTICE, WARN, render, sentence
 from .explain import GLOSSARY, GLOSSARY_VERSION
+from . import screen as screener
+from . import estimate
 
 class LocalServer(ThreadingHTTPServer):
     """The HTTP server plus the two outside readers the handlers use (swapped for fakes in tests)."""
@@ -22,6 +24,9 @@ class LocalServer(ThreadingHTTPServer):
 
 
 PAGE = Path(__file__).parent / "web" / "index.html"
+FAVICON = (b'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect x="2" y="2" width="28" height="28" rx="7" fill="#06090f" stroke="#ffb020" stroke-width="2"/>'
+           b'<path d="M8 21l5-6 4 3 7-9" fill="none" stroke="#e6edf7" stroke-width="2.4" stroke-linecap="round"/></svg>')
+_COMPUTE = threading.Lock()   # one DuckDB connection and shared series: computations take turns (planning, a network call, does not)
 MAX_BODY = 20_000
 MAX_CAS_BODY = 15_000_000   # base64 PDF
 
@@ -87,6 +92,8 @@ def make_handler(app: App):
                 return self._json(403, dict(error=f"refused: {why}"))
             if self.path in ("/", "/index.html"):
                 return self._send(200, PAGE.read_bytes(), "text/html; charset=utf-8")
+            if self.path == "/favicon.ico":
+                return self._send(200, FAVICON, "image/svg+xml")
             if self.path == "/api/health":
                 return self._json(200, dict(ok=True, schemes=len(app.resolver.codes)))
             self._json(404, dict(error="not found"))
@@ -125,6 +132,10 @@ def make_handler(app: App):
             cas_pw = req.pop("cas_password", None)
             if self.path == "/api/ask":
                 return self._ask(req, key)
+            if self.path == "/api/estimate":
+                return self._estimate(req)
+            if self.path == "/api/screen":
+                return self._screen(req)
             if self.path == "/api/models":
                 return self._models(key)
             if self.path == "/api/holdings":
@@ -145,11 +156,35 @@ def make_handler(app: App):
                 return self._json(502, dict(error=str(e).replace(key or "\0", "[key]")))
             except Exception as e:
                 return self._json(200, dict(status="NOPLAN", planner=name, error=f"could not plan this question: {e}", warning=WARN))
+            with _COMPUTE:
+                try:
+                    o = execute.run(plan, app.resolver, app.engine, q, picks=req.get("picks"))
+                except (PlanError, KeyError, TypeError) as e:
+                    return self._json(200, dict(status="NOPLAN", planner=name, plan=plan, error=f"the plan was rejected by code checks: {e}", warning=WARN))
+                body = outcome_json(o, name, plan, app.engine.series)
+            self._json(200, body)
+
+        def _estimate(self, req):
+            code = req.get("code")
+            if not isinstance(code, int) or isinstance(code, bool) or code <= 0 or code not in app.engine.series:
+                return self._json(400, dict(error="unknown fund code"))
             try:
-                o = execute.run(plan, app.resolver, app.engine, q, picks=req.get("picks"))
-            except (PlanError, KeyError, TypeError) as e:
-                return self._json(200, dict(status="NOPLAN", planner=name, plan=plan, error=f"the plan was rejected by code checks: {e}", warning=WARN))
-            self._json(200, outcome_json(o, name, plan, app.engine.series))
+                out = estimate.vol_estimate(app.engine.series[code])
+            except estimate.EstimateError as e:
+                return self._json(200, dict(status="NOT_PROVIDED", reason=str(e)))
+            except Exception as e:                                  # model fit failures: say so, never invent a number
+                return self._json(200, dict(status="NOT_PROVIDED", reason=f"the model could not be fitted: {type(e).__name__}"))
+            self._json(200, out)
+
+        def _screen(self, req):
+            try:
+                with _COMPUTE:
+                    out = screener.screen(app.engine, app.resolver.codes, app.resolver.names, str(req.get("text") or "")[:80],
+                                          str(req.get("metric") or ""), req.get("years"), req.get("top", 10))
+            except screener.ScreenError as e:
+                return self._json(400, dict(error=str(e)))
+            out["warning"] = WARN
+            self._json(200, out)
 
         def _holdings(self, token):
             from .portfolio import groww

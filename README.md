@@ -1,8 +1,17 @@
 # Indian Markets Analytics Platform
 
-An AI analyst for Indian mutual funds, gold, silver and USD/INR where **every number is computed by code, cross-checked by independent implementations, and verified, or the answer is withheld.** The language model only plans; it never writes a figure. Nothing here is investment advice, and nothing predicts.
+An AI analyst for Indian mutual funds, gold, silver and USD/INR where **every number is computed by code, cross-checked by independent implementations, and verified, or the answer is withheld.** The language model only plans; it never writes a figure. Nothing here is investment advice, and nothing predicts returns. The one model-based figure, an opt-in volatility estimate, is shown separately and labelled as not verified.
 
-> Status: working, run locally on Windows; CI (lint, types, Rust tests, tests) runs on GitHub. Evidence for each claim is in `docs/`. Items marked UNVERIFIED have not been proven.
+> Status: working locally; not yet published. Evidence for each claim is in `docs/`. Items marked UNVERIFIED have not been proven.
+
+## What it looks like
+A local, offline web terminal. The watchlist and ticker are verified answers computed when the page loads (end-of-day data, not live prices). Every figure shows both engines lighting up before it is shown; questions the data cannot support are withheld with the reason.
+
+![A verified answer: CAGR with both engines agreeing](docs/img/ui_verified.png)
+
+| Withheld, with the reason | Chart with hover, legend toggle and PNG export |
+|---|---|
+| ![A withheld answer](docs/img/ui_withheld.png) | ![Growth chart for two funds](docs/img/ui_chart.png) |
 
 ## Why it is different
 | Most finance chatbots | This project |
@@ -13,7 +22,7 @@ An AI analyst for Indian mutual funds, gold, silver and USD/INR where **every nu
 | "Trust me" | Hand-checked figures, mutation testing, pre-registered model evaluations |
 
 ## What it answers
-Total return, CAGR, max drawdown, volatility, SIP XIRR, rolling returns, **Sharpe and Sortino ratios** (risk-free rate from RBI 91-day T-bill yields), for 1,772 mutual-fund schemes (AMFI NAVs), Mumbai gold and silver (RBI), and USD/INR (RBI). Compare several in one question. Optional: read your own CAS statement (in memory only).
+Total return, CAGR, max drawdown, volatility, SIP XIRR, rolling returns, **Sharpe and Sortino ratios** (risk-free rate from RBI 91-day T-bill yields), for 1,772 mutual-fund schemes (AMFI NAVs), Mumbai gold and silver (RBI), and USD/INR (RBI). Compare several in one question, or **screen** funds: rank every fund whose name contains some words (such as "small cap") by one measure, with every row passing the same agreement gate. Optional: read your own CAS statement (in memory only).
 
 ## How it works
 ```
@@ -25,7 +34,7 @@ Data checks run first: a manifest of SHA-256 hashes (the app refuses to start on
 
 ## Evidence
 - **Three-engine agreement** over every series and window: 40,169 figures verified by all engines, 0 disagreements (`docs/HARDENING.md`, `scripts/run_agreement_abc.py`, `data/engine_agreement_abc.json`).
-- **Tests:** 241, plus ruff and mypy clean, pip-audit clean.
+- **Tests:** 250, plus ruff and mypy clean, pip-audit clean.
 - **Mutation testing** on the maths and the agreement gate: 88% of 1,746 mutants caught; it found two real bugs (`docs/HARDENING.md`).
 - **Published-figure check:** HDFC CAGR matches 12 of 12 published figures (`docs/ENGINE_RESULTS.md`).
 - **Planner evaluations:** locked sets, with failures kept on record. A first test of gold, silver and USD/INR questions failed (14 of 21), the prompt was fixed, and a new held-out set passed (15 of 17, 0 wrong answers): `docs/PLANNER_EVAL_V3.md`, `docs/PLANNER_EVAL_V4.md`.
@@ -35,7 +44,7 @@ Data checks run first: a manifest of SHA-256 hashes (the app refuses to start on
     pip install -r requirements.txt
     python -m pytest -q
     cd src && python -m imap.server        # then open http://127.0.0.1:8765
-A Groq key can be pasted on the page (kept in memory only); without one a scripted parser reads questions. Also: an **MCP server** for Claude Desktop (`docs/MCP.md`).
+A Groq key can be pasted on the page (kept in memory only); without one a scripted parser reads questions. Also: an **MCP server** for Claude Desktop (`docs/MCP.md`) and a Dockerfile (`docs/HARDENING.md`; the image has not been built yet, so CI will be its first build: UNVERIFIED).
 
 ## Data
 Built locally by the pipeline; sources: AMFI NAV archive, RBI (Handbook, reference rate archive, T-bill yields), optional NSE prices for personal use. **Reuse terms for AMFI-derived data are UNVERIFIED (`docs/FEASIBILITY.md`), and NSE data must not be published, so the repository does not include data files.** FBIL data is not used (its terms bar commercial use without permission).
@@ -46,6 +55,3 @@ Built locally by the pipeline; sources: AMFI NAV archive, RBI (Handbook, referen
 - Sharpe and Sortino need T-bill yields, which start July 2015 and run about two months behind; those ratios are withheld before then and capped at the latest published yield.
 - Engine C (Rust) has been built and tested only in the development sandbox; on Windows it is untested.
 - Every claim above has a source in `docs/`; the full status list is `docs/STATUS.md`.
-
-## Licence
-MIT for the code and documents (`LICENSE`). Third-party data is not included and keeps its owners' terms.

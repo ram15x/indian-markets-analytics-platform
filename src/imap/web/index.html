@@ -1,132 +1,390 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="/favicon.ico" type="image/svg+xml">
 <title>Indian Markets Analytics Platform</title>
 <style>
   :root{
-    --paper:#EDF0F2; --sheet:#F8F9FA; --ink:#1B2733; --muted:#5C6B78; --rule:#C9D1D8;
-    --blue:#1E4E79; --up:#2F6B3F; --down:#9E3A2E; --note:#7A5B12;
-    --serif: Charter, "Bitstream Charter", "Iowan Old Style", Georgia, serif;
+    --bg:#06090f; --bg2:#0a0f19; --sheet:#0d1420; --raised:#121b2a; --rule:#1c2840; --rule2:#2a3a5a;
+    --ink:#e6edf7; --muted:#8a9ab5; --faint:#5b6b88;
+    --accent:#ffb020; --accent-ink:#1a1100;
+    --ok:#22d38a; --ok-bg:rgba(34,211,138,.10); --bad:#ff6161; --bad-bg:rgba(255,97,97,.10); --note:#ffc65c;
+    --link:#52c3ff; --glow:rgba(255,176,32,.20); --shadow:0 14px 40px -26px rgba(0,0,0,.9);
     --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
+    --serif: var(--sans);
+  }
+  html[data-theme="light"]{
+    --bg:#eceff4; --bg2:#e4e9f0; --sheet:#fbfcfe; --raised:#f1f4f9; --rule:#d3dae6; --rule2:#b6c1d4;
+    --ink:#142033; --muted:#51617a; --faint:#7d8aa0; --accent:#b36200; --accent-ink:#fff;
+    --ok:#0e8a5f; --ok-bg:rgba(14,138,95,.09); --bad:#bf3030; --bad-bg:rgba(191,48,48,.08); --note:#7a5b12;
+    --link:#1b5fae; --glow:rgba(179,98,0,.16); --shadow:0 14px 34px -26px rgba(30,50,90,.5);
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 var(--sans)}
-  main{max-width:780px;margin:0 auto;padding:40px 24px 80px}
-  header p{margin:.2rem 0 0;color:var(--muted);max-width:62ch}
-  h1{font:600 1.15rem/1.3 var(--serif);margin:0;letter-spacing:.01em}
-  .ask{margin-top:32px}
-  label{display:block;font-weight:600;margin-bottom:6px}
-  textarea,input,select{font:inherit;color:inherit;background:var(--sheet);border:1px solid var(--rule);border-radius:6px;padding:12px 14px;width:100%}
-  textarea{font:1.35rem/1.4 var(--serif);min-height:88px;resize:vertical}
-  textarea:focus,input:focus,select:focus,button:focus-visible,a:focus-visible{outline:3px solid #7FA6CF;outline-offset:1px}
-  .row{display:flex;gap:12px;align-items:center;margin-top:12px;flex-wrap:wrap}
-  button{font:600 1rem var(--sans);border:0;border-radius:6px;padding:11px 20px;background:var(--blue);color:#fff;cursor:pointer}
-  button.quiet{background:transparent;color:var(--blue);border:1px solid var(--rule);font-weight:500;padding:8px 12px}
-  button:disabled{opacity:.55;cursor:wait}
-  .examples{color:var(--muted);font-size:.95rem}
-  .examples a{color:var(--blue);text-decoration:underline;text-underline-offset:2px;cursor:pointer;margin-right:14px;white-space:nowrap}
-  details.key{margin-top:22px;border-top:1px solid var(--rule);padding-top:12px}
-  details.key summary{cursor:pointer;color:var(--blue)}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-  .grid .wide{grid-column:1/-1}
-  .hint{color:var(--muted);font-size:.9rem;margin:.4rem 0 0}
-  #out{margin-top:36px}
-  .banner{background:#F3ECDD;border-left:4px solid var(--note);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:20px}
-  .err{background:#F6E3E0;border-left:4px solid var(--down);padding:12px 16px;border-radius:0 6px 6px 0}
-  .line{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:20px 22px;margin-bottom:14px}
-  .line .fund{font:600 1.05rem/1.35 var(--serif)}
-  .line .meta{color:var(--muted);font-size:.92rem;margin-top:2px}
-  .fig{font:400 2.6rem/1.1 var(--serif);font-variant-numeric:tabular-nums lining-nums;margin:14px 0 6px;padding-top:12px;border-top:1px solid var(--rule)}
-  .fig.up{color:var(--up)} .fig.down{color:var(--down)}
-  .line p{margin:.3rem 0 0}
-  .note{color:var(--note);font-size:.92rem}
-  table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;margin:6px 0 18px}
-  th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--rule)} td.n{text-align:right;font-family:var(--serif);font-size:1.1rem;white-space:nowrap}
-  th{font-weight:600;color:var(--muted);font-size:.9rem}
-  .choices button{margin:6px 8px 0 0}
-  .glossary{margin-top:22px;border-top:1px solid var(--rule);padding-top:12px}
-  .glossary h2,.how h2{font:600 1rem var(--serif);margin:0 0 6px}
-  .glossary dt{font-weight:600;margin-top:8px} .glossary dd{margin:2px 0 0}
-  .matched,.warn{color:var(--muted);font-size:.92rem;margin-top:14px}
-  .how{margin-top:18px} .how summary{cursor:pointer;color:var(--blue);font-size:.92rem}
-  pre{background:var(--sheet);border:1px solid var(--rule);border-radius:6px;padding:12px;overflow:auto;font-size:.82rem}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);background-size:44px 44px;opacity:.22;mask-image:linear-gradient(#000,transparent 70%);-webkit-mask-image:linear-gradient(#000,transparent 70%)}
+  .num,.fig,td.n,.tabular{font-variant-numeric:tabular-nums lining-nums;font-family:var(--mono)}
 
-  .chart{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:16px 18px 10px;margin:4px 0 16px;position:relative}
-  .chart h2{font:600 1rem var(--serif);margin:0}
-  .chart .sub{color:var(--muted);font-size:.88rem;margin:2px 0 8px}
+  /* status bar */
+  .bar{display:flex;align-items:center;gap:18px;padding:9px 18px;border-bottom:1px solid var(--rule);background:color-mix(in srgb,var(--sheet) 92%,transparent);backdrop-filter:blur(8px);position:sticky;top:0;z-index:20;flex-wrap:wrap}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.01em;font-size:.95rem}
+  .logo svg{width:24px;height:24px}
+  .stats{display:flex;gap:18px;margin-left:auto;align-items:center;font-size:.8rem;color:var(--muted);flex-wrap:wrap}
+  .stat b{font:600 .86rem var(--mono);color:var(--ink);margin-left:5px}
+  .stat b.g{color:var(--ok)} .stat b.r{color:var(--bad)}
+  .pill{display:inline-flex;align-items:center;gap:7px;font-size:.8rem;color:var(--muted)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--faint)}
+  .pill.on .dot{background:var(--ok);animation:ping 2.4s infinite}
+  .pill.off .dot{background:var(--bad)}
+  @keyframes ping{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 60%,transparent)}70%,100%{box-shadow:0 0 0 8px transparent}}
+  .icon{width:32px;height:32px;padding:0;display:grid;place-items:center;border-radius:8px;background:var(--raised);border:1px solid var(--rule);color:var(--ink)}
+  .icon:hover{border-color:var(--accent)}
+
+  /* ticker tape */
+  .tape{border-bottom:1px solid var(--rule);background:var(--bg2);overflow:hidden;white-space:nowrap;position:relative;height:38px}
+  .tape::before,.tape::after{content:"";position:absolute;top:0;bottom:0;width:48px;z-index:2;pointer-events:none}
+  .tape::before{left:0;background:linear-gradient(90deg,var(--bg2),transparent)} .tape::after{right:0;background:linear-gradient(270deg,var(--bg2),transparent)}
+  .track{display:inline-flex;height:100%;align-items:center;will-change:transform}
+  @media (prefers-reduced-motion:no-preference){ .track.run{animation:tape 70s linear infinite} .tape:hover .track{animation-play-state:paused} @keyframes tape{to{transform:translateX(-50%)}} }
+  .tk{display:inline-flex;align-items:center;gap:9px;padding:0 22px;border-right:1px solid var(--rule);height:100%;cursor:pointer;font-size:.84rem;transition:background .15s}
+  .tk:hover{background:var(--raised)}
+  .tk .nm{font-weight:600} .tk .v{font:600 .84rem var(--mono)} .tk .d{color:var(--faint);font-size:.74rem}
+  .up{color:var(--ok)} .down{color:var(--bad)}
+  .tape .empty{padding:0 20px;color:var(--faint);font-size:.82rem;display:flex;align-items:center;height:100%}
+
+  /* layout */
+  .shell{display:grid;grid-template-columns:290px minmax(0,1fr) 290px;gap:14px;padding:14px 18px 60px;max-width:1680px;margin:0 auto;align-items:start}
+  .col{display:flex;flex-direction:column;gap:14px;min-width:0}
+  .panel{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+  .panel>.hd{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-bottom:1px solid var(--rule);background:var(--raised);font-size:.78rem;font-weight:700;letter-spacing:.06em;color:var(--muted)}
+  .panel>.bd{padding:12px}
+  .panel .hd button{padding:2px 8px;font-size:.74rem}
+  .sticky{position:sticky;top:62px}
+
+  /* watchlist */
+  .wl{display:flex;flex-direction:column}
+  .wr{display:grid;grid-template-columns:minmax(0,1fr) 52px 78px;gap:8px;align-items:center;padding:9px 12px;border-bottom:1px solid var(--rule);cursor:pointer;position:relative;transition:background .15s}
+  .wr:last-child{border-bottom:0}
+  .wr:hover{background:var(--raised)} .wr:hover::before{opacity:1}
+  .wr::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);opacity:0;transition:opacity .15s}
+  .wr.sel{background:color-mix(in srgb,var(--accent) 8%,transparent)} .wr.sel::before{opacity:1}
+  .wr .nm{font-weight:600;font-size:.86rem;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .wr .sub{font-size:.72rem;color:var(--faint);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .wr .vv{font:700 .88rem var(--mono);text-align:right;white-space:nowrap}
+  .wr svg{width:52px;height:26px;display:block}
+  .wr.load .nm,.wr.load .vv{color:transparent;background:var(--raised);border-radius:4px;animation:blink 1.1s infinite alternate}
+  @keyframes blink{to{opacity:.4}}
+  .wr .hold{color:var(--note);font:600 .74rem var(--sans)}
+  .unpin{position:absolute;top:2px;right:2px;padding:0 6px!important;line-height:1.2;font-size:.9rem!important;opacity:0;border:0!important} .wr:hover .unpin,.unpin:focus-visible{opacity:1}
+  .wnote{font-size:.74rem;color:var(--faint);padding:8px 12px;border-top:1px solid var(--rule)}
+
+  /* command bar */
+  .cmd{display:flex;gap:10px;align-items:flex-start;padding:12px 14px}
+  .cmd .pr{font:700 1.3rem/1.5 var(--mono);color:var(--accent);padding-top:2px}
+  textarea,input,select{font:inherit;color:var(--ink);background:var(--raised);border:1px solid var(--rule);border-radius:8px;padding:9px 11px;width:100%;transition:border-color .2s,box-shadow .2s}
+  textarea{font:1.08rem/1.45 var(--mono);min-height:64px;resize:vertical;background:transparent;border:0;padding:2px;outline:0}
+  input:hover,select:hover{border-color:var(--rule2)}
+  input:focus,select:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
+  #cmdpanel{transition:border-color .2s,box-shadow .2s} #cmdpanel:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
+  label{display:block;font-weight:600;margin-bottom:5px;font-size:.84rem;color:var(--muted)}
+  button:focus-visible,a:focus-visible,summary:focus-visible,.wr:focus-visible,.tk:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+  .row{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
+  button{font:700 .9rem var(--sans);border:0;border-radius:8px;padding:9px 18px;background:var(--accent);color:var(--accent-ink);cursor:pointer;position:relative;overflow:hidden;transition:transform .15s,box-shadow .2s,background .2s,border-color .2s}
+  button:hover{transform:translateY(-1px);box-shadow:0 8px 20px -10px var(--accent)}
+  button:active{transform:translateY(1px) scale(.985)}
+  button.quiet{background:transparent;color:var(--link);border:1px solid var(--rule);font-weight:600;padding:6px 11px;font-size:.84rem}
+  button.quiet:hover{border-color:var(--link);box-shadow:none;background:color-mix(in srgb,var(--link) 8%,transparent)}
+  button:disabled{opacity:.6;cursor:wait;transform:none;box-shadow:none}
+  .ripple{position:absolute;border-radius:50%;background:currentColor;opacity:.25;transform:scale(0);animation:rip .6s ease-out forwards;pointer-events:none}
+  @keyframes rip{to{transform:scale(1);opacity:0}}
+  kbd{font:.72rem var(--mono);border:1px solid var(--rule2);border-bottom-width:2px;border-radius:4px;padding:0 5px;color:var(--muted)}
+  .hint{color:var(--muted);font-size:.84rem;margin:.35rem 0 0} #who{margin:0}
+  .examples{display:flex;gap:7px;flex-wrap:wrap;align-items:center;color:var(--muted);font-size:.82rem;padding:0 14px 12px}
+  .chip{background:var(--raised);border:1px solid var(--rule);color:var(--ink);border-radius:6px;padding:4px 10px;font-size:.82rem;font-weight:500;cursor:pointer;transition:transform .15s,border-color .2s,background .2s}
+  .chip:hover{border-color:var(--accent);transform:translateY(-1px)}
+  .recent .chip{background:transparent;color:var(--muted);max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  [hidden]{display:none!important}
+  details.key{border-top:1px solid var(--rule);padding:10px 0 2px}
+  details.key:first-of-type{border-top:0;padding-top:0}
+  details.key summary{cursor:pointer;color:var(--link);font-size:.86rem;list-style:none;display:flex;align-items:center;gap:8px}
+  details.key summary::-webkit-details-marker{display:none}
+  details.key summary::before{content:"";width:6px;height:6px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .25s}
+  details[open]>summary::before{transform:rotate(45deg)}
+  details.key[open]>*:not(summary){animation:open .3s ease both}
+  @keyframes open{from{opacity:0;transform:translateY(-5px)}}
+  .grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px}
+  code{font:.84em var(--mono);background:var(--raised);padding:1px 5px;border-radius:4px}
+
+  #out{min-height:40px;display:flex;flex-direction:column;gap:14px}
+  #out .empty{border:1px dashed var(--rule2);border-radius:10px;padding:34px 20px;text-align:center;color:var(--muted)}
+  #out .empty b{display:block;color:var(--ink);font-size:1.15rem;margin-bottom:6px}
+  .banner{background:color-mix(in srgb,var(--note) 12%,transparent);border-left:3px solid var(--note);padding:10px 14px;border-radius:0 8px 8px 0}
+  .err{background:var(--bad-bg);border:1px solid color-mix(in srgb,var(--bad) 40%,transparent);border-left:3px solid var(--bad);padding:10px 14px;border-radius:0 8px 8px 0}
+
+  .line{position:relative;background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:18px 20px;overflow:hidden;transition:border-color .25s}
+  .line::before{content:"";position:absolute;inset:0;background:radial-gradient(340px circle at var(--mx,50%) var(--my,0%),var(--glow),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none}
+  .line:hover{border-color:var(--rule2)} .line:hover::before{opacity:1}
+  .line.ok{border-left:3px solid var(--ok)}
+  .line.hold{border-left:3px solid var(--bad);background:repeating-linear-gradient(135deg,var(--sheet) 0 12px,color-mix(in srgb,var(--bad) 6%,var(--sheet)) 12px 24px)}
+  .line .top{display:flex;gap:14px;justify-content:space-between;align-items:flex-start}
+  .line .fund{font-weight:700;font-size:1.02rem;line-height:1.3}
+  .line .meta{color:var(--muted);font-size:.82rem;margin-top:3px}
+  .fig{font-size:clamp(2.4rem,6vw,3.6rem);line-height:1.05;font-weight:600;margin:12px 0 6px;letter-spacing:-.03em}
+  .fig.up{color:var(--ok)} .fig.down{color:var(--bad)}
+  .line p{margin:.3rem 0 0}
+  .note{color:var(--note);font-size:.88rem}
+  .acts{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+
+  .seal{flex:none;width:56px;height:56px}
+  .seal circle.r{fill:none;stroke:var(--ok);stroke-width:3;stroke-linecap:round;stroke-dasharray:163.4;transform:rotate(-90deg);transform-origin:center}
+  .seal circle.bg0{fill:var(--ok-bg);stroke:none}
+  .seal path{fill:none;stroke:var(--ok);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40}
+  .seal.hold circle.r{stroke:var(--bad);stroke-dasharray:10 8} .seal.hold circle.bg0{fill:var(--bad-bg)} .seal.hold path{stroke:var(--bad)}
+  .engines{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;font-size:.8rem;color:var(--muted);align-items:center}
+  .eng{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--rule);border-radius:6px;padding:2px 9px 2px 5px;background:var(--raised)}
+  .eng i{width:16px;height:16px;border-radius:4px;display:grid;place-items:center;font:700 .62rem var(--mono);font-style:normal;background:var(--rule);color:var(--muted)}
+  .eng.lit{border-color:color-mix(in srgb,var(--ok) 50%,var(--rule));color:var(--ink)}
+  .eng.lit i{background:var(--ok);color:#04231a}
+  .agree{color:var(--ok);font-weight:700;opacity:0;transition:opacity .4s} .agree.lit{opacity:1}
+  @media (prefers-reduced-motion:no-preference){
+    .seal circle.r{animation:ring 1s .15s cubic-bezier(.3,.7,.2,1) both}
+    .seal path{animation:tick .45s .95s ease-out both}
+    .seal circle.bg0{animation:pop .5s 1.1s ease-out both}
+    .seal.hold circle.r{animation:none;stroke-dashoffset:0} .seal.hold path{animation:shake .5s .2s}
+    @keyframes ring{from{stroke-dashoffset:163.4}to{stroke-dashoffset:0}}
+    @keyframes tick{from{stroke-dashoffset:40}to{stroke-dashoffset:0}}
+    @keyframes pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+    @keyframes shake{20%{transform:translateX(-3px)}40%{transform:translateX(3px)}60%{transform:translateX(-2px)}80%{transform:translateX(2px)}}
+    .eng{transition:border-color .4s,color .4s} .eng i{transition:background .4s,color .4s}
+    #out.fresh>*{animation:in .45s cubic-bezier(.2,.8,.2,1) both}
+    #out.fresh>*:nth-child(2){animation-delay:.07s} #out.fresh>*:nth-child(3){animation-delay:.14s}
+    @keyframes in{from{opacity:0;transform:translateY(12px)}}
+  }
+  @media (prefers-reduced-motion:reduce){ .agree{opacity:1;transition:none} }
+
+  table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;margin:4px 0 12px}
+  th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--rule)} td.n{text-align:right;font-size:.95rem;white-space:nowrap}
+  th{font-weight:700;color:var(--muted);font-size:.76rem;letter-spacing:.05em}
+  tbody tr{transition:background .15s} tbody tr:hover{background:color-mix(in srgb,var(--accent) 7%,transparent)}
+  .tablebox{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:12px 16px 2px}
+  .tablebox .hd{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .tablebox h2{font:700 .95rem var(--sans);margin:0}
+  table.rank{table-layout:fixed} table.rank th:nth-child(2){width:38%} table.rank th:nth-child(3){width:96px}
+  td.meter{position:relative}
+  table.rank td,table.rank th{vertical-align:middle} td.meter{vertical-align:middle;height:1px} td.meter i{display:block;height:8px;margin:0 8px;border-radius:2px;background:var(--ok);opacity:.6;transform-origin:left}
+  table.rank td:nth-child(1),table.rank td:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap} #scrout table.rank td{padding-top:7px;padding-bottom:7px}
+  td.meter i.neg{background:var(--bad)} tbody tr:hover td.meter i{opacity:.95}
+  @media (prefers-reduced-motion:no-preference){ td.meter i{animation:grow .9s cubic-bezier(.2,.8,.2,1) both} @keyframes grow{from{transform:scaleX(0)}} }
+  .choices{display:flex;flex-wrap:wrap;gap:8px}
+  .glossary{border-top:1px solid var(--rule);padding-top:12px}
+  .glossary h2{font:700 .95rem var(--sans);margin:0 0 6px}
+  .glossary dt{font-weight:700;margin-top:8px} .glossary dd{margin:2px 0 0;color:var(--muted)}
+  .matched,.warn{color:var(--muted);font-size:.86rem;margin:0}
+  .how{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:10px 14px}
+  .how summary{cursor:pointer;color:var(--link);font-size:.88rem}
+  .how .steps{display:flex;margin:12px 0 8px;flex-wrap:wrap}
+  .how .st{flex:1 1 140px;padding:9px 11px;border:1px solid var(--rule);background:var(--raised);font-size:.8rem}
+  .how .st:first-child{border-radius:8px 0 0 8px} .how .st:last-child{border-radius:0 8px 8px 0}
+  .how .st b{display:block;font-size:.86rem;margin-bottom:2px} .how .st span{color:var(--muted)}
+  pre{background:var(--raised);border:1px solid var(--rule);border-radius:8px;padding:10px;overflow:auto;font:.78rem var(--mono);color:var(--muted)}
+
+  .chart{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:14px 16px 10px;position:relative}
+  .chart h2{font:700 .98rem var(--sans);margin:0}
+  .chart .sub{color:var(--muted);font-size:.82rem;margin:3px 0 8px;max-width:calc(100% - 90px)}
   .chart svg{width:100%;height:auto;display:block;touch-action:none}
-  .chart svg text.lab{paint-order:stroke;stroke:#F8F9FA;stroke-width:4px;stroke-linejoin:round}
-  .chart .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.88rem;color:var(--ink);margin:6px 0 2px}
-  .chart .legend i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:6px}
-  .tip{position:absolute;pointer-events:none;background:#fff;border:1px solid var(--rule);border-radius:6px;padding:6px 9px;font-size:.85rem;box-shadow:0 2px 6px rgba(27,39,51,.12);white-space:nowrap;display:none}
-  .tip b{font-variant-numeric:tabular-nums}
-  .chart details summary{cursor:pointer;color:var(--blue);font-size:.88rem;margin-top:6px}
-  .chart table{font-size:.85rem}
-  @media (max-width:600px){ .grid{grid-template-columns:1fr} .fig{font-size:2.1rem} main{padding:28px 16px 60px} }
-  @media (prefers-reduced-motion:no-preference){ #out.fresh{animation:in .25s ease-out} @keyframes in{from{opacity:.0}to{opacity:1}} }
+  .chart .legend{display:flex;gap:8px;flex-wrap:wrap;font-size:.84rem;margin:6px 0 2px}
+  .chart .legend button{background:transparent;color:var(--ink);padding:2px 9px;border:1px solid var(--rule);border-radius:6px;font-weight:500;font-size:.82rem;display:inline-flex;align-items:center;gap:7px}
+  .chart .legend button:hover{border-color:var(--rule2);transform:none;box-shadow:none}
+  .chart .legend button[aria-pressed="false"]{opacity:.4;text-decoration:line-through}
+  .chart .legend i{display:inline-block;width:16px;height:3px;border-radius:2px}
+  .chart .chartacts{position:absolute;right:14px;top:12px}
+  .tip{position:absolute;pointer-events:none;background:var(--raised);border:1px solid var(--rule2);border-radius:8px;padding:6px 10px;font-size:.82rem;box-shadow:0 10px 28px -12px rgba(0,0,0,.7);white-space:nowrap;display:none;z-index:3}
+  .tip b{font-family:var(--mono)}
+  .chart details summary{cursor:pointer;color:var(--link);font-size:.84rem;margin-top:6px}
+  .chart table{font-size:.82rem}
+
+  .skel{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:20px;overflow:hidden;position:relative}
+  .skel i{display:block;height:13px;border-radius:6px;background:var(--raised);margin-bottom:12px} .skel i.big{height:48px;width:42%;margin:18px 0}
+  .skel::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,color-mix(in srgb,var(--ink) 8%,transparent) 50%,transparent 70%);transform:translateX(-100%);animation:sh 1.3s infinite}
+  @keyframes sh{to{transform:translateX(100%)}}
+
+  /* ledger */
+  .led{display:flex;flex-direction:column;max-height:46vh;overflow:auto}
+  .le{padding:9px 12px;border-bottom:1px solid var(--rule);font-size:.8rem;cursor:pointer;transition:background .15s}
+  .le:hover{background:var(--raised)} .le:last-child{border-bottom:0}
+  .le .t{display:flex;gap:8px;align-items:center;color:var(--faint);font:.72rem var(--mono)}
+  .le .q{margin-top:2px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tag{font:700 .66rem var(--sans);letter-spacing:.05em;padding:1px 6px;border-radius:4px}
+  .tag.v{background:var(--ok-bg);color:var(--ok)} .tag.w{background:var(--bad-bg);color:var(--bad)} .tag.o{background:var(--raised);color:var(--muted)}
+  @media (prefers-reduced-motion:no-preference){ .le.new{animation:slide .4s ease both} @keyframes slide{from{opacity:0;transform:translateX(14px)}} }
+  .rules{margin:0;padding:0;list-style:none;font-size:.8rem;color:var(--muted)}
+  .rules li{padding:5px 0 5px 18px;position:relative} .rules li::before{content:"";position:absolute;left:0;top:11px;width:7px;height:7px;border-radius:2px;background:var(--ok)}
+
+
+
+  .est{border:1px dashed var(--note);border-radius:10px;padding:16px 20px;background:color-mix(in srgb,var(--note) 7%,var(--sheet))}
+  .est .tg{display:inline-block;font:700 .68rem var(--sans);letter-spacing:.06em;padding:2px 8px;border-radius:4px;background:color-mix(in srgb,var(--note) 22%,transparent);color:var(--note)}
+  .est .big{font:600 2.1rem/1.1 var(--mono);margin:10px 0 2px;letter-spacing:-.02em}
+  .est .cmp{display:flex;gap:22px;flex-wrap:wrap;margin:10px 0;color:var(--muted);font-size:.86rem} .est .cmp b{font-family:var(--mono);color:var(--ink);margin-left:6px}
+  @media (prefers-reduced-motion:no-preference){ .est{animation:in .4s ease both} }
+  /* screener */
+  .scr{display:grid;grid-template-columns:1.4fr 1fr .7fr .6fr auto;gap:10px;align-items:end;padding:12px 14px}
+  .scr label{margin-bottom:4px}
+  .scr .sum{grid-column:1/-1;margin:0}
+  #scrout{padding:0 14px 6px}
+  #scrout table.rank th:nth-child(1){width:44px} #scrout table.rank th:nth-child(3){width:38%} #scrout table.rank th:nth-child(4){width:96px}
+  #scrout tbody tr{cursor:pointer}
+  .rk{color:var(--faint);font:600 .8rem var(--mono)}
+  @media (max-width:800px){ .scr{grid-template-columns:1fr 1fr} }
+  .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,24px);background:var(--ink);color:var(--bg);padding:8px 15px;border-radius:8px;font-size:.86rem;font-weight:700;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:30}
+  .toast.on{opacity:1;transform:translate(-50%,0)}
+  @media (max-width:1180px){ .shell{grid-template-columns:270px minmax(0,1fr)} .shell>.col.right{grid-column:1/-1} .sticky{position:static} }
+  @media (max-width:800px){ .shell{grid-template-columns:1fr;padding:12px} td.meter{display:none} .stats .stat.hide-s{display:none} }
+  @media (prefers-reduced-motion:reduce){ *{animation-duration:.001s!important;animation-delay:0s!important;transition-duration:.001s!important} }
 </style>
 </head>
 <body>
-<main>
-  <header>
-    <h1>Indian Markets Analytics Platform</h1>
-    <p>Past figures for 1,772 Direct Growth mutual funds, computed from AMFI NAVs and checked twice by code. Facts only: no advice, no predictions.</p>
-  </header>
 
-  <section class="ask" aria-label="Ask a question">
-    <label for="q">Ask about a fund</label>
-    <textarea id="q" placeholder="For example: 5 year CAGR of Parag Parikh Flexi Cap vs HDFC Flexi Cap"></textarea>
-    <div class="row">
-      <button id="go">Get figures</button>
-      <span id="who" class="hint"></span>
-    </div>
-    <p class="examples">Try:
-      <a data-q="What is the 3 year CAGR of SBI Small Cap?">3 year CAGR</a>
-      <a data-q="SIP of Rs 5000 on the 5th in quant small cap for 5 years, what XIRR?">SIP XIRR</a>
-      <a data-q="Max drawdown of Axis Bluechip since inception">old fund name</a>
-      <a data-q="Compare 5 year volatility of SBI Small Cap vs Nippon India Small Cap">compare</a>
-    </p>
+<header class="bar">
+  <div class="logo">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="28" height="28" rx="7" fill="none" stroke="var(--accent)" stroke-width="2"/><path d="M8 21l5-6 4 3 7-9" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="9" r="2.4" fill="var(--accent)"/></svg>
+    Indian Markets Analytics
+  </div>
+  <div class="stats">
+    <span class="stat hide-s">Verified<b class="g" id="cntV">0</b></span>
+    <span class="stat hide-s">Withheld<b class="r" id="cntW">0</b></span>
+    <span class="stat hide-s">NAV data to<b id="asof">…</b></span>
+    <span class="stat hide-s"><b id="clock"></b></span>
+    <span class="pill" id="health"><span class="dot"></span><span id="healthtxt">checking…</span></span>
+    <button class="icon" id="theme" type="button" aria-label="Switch between dark and light theme" title="Switch theme">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/></svg>
+    </button>
+  </div>
+</header>
+<div class="tape" aria-label="Watchlist ticker: 1 year CAGR, end of day data, not live"><div class="track" id="track"><span class="empty">Loading verified figures…</span></div></div>
 
-    <details class="key">
-      <summary>Use your own model key (optional)</summary>
-      <p class="hint">Without a key, a simple scripted parser reads your question; it understands fewer phrasings. With a key, your chosen model plans the question and code checks the plan. The key stays in this page's memory and is sent only to your local server for each request. It is never saved.</p>
-      <div class="grid">
-        <div><label for="kname">Key name</label><input id="kname" placeholder="e.g. Ram's Groq key" autocomplete="off"></div>
-        <div><label for="model">Model</label><select id="model"><option>openai/gpt-oss-120b</option></select></div>
-        <div class="wide"><label for="key">Groq API key</label><input id="key" type="password" autocomplete="off" spellcheck="false" placeholder="gsk_…"></div>
+<div class="shell">
+  <aside class="col">
+    <section class="panel">
+      <div class="hd"><span>WATCHLIST · 1Y CAGR</span><button class="quiet" id="wlrefresh" type="button" title="Recompute">Refresh</button></div>
+      <div class="wl" id="wl"></div>
+      <div class="wnote">Each row is a verified answer from this platform, computed on load. End-of-day NAVs and RBI averages, not live prices. Gold and silver are monthly averages.</div>
+    </section>
+    <section class="panel">
+      <div class="hd"><span>CONNECT (OPTIONAL)</span></div>
+      <div class="bd">
+        <details class="key">
+          <summary>Your own model key</summary>
+          <p class="hint">Without a key, a scripted parser reads your question; it understands fewer phrasings. With a key, your model plans the question and code checks the plan. The key stays in this page's memory and is sent only to your local server. Never saved.</p>
+          <div class="grid">
+            <div><label for="kname">Key name</label><input id="kname" placeholder="e.g. Ram's Groq key" autocomplete="off"></div>
+            <div><label for="model">Model</label><select id="model"><option>openai/gpt-oss-120b</option></select></div>
+            <div><label for="key">Groq API key</label><input id="key" type="password" autocomplete="off" spellcheck="false" placeholder="gsk_…"></div>
+          </div>
+          <div class="row"><button class="quiet" id="list" type="button">Load models</button><button class="quiet" id="forget" type="button">Forget key</button></div><p id="kmsg" class="hint"></p>
+        </details>
+        <details class="key" id="gw">
+          <summary>Groww stock holdings (read-only)</summary>
+          <p class="hint">Reads your stock holdings from Groww's official API using a token you generate in Groww Cloud. Read-only: no code here can place or change orders. The token stays in this page's memory. Value uses NSE end-of-day closes once you run <code>python prices.py</code>. Mutual funds are not in this API; use the CAS section.</p>
+          <div class="grid"><div><label for="gtok">Groww access token</label><input id="gtok" type="password" autocomplete="off" spellcheck="false"></div></div>
+          <div class="row"><button class="quiet" id="gload" type="button">Load holdings</button><button class="quiet" id="gforget" type="button">Forget token</button></div><p id="gmsg" class="hint"></p>
+        </details>
+        <details class="key" id="casbox">
+          <summary>Mutual funds from a CAS statement</summary>
+          <p class="hint">Use the DETAILED Consolidated Account Statement from CAMS or KFintech (a PDF, usually locked with your PAN in capitals). Read on this computer only, in memory. Name, PAN, email and address are never shown or kept; folios are masked. Values are as printed on the statement date.</p>
+          <div class="grid">
+            <div><label for="casfile">CAS PDF</label><input id="casfile" type="file" accept="application/pdf"></div>
+            <div><label for="caspw">PDF password</label><input id="caspw" type="password" autocomplete="off" spellcheck="false"></div>
+          </div>
+          <div class="row"><button class="quiet" id="casload" type="button">Read statement</button><button class="quiet" id="casforget" type="button">Clear</button></div><p id="casmsg" class="hint"></p>
+        </details>
       </div>
-      <div class="row"><button class="quiet" id="list">Load my models</button><button class="quiet" id="forget">Forget key</button><span id="kmsg" class="hint"></span></div>
-    </details>
-    <details class="key" id="gw">
-      <summary>My Groww stock holdings (optional, read-only)</summary>
-      <p class="hint">Reads your stock holdings from Groww's official API using an access token you generate in Groww Cloud. Read-only: this app has no code that can place or change orders. The token stays in this page's memory and is never saved. Value uses NSE's end-of-day closing prices once you run <code>python prices.py</code> (not live). Mutual funds are not included in this API; use the CAS section for those.</p>
-      <div class="grid"><div class="wide"><label for="gtok">Groww access token</label><input id="gtok" type="password" autocomplete="off" spellcheck="false"></div></div>
-      <div class="row"><button class="quiet" id="gload">Load holdings</button><button class="quiet" id="gforget">Forget token</button><span id="gmsg" class="hint"></span></div>
-      <div id="gout"></div>
-    </details>
-    <details class="key" id="casbox">
-      <summary>My mutual funds from a CAS statement (optional)</summary>
-      <p class="hint">Use the DETAILED Consolidated Account Statement that CAMS or KFintech email you (a PDF, usually locked with your PAN in capitals). It is read on this computer only, in memory: not saved, not sent anywhere else. Your name, PAN, email and address are never shown or kept; folio numbers are masked. Values are as printed in the statement on its date.</p>
-      <div class="grid">
-        <div class="wide"><label for="casfile">CAS PDF</label><input id="casfile" type="file" accept="application/pdf"></div>
-        <div class="wide"><label for="caspw">PDF password</label><input id="caspw" type="password" autocomplete="off" spellcheck="false"></div>
-      </div>
-      <div class="row"><button class="quiet" id="casload">Read statement</button><button class="quiet" id="casforget">Clear</button><span id="casmsg" class="hint"></span></div>
-      <div id="casout"></div>
-    </details>
-  </section>
+    </section>
+  </aside>
 
-  <section id="out" aria-live="polite"></section>
-</main>
+  <main class="col">
+    <section class="panel" id="cmdpanel" aria-label="Ask a question">
+      <div class="cmd"><span class="pr" aria-hidden="true">›</span><textarea id="q" aria-label="Ask about a fund, gold, silver or the dollar" placeholder="Ask: 5 year CAGR of Parag Parikh Flexi Cap vs HDFC Flexi Cap"></textarea><button id="go" type="button">Get figures</button></div>
+      <div class="examples">
+        <a class="chip" role="button" tabindex="0" data-q="What is the 3 year CAGR of SBI Small Cap?">3 year CAGR</a>
+        <a class="chip" role="button" tabindex="0" data-q="SIP of Rs 5000 on the 5th in quant small cap for 5 years, what XIRR?">SIP XIRR</a>
+        <a class="chip" role="button" tabindex="0" data-q="Max drawdown of Axis Bluechip since inception">old fund name</a>
+        <a class="chip" role="button" tabindex="0" data-q="Compare 5 year volatility of SBI Small Cap vs Nippon India Small Cap">compare</a>
+        <span class="hint" style="margin:0 0 0 auto"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> run · <kbd>/</kbd> focus · <span id="who"></span></span>
+      </div>
+      <div class="examples recent" id="recent" hidden>Recent:</div>
+    </section>
+    <section class="panel" aria-label="Screener">
+      <div class="hd"><span>SCREENER · RANK FUNDS, EVERY ROW VERIFIED</span><span id="scrcopy"></span></div>
+      <div class="scr">
+        <div><label for="sname">Fund name contains</label><input id="sname" value="small cap" autocomplete="off" spellcheck="false" aria-describedby="shint"></div>
+        <div><label for="smetric">Measure</label><select id="smetric"><option value="cagr">CAGR</option><option value="total_return">Total return</option><option value="volatility">Volatility (lowest first)</option><option value="max_drawdown">Max drawdown</option><option value="sharpe">Sharpe ratio</option><option value="sortino">Sortino ratio</option></select></div>
+        <div><label for="syears">Window</label><select id="syears"><option value="1">1 year</option><option value="3" selected>3 years</option><option value="5">5 years</option><option value="7">7 years</option><option value="10">10 years</option></select></div>
+        <div><label for="stop">Show</label><select id="stop"><option>10</option><option>20</option><option>50</option></select></div>
+        <button id="srun" type="button">Rank</button>
+        <p class="hint sum" id="shint">Chooses funds by the words in their name; the data has no official category. Each figure is computed twice and shown only if both agree.</p>
+      </div>
+      <div id="scrout" aria-live="polite"></div>
+    </section>
+    <section id="out" aria-live="polite"><div class="empty"><b>Ask a question, or click a row in the watchlist.</b>Every figure is computed twice by separate code and shown only if both agree.</div></section>
+    <div id="portfolio"><div id="gout"></div><div id="casout"></div></div>
+  </main>
+
+  <aside class="col right">
+    <section class="panel sticky">
+      <div class="hd"><span>VERIFICATION LEDGER</span><button class="quiet" id="ledclear" type="button">Clear</button></div>
+      <div class="led" id="led"><div class="wnote" id="ledempty" style="border:0">Your questions appear here with their outcome.</div></div>
+      <div class="bd" style="border-top:1px solid var(--rule)">
+        <ul class="rules">
+          <li>Two independent computations per figure; shown only if they agree.</li>
+          <li>If they disagree, or the data cannot support it, the answer is withheld with the reason.</li>
+          <li>The model only plans. It never produces a number.</li>
+          <li>Past figures only. No advice, no predictions.</li>
+        </ul>
+      </div>
+    </section>
+  </aside>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
 <script>
 const $ = id => document.getElementById(id);
-const S = { key: "", lastQ: "", picks: {} };          // key lives here only; never in storage
+const S = { key: "", lastQ: "", picks: {}, recent: [], chart: null, nV: 0, nW: 0 };          // key lives here only; never in storage
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const pct = v => (v < 0 ? "−" : "") + (Math.abs(v) * 100).toFixed(2) + "%";
+const isRatio = m => ["sharpe", "sortino"].includes(m);
+const fmtFact = f => isRatio(f.metric) ? (f.value < 0 ? "−" : "") + Math.abs(f.value).toFixed(2) : pct(f.value);
 const win = f => f.years === "inception" ? "since inception" : `${f.years} year${f.years > 1 ? "s" : ""}`;
 
+/* ---------- theme, toast, health, ripples, spotlight ---------- */
+const root = document.documentElement;
+if (matchMedia("(prefers-color-scheme: light)").matches) root.dataset.theme = "light";   // follows the OS; nothing is stored
+$("theme").onclick = () => {
+  root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+  if (S.chart) redrawChart(false);
+};
+let toastT;
+function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("on"), 1800); }
+async function copy(text, msg){
+  try { await navigator.clipboard.writeText(text); toast(msg || "Copied"); }
+  catch (e) { const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); toast(msg || "Copied"); } catch (_) { toast("Could not copy"); } ta.remove(); }
+}
+fetch("/api/health").then(r => { $("health").classList.add(r.ok ? "on" : "off"); $("healthtxt").textContent = r.ok ? "local server online" : "server problem"; })
+  .catch(() => { $("health").classList.add("off"); $("healthtxt").textContent = "server not reachable"; });
+document.addEventListener("pointerdown", e => {
+  const b = e.target.closest("button:not(.icon)"); if (!b || REDUCED || b.disabled) return;
+  const r = b.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2, s = document.createElement("span");
+  s.className = "ripple"; s.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - r.left - d / 2}px;top:${e.clientY - r.top - d / 2}px`;
+  b.appendChild(s); setTimeout(() => s.remove(), 650);
+});
+document.addEventListener("pointermove", e => { const c = e.target.closest && e.target.closest(".line"); if (!c) return; const r = c.getBoundingClientRect(); c.style.setProperty("--mx", (e.clientX - r.left) + "px"); c.style.setProperty("--my", (e.clientY - r.top) + "px"); });
+document.addEventListener("keydown", e => { if (e.key === "/" && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) { e.preventDefault(); $("q").focus(); } });
+
+/* ---------- key, holdings, CAS (unchanged behaviour) ---------- */
 function who(){
   const k = $("key").value.trim(); S.key = k;
   $("who").textContent = k ? `Planning with ${$("kname").value.trim() || "your key"} · ${$("model").value}` : "Planning with the scripted parser (no key)";
@@ -168,7 +426,7 @@ $("casload").onclick = async () => {
   const inr = x => x == null ? "–" : "Rs " + Math.round(x).toLocaleString("en-IN");
   const p = j.portfolio;
   let h = j.parser_warnings.length ? `<div class="err">The statement parser reported problems; affected figures may be wrong: ${j.parser_warnings.map(esc).join("; ")}</div>` : "";
-  h += `<article class="line"><div class="fund">Your mutual fund portfolio</div><div class="meta">${p.schemes_held} scheme${p.schemes_held === 1 ? "" : "s"} held · value as printed in the statement</div>
+  h += `<article class="line ${p.xirr_status === "VERIFIED" ? "ok" : ""}" style="margin-top:14px"><div class="fund">Your mutual fund portfolio</div><div class="meta">${p.schemes_held} scheme${p.schemes_held === 1 ? "" : "s"} held · value as printed in the statement</div>
         <div class="fig">${inr(p.value)}</div><p>${p.xirr_status === "VERIFIED" ? `Your overall annualised return (XIRR) on these schemes: <b>${(p.xirr*100).toFixed(2)}%</b>, computed twice and checked.` : `Overall XIRR withheld.`} ${esc(p.note)}</p></article>`;
   h += `<table><thead><tr><th>Scheme</th><th style="text-align:right">Units</th><th style="text-align:right">Net invested</th><th style="text-align:right">Value</th><th style="text-align:right">XIRR</th></tr></thead><tbody>` +
     j.schemes.map(x => `<tr><td>${esc(x.name)}<div class="hint">${esc(x.amc)} · folio ${esc(x.folio)}${x.valuation_date ? ` · valued ${esc(x.valuation_date)}` : ""}</div>${x.checks.map(c => `<div class="note">${esc(c)}</div>`).join("")}</td>
@@ -192,82 +450,117 @@ $("list").onclick = async () => {
   $("kmsg").textContent = `${j.models.length} chat models available to this key.`; who();
 };
 
-document.querySelectorAll(".examples a").forEach(a => a.onclick = () => { $("q").value = a.dataset.q; ask(); });
+document.querySelectorAll(".examples a[data-q]").forEach(a => { a.onclick = () => { $("q").value = a.dataset.q; ask(); }; a.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); a.click(); } }; });
 $("go").onclick = () => ask();
 $("q").addEventListener("keydown", e => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) ask(); });
+
+function remember(q){
+  S.recent = [q, ...S.recent.filter(x => x !== q)].slice(0, 5);
+  const box = $("recent"); box.hidden = false;
+  box.innerHTML = "Recent:";
+  S.recent.forEach(x => { const a = document.createElement("a"); a.className = "chip"; a.tabIndex = 0; a.setAttribute("role", "button"); a.textContent = x; a.title = x;
+    a.onclick = () => { $("q").value = x; ask(x); }; a.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); a.click(); } }; box.appendChild(a); });
+}
 
 async function ask(question, keepPicks){
   const q = (question ?? $("q").value).trim();
   if (q.length < 3) { $("q").focus(); return; }
   if (!keepPicks) S.picks = {};
-  S.lastQ = q; $("go").disabled = true; $("out").innerHTML = `<p class="hint">Working…</p>`;
+  S.lastQ = q; $("go").disabled = true; $("go").textContent = "Checking…"; S.chart = null;
+  $("out").innerHTML = `<div class="skel" aria-label="Working"><i style="width:38%"></i><i style="width:24%"></i><i class="big"></i><i style="width:80%"></i><i style="width:62%"></i></div>`;
   try {
     const {ok, j} = await post("/api/ask", {question: q, model: $("model").value, picks: S.picks});
+    if (!keepPicks) remember(q);
     show(ok ? j : {status: "ERROR", error: j.error});
   } catch (e) { show({status: "ERROR", error: "could not reach the local server"}); }
-  finally { $("go").disabled = false; }
+  finally { $("go").disabled = false; $("go").textContent = "Get figures"; }
 }
 
+/* ---------- counting figure + verification ceremony ---------- */
+function countUp(el, target, fmt){
+  if (REDUCED) { el.textContent = fmt(target); return; }
+  const t0 = performance.now(), D = 900;
+  (function step(now){ const k = Math.max(0, Math.min(1, (now - t0) / D)), e = 1 - Math.pow(1 - k, 4); el.textContent = fmt(target * e); if (k < 1) requestAnimationFrame(step); else el.textContent = fmt(target); })(t0);
+}
+function ceremony(card){
+  const lit = (sel, ms) => setTimeout(() => card.querySelectorAll(sel).forEach(e => e.classList.add("lit")), REDUCED ? 0 : ms);
+  lit(".eng.a", 450); lit(".eng.b", 800); lit(".agree", 1150);
+}
+const SEAL_OK = `<svg class="seal" viewBox="0 0 64 64" role="img" aria-label="Verified: both engines agree"><circle class="bg0" cx="32" cy="32" r="26"/><circle class="r" cx="32" cy="32" r="26"/><path d="M20 33l8 8 16-17"/></svg>`;
+const SEAL_HOLD = `<svg class="seal hold" viewBox="0 0 64 64" role="img" aria-label="Withheld"><circle class="bg0" cx="32" cy="32" r="26"/><circle class="r" cx="32" cy="32" r="26"/><path d="M23 23l18 18M41 23L23 41"/></svg>`;
+const ENGINES = `<div class="engines"><span class="eng a"><i>A</i>first computation</span><span class="eng b"><i>B</i>independent computation</span><span class="agree">Agree to 9 digits · shown</span></div>`;
 
-const SERIES = ["#2a78d6", "#eb6834", "#1baf7a"];   // validated: light surface, all pairs (dataviz validator)
+/* ---------- charts ---------- */
 const NS = "http://www.w3.org/2000/svg";
+const PAL = {   // series colours validated per mode with the dataviz validator (3 slots, adjacent CVD pairs)
+  light: {series: ["#2a78d6", "#eb6834", "#1baf7a"], sipRef: "#5C6B78", grid: "#DCE2E8", axis: "#5C6B78", ink: "#1B2733", halo: "#FBFCFE", ref: "#8A97A3", bad: "#9E3A2E", note: "#7A5B12", surface: "#FBFCFE"},
+  dark:  {series: ["#3987e0", "#e0683a", "#1faa78"], sipRef: "#97a3bf", grid: "#27335a", axis: "#97a3bf", ink: "#e9edf7", halo: "#141c33", ref: "#66739a", bad: "#f08573", note: "#e3b55c", surface: "#141c33"}
+};
+const P = () => PAL[root.dataset.theme] || PAL.dark;
 function el(tag, attrs, parent){ const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent && parent.appendChild(e); return e; }
 const fmtVal = (c, v) => c.kind === "sip" ? "Rs " + Math.round(v).toLocaleString("en-IN") : (c.kind === "drawdown" || c.kind === "rolling") ? v.toFixed(2) + "%" : v.toFixed(1);
 const fmtAxis = (c, v) => c.kind === "sip" ? (v >= 1e5 ? (v / 1e5).toFixed(v % 1e5 ? 1 : 0) + " lakh" : Math.round(v / 1000) + "k") : (c.kind === "drawdown" || c.kind === "rolling") ? Math.round(v) + "%" : String(Math.round(v));
 function niceTicks(lo, hi, n){ const raw = (hi - lo) / n, mag = 10 ** Math.floor(Math.log10(raw)), st = [1, 2, 2.5, 5, 10].map(x => x * mag).find(x => raw <= x);
   const a = Math.floor(lo / st) * st, out = []; for (let v = a; v <= hi + st * 1e-9; v += st) out.push(+v.toFixed(10)); return {ticks: out, lo: a, hi: out[out.length - 1]}; }
-const lineColor = (c, i) => c.kind === "sip" && i === 1 ? "#5C6B78" : SERIES[i];
+const lineColor = (c, i) => c.kind === "sip" && i === 1 ? P().sipRef : P().series[i];
 const niceDate = s => new Date(s + "T00:00:00").toLocaleDateString("en-IN", {day:"numeric", month:"short", year:"numeric"});
+const FONT = "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
 
-function drawChart(c, host){
+function redrawChart(animate){ const h = $("chartHost"); if (!h || !S.chart) return; h.innerHTML = ""; try { drawChart(S.chart, h, animate); } catch (e) { h.innerHTML = `<p class="hint">Chart could not be drawn: ${esc(e.message)}</p>`; } }
+let rzT; addEventListener("resize", () => { clearTimeout(rzT); rzT = setTimeout(() => redrawChart(false), 160); });
+
+function drawChart(c, host, animate = true){
+  const T = P(), hidden = new Set();
   const title = c.kind === "indexed" ? (c.series.length > 1 ? "Growth of each fund, same start = 100" : "NAV growth, start = 100")
               : c.kind === "drawdown" ? "Fall from previous high" : c.kind === "rolling" ? "Rolling returns: each period's yearly return, by when it ended" : "SIP: value against amount invested";
   const box = document.createElement("div"); box.className = "chart"; host.appendChild(box);
-  box.innerHTML = `<h2>${title}</h2><p class="sub">${niceDate(c.start)} to ${niceDate(c.end)} · ${esc(c.unit)} · drawn from the same adjusted NAVs; the checked figures are in the cards above.</p>`;
-  if (c.series.length > 1) box.insertAdjacentHTML("beforeend", `<div class="legend">${c.series.map((s,i) => `<span><i style="background:${c.kind === "sip" && i === 1 ? "repeating-linear-gradient(90deg,#5C6B78 0 5px,transparent 5px 9px)" : SERIES[i]}"></i>${esc(s.name)}</span>`).join("")}</div>`);
-  const W = Math.max(320, Math.round(box.clientWidth - 36)), narrow = W < 560, H = narrow ? 240 : 300;
+  box.innerHTML = `<h2>${title}</h2><p class="sub">${niceDate(c.start)} to ${niceDate(c.end)} · ${esc(c.unit)} · drawn from the same adjusted NAVs; the checked figures are in the cards above.</p>
+    <div class="chartacts"><button class="quiet" type="button" data-png style="padding:5px 10px;font-size:.82rem">Save PNG</button></div>`;
+  if (c.series.length > 1) box.insertAdjacentHTML("beforeend", `<div class="legend">${c.series.map((s,i) => `<button type="button" aria-pressed="true" data-i="${i}"><i style="background:${c.kind === "sip" && i === 1 ? `repeating-linear-gradient(90deg,${T.sipRef} 0 5px,transparent 5px 9px)` : T.series[i]}"></i>${esc(s.name)}</button>`).join("")}</div>`);
+  const W = Math.max(320, Math.round(box.clientWidth - 40)), narrow = W < 560, H = narrow ? 240 : 310;
   const m = {l: c.kind === "sip" ? 62 : 46, r: c.series.length > 1 && !narrow ? 140 : 14, t: 22, b: 30};
-  const svg = el("svg", {viewBox:`0 0 ${W} ${H}`, role:"img", "aria-label": title}, box);
+  const svg = el("svg", {viewBox:`0 0 ${W} ${H}`, role:"img", "aria-label": title, "font-family": FONT}, box);
   const t0 = Date.parse(c.start), t1 = Date.parse(c.end) || t0 + 1;
   const all = c.series.flatMap(s => s.values); let lo = Math.min(...all), hi = Math.max(...all);
   if (c.kind === "drawdown") hi = 0; if (c.kind === "sip") lo = 0; if (c.kind === "indexed") { lo = Math.min(lo, 100); hi = Math.max(hi, 100); }
   const nt = niceTicks(lo, hi, narrow ? 3 : 4); lo = nt.lo; hi = Math.max(nt.hi, hi);
   const X = t => m.l + (t - t0) / (t1 - t0) * (W - m.l - m.r), Y = v => m.t + (hi - v) / (hi - lo) * (H - m.t - m.b);
-  const g = el("g", {}, svg);
-  // recessive grid + y labels
+  const defs = el("defs", {}, svg), cp = el("clipPath", {id: "reveal"}, defs), cr = el("rect", {x:0, y:0, width: animate && !REDUCED ? 0 : W, height:H}, cp);
+  const g = el("g", {}, svg), plot = el("g", {"clip-path": "url(#reveal)"}, svg);
   for (const v of nt.ticks) { const y = Y(v);
-    el("line", {x1:m.l, x2:W-m.r, y1:y, y2:y, stroke:"#DCE2E8", "stroke-width":1}, g);
-    const tx = el("text", {x:m.l-8, y:y+4, "text-anchor":"end", "font-size":11, fill:"#5C6B78"}, g); tx.textContent = fmtAxis(c, v); }
-  if (c.kind === "rolling" && lo < 0 && hi > 0) { const y = Y(0); el("line", {x1:m.l, x2:W-m.r, y1:y, y2:y, stroke:"#8A97A3", "stroke-width":1, "stroke-dasharray":"3 3"}, g); }
-  if (c.kind === "indexed") { const y = Y(100); el("line", {x1:m.l, x2:W-m.r, y1:y, y2:y, stroke:"#8A97A3", "stroke-width":1, "stroke-dasharray":"3 3"}, g); }
-  // x labels: years
+    el("line", {x1:m.l, x2:W-m.r, y1:y, y2:y, stroke:T.grid, "stroke-width":1}, g);
+    const tx = el("text", {x:m.l-8, y:y+4, "text-anchor":"end", "font-size":11, fill:T.axis}, g); tx.textContent = fmtAxis(c, v); }
+  if (c.kind === "rolling" && lo < 0 && hi > 0) { const y = Y(0); el("line", {x1:m.l, x2:W-m.r, y1:y, y2:y, stroke:T.ref, "stroke-width":1, "stroke-dasharray":"3 3"}, g); }
+  if (c.kind === "indexed") { const y = Y(100); el("line", {x1:m.l, x2:W-m.r, y1:y, y2:y, stroke:T.ref, "stroke-width":1, "stroke-dasharray":"3 3"}, g); }
   const y0 = new Date(t0).getFullYear(), y1 = new Date(t1).getFullYear(), stepY = Math.max(1, Math.ceil((y1 - y0 + 1) / 7));
   for (let yr = y0 + 1; yr <= y1; yr += stepY) { const t = Date.parse(`${yr}-01-01`); if (t <= t0 || t >= t1) continue;
-    const tx = el("text", {x:X(t), y:H-10, "text-anchor":"middle", "font-size":11, fill:"#5C6B78"}, g); tx.textContent = yr; }
-  if (y0 === y1 || (y1 - y0) < 1) { [t0, t1].forEach((t,i) => { const tx = el("text", {x:X(t), y:H-10, "text-anchor":i?"end":"start", "font-size":11, fill:"#5C6B78"}, g); tx.textContent = niceDate(new Date(t).toISOString().slice(0,10)); }); }
-  // series
+    const tx = el("text", {x:X(t), y:H-10, "text-anchor":"middle", "font-size":11, fill:T.axis}, g); tx.textContent = yr; }
+  if (y0 === y1 || (y1 - y0) < 1) { [t0, t1].forEach((t,i) => { const tx = el("text", {x:X(t), y:H-10, "text-anchor":i?"end":"start", "font-size":11, fill:T.axis}, g); tx.textContent = niceDate(new Date(t).toISOString().slice(0,10)); }); }
+  const groups = [];
   c.series.forEach((s, i) => {
+    const sg = el("g", {style: "transition:opacity .25s"}, plot); groups.push(sg);
     const pts = s.dates.map((d, k) => [X(Date.parse(d)), Y(s.values[k])]);
     const dpath = pts.map((p, k) => (k ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join("");
-    if (c.kind === "drawdown") el("path", {d: dpath + `L${pts[pts.length-1][0]} ${Y(0)}L${pts[0][0]} ${Y(0)}Z`, fill: SERIES[0], "fill-opacity": .12}, g);
-    el("path", {d: dpath, fill:"none", stroke: lineColor(c, i), "stroke-width":2, "stroke-linejoin":"round", "stroke-dasharray": c.kind === "sip" && i === 1 ? "5 4" : "none"}, g);
-    if (c.series.length > 1 && !narrow) { const p = pts[pts.length-1]; const tx = el("text", {x:p[0]+6, y:p[1]+4, "font-size":11, fill:"#1B2733", class:"lab"}, g);
+    if (c.kind === "drawdown") el("path", {d: dpath + `L${pts[pts.length-1][0]} ${Y(0)}L${pts[0][0]} ${Y(0)}Z`, fill: T.series[0], "fill-opacity": .16}, sg);
+    el("path", {d: dpath, fill:"none", stroke: lineColor(c, i), "stroke-width":2.2, "stroke-linejoin":"round", "stroke-dasharray": c.kind === "sip" && i === 1 ? "5 4" : "none"}, sg);
+    if (c.series.length > 1 && !narrow) { const p = pts[pts.length-1]; const tx = el("text", {x:p[0]+6, y:p[1]+4, "font-size":11, fill:T.ink, stroke:T.halo, "stroke-width":4, "paint-order":"stroke", "stroke-linejoin":"round"}, sg);
       tx.textContent = (c.kind === "sip" ? s.name : s.name.split(" - ")[0].replace(/ Fund$/, "")).slice(0, 24); }
-    // flagged dates: small ticks on the baseline
-    s.excluded.forEach(d => el("path", {d:`M${X(Date.parse(d))} ${H-m.b} l-4 7 h8 z`, fill:"#9E3A2E"}, g));
-    s.large_moves.forEach(d => el("line", {x1:X(Date.parse(d)), x2:X(Date.parse(d)), y1:H-m.b, y2:H-m.b+6, stroke:"#7A5B12", "stroke-width":2}, g));
+    s.excluded.forEach(d => el("path", {d:`M${X(Date.parse(d))} ${H-m.b} l-4 7 h8 z`, fill:T.bad}, g));
+    s.large_moves.forEach(d => el("line", {x1:X(Date.parse(d)), x2:X(Date.parse(d)), y1:H-m.b, y2:H-m.b+6, stroke:T.note, "stroke-width":2}, g));
   });
   if (c.marks) { [["peak", c.marks.peak], ["low", c.marks.trough]].forEach(([lab, d]) => {
       const s = c.series[0], k = s.dates.indexOf(d); if (k < 0) return; const x = X(Date.parse(d)), y = Y(s.values[k]);
-      el("circle", {cx:x, cy:y, r:4.5, fill:"#fff", stroke:"#1B2733", "stroke-width":2}, g);
-      const tx = lab === "peak" ? el("text", {x:x-9, y:y+16, "text-anchor":"end", "font-size":11, fill:"#1B2733", class:"lab"}, g)
-                                : el("text", {x:x+9, y:y+4, "text-anchor":"start", "font-size":11, fill:"#1B2733", class:"lab"}, g);
+      el("circle", {cx:x, cy:y, r:4.5, fill:T.surface, stroke:T.ink, "stroke-width":2}, plot);
+      const base = {"font-size":11, fill:T.ink, stroke:T.halo, "stroke-width":4, "paint-order":"stroke", "stroke-linejoin":"round"};
+      const tx = lab === "peak" ? el("text", {...base, x:x-9, y:y+16, "text-anchor":"end"}, plot) : el("text", {...base, x:x+9, y:y+4, "text-anchor":"start"}, plot);
       tx.textContent = `${lab} ${niceDate(d)}`; }); }
   const flags = c.series.some(s => s.excluded.length || s.large_moves.length);
-  if (flags) box.insertAdjacentHTML("beforeend", `<p class="sub">Marks on the bottom edge: <span style="color:#9E3A2E">▲</span> NAV left out as a suspected bad value · <span style="color:#7A5B12">|</span> large move flagged by the data checks.</p>`);
+  if (flags) box.insertAdjacentHTML("beforeend", `<p class="sub">Marks on the bottom edge: <span style="color:${T.bad}">▲</span> NAV left out as a suspected bad value · <span style="color:${T.note}">|</span> large move flagged by the data checks.</p>`);
+  // reveal sweep
+  if (animate && !REDUCED) { const t00 = performance.now(); (function s(now){ const k = Math.max(0, Math.min(1, (now - t00) / 1000)); cr.setAttribute("width", W * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(s); else cr.setAttribute("width", W); })(t00); }
   // crosshair + tooltip
-  const cross = el("line", {y1:m.t, y2:H-m.b, stroke:"#1B2733", "stroke-width":1, opacity:0}, g);
-  const dots = c.series.map((s,i) => el("circle", {r:4, fill: lineColor(c, i), stroke:"#fff", "stroke-width":2, opacity:0}, g));
+  const cross = el("line", {y1:m.t, y2:H-m.b, stroke:T.ink, "stroke-width":1, opacity:0}, g);
+  const dots = c.series.map((s,i) => el("circle", {r:4.5, fill: lineColor(c, i), stroke:T.surface, "stroke-width":2, opacity:0}, g));
   const tip = document.createElement("div"); tip.className = "tip"; box.appendChild(tip);
   const hit = el("rect", {x:m.l, y:m.t, width:W-m.l-m.r, height:H-m.t-m.b, fill:"transparent"}, svg);
   const ts = c.series.map(s => s.dates.map(d => Date.parse(d)));
@@ -275,47 +568,69 @@ function drawChart(c, host){
     const r = svg.getBoundingClientRect(), px = (ev.clientX - r.left) * W / r.width, t = t0 + (px - m.l) / (W - m.l - m.r) * (t1 - t0);
     let rows = [], cx = null;
     c.series.forEach((s, i) => { const a = ts[i]; let lo2 = 0, hi2 = a.length - 1; while (hi2 - lo2 > 1) { const mid = (lo2 + hi2) >> 1; (a[mid] < t ? lo2 = mid : hi2 = mid); }
-      const k = Math.abs(a[lo2] - t) < Math.abs(a[hi2] - t) ? lo2 : hi2; cx ??= X(a[k]);
+      const k = Math.abs(a[lo2] - t) < Math.abs(a[hi2] - t) ? lo2 : hi2;
+      if (hidden.has(i)) { dots[i].setAttribute("opacity", 0); return; }
+      cx ??= X(a[k]);
       dots[i].setAttribute("cx", X(a[k])); dots[i].setAttribute("cy", Y(s.values[k])); dots[i].setAttribute("opacity", 1);
       rows.push(`<div>${c.series.length > 1 ? `<span style="color:${lineColor(c, i)}">●</span> ${esc(s.name.split(" - ")[0])}: ` : ""}<b>${fmtVal(c, s.values[k])}</b></div>`);
-      if (i === 0) rows.unshift(`<div class="hint">${niceDate(s.dates[k])}</div>`); });
-    cross.setAttribute("x1", cx); cross.setAttribute("x2", cx); cross.setAttribute("opacity", .35);
+      if (rows.length === 1) rows.unshift(`<div class="hint" style="margin:0">${niceDate(s.dates[k])}</div>`); });
+    if (cx == null) return;
+    cross.setAttribute("x1", cx); cross.setAttribute("x2", cx); cross.setAttribute("opacity", .4);
     tip.innerHTML = rows.join(""); tip.style.display = "block";
     const bx = box.getBoundingClientRect(), left = ev.clientX - bx.left + 14;
-    tip.style.left = Math.min(left, bx.width - tip.offsetWidth - 8) + "px"; tip.style.top = (ev.clientY - bx.top - 10) + "px";
+    tip.style.left = Math.max(8, Math.min(left, bx.width - tip.offsetWidth - 8)) + "px"; tip.style.top = (ev.clientY - bx.top - 10) + "px";
   }
   hit.addEventListener("pointermove", move); hit.addEventListener("pointerleave", () => { tip.style.display = "none"; cross.setAttribute("opacity", 0); dots.forEach(d => d.setAttribute("opacity", 0)); });
-  // table view (accessibility and exact values); thinned to about 24 rows
+  // legend: hover isolates a series, click hides or shows it
+  box.querySelectorAll(".legend button").forEach(b => { const i = +b.dataset.i;
+    b.addEventListener("mouseenter", () => groups.forEach((gg, k) => { if (!hidden.has(k)) gg.style.opacity = k === i ? 1 : .18; }));
+    b.addEventListener("mouseleave", () => groups.forEach((gg, k) => gg.style.opacity = hidden.has(k) ? 0 : 1));
+    b.addEventListener("click", () => { hidden.has(i) ? hidden.delete(i) : hidden.add(i); b.setAttribute("aria-pressed", String(!hidden.has(i))); groups.forEach((gg, k) => gg.style.opacity = hidden.has(k) ? 0 : 1); if (hidden.size === c.series.length) { hidden.clear(); box.querySelectorAll(".legend button").forEach(x => x.setAttribute("aria-pressed", "true")); groups.forEach(gg => gg.style.opacity = 1); } });
+  });
+  // save as PNG: draws the live SVG onto a canvas with the theme background
+  box.querySelector("[data-png]").onclick = () => {
+    const xml = new XMLSerializer().serializeToString(svg), img = new Image(), sc = 2;
+    img.onload = () => { const cv = document.createElement("canvas"); cv.width = W * sc; cv.height = (H + 36) * sc; const x = cv.getContext("2d");
+      x.scale(sc, sc); x.fillStyle = T.surface; x.fillRect(0, 0, W, H + 36); x.fillStyle = T.ink; x.font = `600 14px ${FONT}`; x.fillText(title, 12, 22); x.drawImage(img, 0, 30, W, H);
+      cv.toBlob(b => { const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = "imap-chart.png"; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); toast("Chart saved"); }); };
+    img.onerror = () => toast("Could not save the chart");
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(xml);
+  };
   const s0 = c.series[0], every = Math.max(1, Math.floor(s0.dates.length / 24)), rowsIdx = s0.dates.map((_, k) => k).filter(k => k % every === 0 || k === s0.dates.length - 1);
   box.insertAdjacentHTML("beforeend", `<details><summary>Show as a table</summary><table><thead><tr><th>Date</th>${c.series.map(s => `<th style="text-align:right">${esc(s.name.split(" - ")[0])}</th>`).join("")}</tr></thead><tbody>` +
     rowsIdx.map(k => `<tr><td>${esc(s0.dates[k])}</td>${c.series.map(s => { const j = s.dates.indexOf(s0.dates[k]); return `<td class="n">${j < 0 ? "–" : fmtVal(c, s.values[j])}</td>`; }).join("")}</tr>`).join("") + `</tbody></table></details>`);
 }
 
+/* ---------- results ---------- */
 function show(r){
+  ledger(r);
   const o = $("out"); o.classList.remove("fresh"); void o.offsetWidth; o.classList.add("fresh");
   let h = r.notice ? `<div class="banner">${esc(r.notice)}</div>` : "";
   if (r.status === "ERROR" || r.status === "NOPLAN") h += `<div class="err">${esc(r.error)}</div>`;
-  if (r.status === "WITHHELD") h += `<div class="err">Withheld: ${esc(r.reason)}</div>`;
+  if (r.status === "WITHHELD") h += `<article class="line hold"><div class="top"><div><div class="fund">Withheld</div><div class="meta">Nothing is shown when it can't be checked.</div></div>${SEAL_HOLD}</div><p style="margin-top:14px">${esc(r.reason)}</p></article>`;
   if (r.status === "NOTICE_ONLY") h += `<p>Name a fund if you'd like its past figures.</p>`;
   if (r.status === "CLARIFY") {
     const c = r.clarify;
     h += `<p>“${esc(c.query)}” matches more than one fund. Which one did you mean?</p><div class="choices">` +
-      c.candidates.map(x => `<button class="quiet" data-pick="${x.code}" data-query="${esc(c.query)}">${esc(x.name)} · ${x.code}</button>`).join("") + `</div>`;
+      c.candidates.map(x => `<button class="quiet" type="button" data-pick="${x.code}" data-query="${esc(c.query)}">${esc(x.name)} · ${x.code}</button>`).join("") + `</div>`;
   }
   if (r.status === "ASK") {
-    h += `<p>Which measure do you mean?</p><div class="choices">` + r.ask.map(x => `<button class="quiet" data-metric="${esc(x.label)}">${esc(x.label)}</button>`).join("") + `</div>`;
+    h += `<p>Which measure do you mean?</p><div class="choices">` + r.ask.map(x => `<button class="quiet" type="button" data-metric="${esc(x.label)}">${esc(x.label)}</button>`).join("") + `</div>`;
   }
   if (r.status === "ANSWERED") {
-    for (const f of r.facts) {
+    r.facts.forEach((f, i) => {
       const dir = f.metric === "volatility" ? "" : f.value > 0 ? "up" : f.value < 0 ? "down" : "";
-      h += `<article class="line"><div class="fund">${esc(f.fund)}</div>
-        <div class="meta">${esc(f.label)} · ${win(f)}${f.start ? ` · ${esc(f.start)} to ${esc(f.end)}` : ""} · scheme ${f.code}</div>
-        <div class="fig ${dir}">${pct(f.value)}</div><p>${esc(f.sentence.startsWith(f.fund + ": ") ? f.sentence.slice(f.fund.length + 2).replace(/^./, c => c.toUpperCase()) : f.sentence)}</p>
-        ${f.notes.map(n => `<p class="note">${esc(n)}</p>`).join("")}</article>`;
-    }
+      const sentence = f.sentence.startsWith(f.fund + ": ") ? f.sentence.slice(f.fund.length + 2).replace(/^./, c => c.toUpperCase()) : f.sentence;
+      h += `<article class="line ok" data-fact="${i}"><div class="top"><div><div class="fund">${esc(f.fund)}</div>
+        <div class="meta">${esc(f.label)} · ${win(f)}${f.start ? ` · ${esc(f.start)} to ${esc(f.end)}` : ""} · ${f.code < 0 ? "RBI series" : "scheme " + f.code}</div></div>${SEAL_OK}</div>
+        <div class="fig ${dir}" data-v="${f.value}">${fmtFact(f)}</div><p>${esc(sentence)}</p>
+        ${f.notes.map(n => `<p class="note">${esc(n)}</p>`).join("")}${ENGINES}
+        <div class="acts"><button class="quiet" type="button" data-copyfact="${i}">Copy answer</button><button class="quiet" type="button" data-again="${i}">Ask about this fund again</button>${f.code > 0 ? `<button class="quiet" type="button" data-pin="${i}">Pin to watchlist</button><button class="quiet" type="button" data-est="${i}" title="A model estimate, shown separately from the verified figures">Volatility estimate (model)</button>` : ""}</div></article>`;
+    });
     if (r.ranking && r.ranking.length) {
-      h += `<table><caption class="hint" style="text-align:left">Ordered from highest to lowest value</caption><thead><tr><th>Fund</th><th style="text-align:right">Value</th></tr></thead><tbody>` +
-        r.ranking.map(x => `<tr><td>${esc(x.fund)}</td><td class="n">${["sharpe", "sortino"].includes(r.facts[0].metric) ? x.value.toFixed(2) : pct(x.value)}</td></tr>`).join("") + `</tbody></table>`;
+      const ratio = isRatio(r.facts[0].metric), fm = v => ratio ? (v < 0 ? "−" : "") + Math.abs(v).toFixed(2) : pct(v), mx = Math.max(...r.ranking.map(x => Math.abs(x.value))) || 1;
+      h += `<div class="tablebox"><div class="hd"><h2>Ranking</h2><button class="quiet" type="button" data-copyrank style="padding:5px 10px;font-size:.82rem">Copy as CSV</button></div><table class="rank"><caption class="hint" style="text-align:left;caption-side:top">Ordered from highest to lowest value</caption><thead><tr><th>Fund</th><th></th><th style="text-align:right">Value</th></tr></thead><tbody>` +
+        r.ranking.map((x, k) => `<tr><td>${esc(x.fund)}</td><td class="meter"><i class="${x.value < 0 ? "neg" : ""}" style="width:${(Math.abs(x.value) / mx * 100).toFixed(1)}%;animation-delay:${(k * 70)}ms"></i></td><td class="n">${fm(x.value)}</td></tr>`).join("") + `</tbody></table></div>`;
     }
     h += `<div id="chartHost"></div>`;
     h += `<p class="matched">Matched: ${r.facts.map(f => `${esc(f.fund)} (${f.code < 0 ? "RBI series" : "scheme " + f.code})`).join("; ")}. Check these are what you meant.</p>`;
@@ -323,12 +638,137 @@ function show(r){
       r.glossary.entries.map(g => `<dt>${esc(g.label)}</dt><dd>${esc(g.text)}</dd>`).join("") + `</dl><p class="hint">Glossary version ${esc(r.glossary.version)}</p></div>`;
   }
   if (r.warning) h += `<p class="warn">${esc(r.warning)}</p>`;
-  if (r.plan || r.planner) h += `<details class="how"><summary>How this was answered</summary><p class="hint">Planned by: ${esc(r.planner)}. The plan below was checked by code; every figure was computed twice by separate code and only shown when both agreed.</p><pre>${esc(JSON.stringify(r.plan, null, 1))}</pre></details>`;
+  if (r.plan || r.planner) h += `<details class="how"><summary>How this was checked</summary>
+    <div class="steps"><div class="st"><b>1 · Plan</b><span>${esc(r.planner)} turns the question into a plan</span></div><div class="st"><b>2 · Validate</b><span>Code checks the plan against what the data can answer</span></div><div class="st"><b>3 · Compute twice</b><span>Two separate pieces of code work out each figure</span></div><div class="st"><b>4 · Compare</b><span>Shown only if they agree; otherwise withheld</span></div></div>
+    <p class="hint">Planned by: ${esc(r.planner)}. The plan below was checked by code; every figure was computed twice by separate code and only shown when both agreed.</p><pre>${esc(JSON.stringify(r.plan, null, 1))}</pre></details>`;
   o.innerHTML = h;
-  if (r.chart) { try { drawChart(r.chart, $("chartHost")); } catch (e) { $("chartHost").innerHTML = `<p class="hint">Chart could not be drawn: ${esc(e.message)}</p>`; } }
+  if (r.chart) { S.chart = r.chart; redrawChart(true); }
+  o.querySelectorAll(".line.ok[data-fact]").forEach(ceremony);
+  o.querySelectorAll(".fig[data-v]").forEach(e => { const f = r.facts[+e.closest("[data-fact]").dataset.fact]; countUp(e, f.value, v => fmtFact({metric: f.metric, value: v})); });
+  o.querySelectorAll("[data-copyfact]").forEach(b => b.onclick = () => { const f = r.facts[+b.dataset.copyfact];
+    copy(`${f.fund}: ${f.label}, ${win(f)}${f.start ? ` (${f.start} to ${f.end})` : ""} = ${fmtFact(f)}. Computed twice by independent code and checked. Past figure, not advice.`, "Answer copied"); });
+  o.querySelectorAll("[data-again]").forEach(b => b.onclick = () => { const f = r.facts[+b.dataset.again]; $("q").value = `${f.label} of ${f.fund}`; $("q").focus(); window.scrollTo({top: 0, behavior: "smooth"}); });
+  o.querySelectorAll("[data-pin]").forEach(b => b.onclick = () => { const f = r.facts[+b.dataset.pin];
+    if (WATCH.some(w => w.name === f.fund)) { toast("Already on the watchlist"); return; }
+    WATCH.push({name: f.fund, sub: "Pinned", q: `1 year CAGR of ${f.fund}`, pinned: true}); toast("Pinned until you close this page"); loadWatch(); });
+  o.querySelectorAll("[data-est]").forEach(b => b.onclick = async () => { const f = r.facts[+b.dataset.est], card = b.closest("article");
+    const old = card.nextElementSibling; if (old && old.classList.contains("est")) { old.remove(); return; }
+    b.disabled = true; const box = document.createElement("div"); box.className = "est"; box.innerHTML = `<span class="tg">MODEL ESTIMATE · NOT VERIFIED</span><p class="hint">Fitting the model…</p>`; card.after(box);
+    try { const x = await fetch("/api/estimate", {method: "POST", headers: {"Content-Type": "application/json", "X-IMAP-Client": "1"}, body: JSON.stringify({code: f.code})});
+      const j = await x.json().catch(() => ({}));
+      if (!x.ok) box.innerHTML = `<span class="tg">MODEL ESTIMATE · NOT VERIFIED</span><p>${esc(j.error || "could not get an estimate")}</p>`;
+      else if (j.status !== "ESTIMATE") box.innerHTML = `<span class="tg">MODEL ESTIMATE · NOT PROVIDED</span><p>${esc(j.reason)}</p>`;
+      else box.innerHTML = `<span class="tg">MODEL ESTIMATE · NOT VERIFIED</span><div class="meta" style="margin-top:8px">Expected volatility of ${esc(f.fund)} over the next ${j.horizon_days} trading days (annualised)</div>
+        <div class="big">${(j.garch * 100).toFixed(1)}%</div>
+        <div class="cmp"><span>Simple moving estimate (EWMA)<b>${(j.ewma * 100).toFixed(1)}%</b></span><span>Last 21 days, realised<b>${(j.trailing_21 * 100).toFixed(1)}%</b></span><span>Model memory<b>${j.persistence.toFixed(2)}</b></span></div>
+        <p class="note" style="margin:0 0 6px">${esc(j.label)} It is one model's output, not checked by a second engine, and it is not a forecast of returns.</p><p class="hint" style="margin:0">${esc(j.backtest)} Fitted on ${j.n_returns} daily returns to ${esc(j.fit_end)}.</p>`;
+    } catch (e) { box.innerHTML = `<p>could not reach the local server</p>`; }
+    b.disabled = false; });
+  o.querySelectorAll("[data-copyrank]").forEach(b => b.onclick = () => copy("fund,value\n" + r.ranking.map(x => `"${String(x.fund).replace(/"/g, '""')}",${x.value}`).join("\n"), "Ranking copied"));
   o.querySelectorAll("[data-pick]").forEach(b => b.onclick = () => { S.picks[b.dataset.query.toLowerCase()] = +b.dataset.pick; ask(S.lastQ, true); });
   o.querySelectorAll("[data-metric]").forEach(b => b.onclick = () => { const q = `${S.lastQ} Use ${b.dataset.metric}.`; $("q").value = q; ask(q); });
+  if ((r.status === "ANSWERED" || r.status === "WITHHELD") && o.getBoundingClientRect().top > innerHeight * 0.6) o.scrollIntoView({behavior: REDUCED ? "auto" : "smooth", block: "start"});
 }
+
+/* ---------- terminal furniture: counters, clock, ledger, watchlist, ticker ---------- */
+const bump = () => { $("cntV").textContent = S.nV; $("cntW").textContent = S.nW; };
+const tick = () => { $("clock").textContent = new Date().toLocaleTimeString("en-IN", {hour:"2-digit", minute:"2-digit", second:"2-digit"}) + " local"; };
+tick(); setInterval(tick, 1000);
+$("ledclear").onclick = () => { $("led").innerHTML = `<div class="wnote" id="ledempty" style="border:0">Your questions appear here with their outcome.</div>`; };
+function ledgerRaw(cls, label, q){
+  const e = document.createElement("div"); e.className = "le new"; e.tabIndex = 0;
+  e.innerHTML = `<div class="t"><span class="tag ${cls}">${label}</span><span>${new Date().toLocaleTimeString("en-IN", {hour:"2-digit", minute:"2-digit", second:"2-digit"})}</span></div><div class="q">${esc(q)}</div>`;
+  e.onclick = () => $("srun").click(); e.onkeydown = ev => { if (ev.key === "Enter") e.click(); };
+  const em = $("ledempty"); if (em) em.remove(); $("led").prepend(e);
+}
+function ledger(r){
+  const st = r.status === "ANSWERED" ? ["v", "VERIFIED"] : r.status === "WITHHELD" ? ["w", "WITHHELD"] : r.status === "CLARIFY" || r.status === "ASK" ? ["o", "CLARIFY"] : ["o", r.status === "ERROR" || r.status === "NOPLAN" ? "NO ANSWER" : r.status];
+  if (r.status === "ANSWERED") S.nV += r.facts.length; if (r.status === "WITHHELD") S.nW++; bump();
+  if (r.status === "CLARIFY" || r.status === "ASK") return;      // the follow-up carries the outcome
+  const e = document.createElement("div"); e.className = "le new"; e.tabIndex = 0; e.title = "Run again";
+  const q = S.lastQ, t = new Date().toLocaleTimeString("en-IN", {hour:"2-digit", minute:"2-digit", second:"2-digit"});
+  e.innerHTML = `<div class="t"><span class="tag ${st[0]}">${st[1]}</span><span>${t}</span></div><div class="q">${esc(q)}</div>`;
+  e.onclick = () => { $("q").value = q; ask(q); };
+  e.onkeydown = ev => { if (ev.key === "Enter") e.click(); };
+  const led = $("led"); const em = $("ledempty"); if (em) em.remove(); led.prepend(e);
+}
+
+/* ---------- screener ---------- */
+const SM = {cagr: "CAGR", total_return: "total return", volatility: "volatility", max_drawdown: "max drawdown", sharpe: "Sharpe ratio", sortino: "Sortino ratio"};
+async function runScreen(){
+  const text = $("sname").value.trim(), metric = $("smetric").value, years = +$("syears").value, top = +$("stop").value, o = $("scrout");
+  if (text.length < 2) { $("sname").focus(); return; }
+  $("srun").disabled = true; $("srun").textContent = "Ranking…"; o.innerHTML = `<div class="skel" style="margin:4px 0 12px"><i style="width:50%"></i><i style="width:80%"></i><i style="width:65%"></i></div>`;
+  try {
+    const r = await fetch("/api/screen", {method: "POST", headers: {"Content-Type": "application/json", "X-IMAP-Client": "1"}, body: JSON.stringify({text, metric, years, top})});
+    const j = await r.json().catch(() => ({error: `server returned ${r.status}`}));
+    if (!r.ok) { o.innerHTML = `<div class="err" style="margin-bottom:12px">${esc(j.error)}</div>`; return; }
+    if (j.status === "NONE") { o.innerHTML = `<p class="hint" style="margin-bottom:12px">${esc(j.reason)}</p>`; return; }
+    S.nV += j.verified; S.nW += j.withheld; bump();
+    const fm = v => isRatio(metric) ? (v < 0 ? "−" : "") + Math.abs(v).toFixed(2) : pct(v), mx = Math.max(...j.rows.map(x => Math.abs(x.value)), 1e-12);
+    const left = [j.too_short ? `${j.too_short} too new for a ${years}-year window` : "", j.not_updated ? `${j.not_updated} not updated recently` : "", j.withheld ? `${j.withheld} withheld by the checks` : ""].filter(Boolean).join(" · ");
+    o.innerHTML = `<p class="hint" style="margin:0 0 6px"><b>${j.verified}</b> of ${j.matched} funds ranked by ${SM[metric]}, ${years} years, ${j.order}${left ? ` (${esc(left)})` : ""}. Click a row for the full answer and chart.</p>
+      <table class="rank"><thead><tr><th></th><th>Fund</th><th></th><th style="text-align:right">${SM[metric]}</th></tr></thead><tbody>` +
+      j.rows.map((x, k) => `<tr tabindex="0" data-name="${esc(x.fund)}"><td class="rk">${x.rank}</td><td title="${esc(x.fund)}">${esc(x.fund)}</td><td class="meter"><i class="${x.value < 0 ? "neg" : ""}" style="width:${(Math.abs(x.value) / mx * 100).toFixed(1)}%;animation-delay:${k * 40}ms"></i></td><td class="n">${fm(x.value)}</td></tr>`).join("") +
+      `</tbody></table><p class="hint" style="margin:0 0 10px">As of ${esc(j.rows[0] ? j.rows[0].end : "")}. ${esc(j.note)}</p>`;
+    $("scrcopy").innerHTML = `<button class="quiet" type="button" id="scrcsv">Copy as CSV</button>`;
+    $("scrcsv").onclick = () => copy("rank,fund,value,start,end\n" + j.rows.map(x => `${x.rank},"${String(x.fund).replace(/"/g, '""')}",${x.value},${x.start},${x.end}`).join("\n"), "Screen copied");
+    o.querySelectorAll("tbody tr").forEach(tr => { const go = () => { const q = `${years} year ${SM[metric]} of ${tr.dataset.name}`; $("q").value = q; ask(q); }; tr.onclick = go; tr.onkeydown = e => { if (e.key === "Enter") go(); }; });
+    ledgerRaw("v", "VERIFIED", `Screen: ${text} · ${SM[metric]} ${years}y`);
+  } catch (e) { o.innerHTML = `<div class="err" style="margin-bottom:12px">could not reach the local server</div>`; }
+  finally { $("srun").disabled = false; $("srun").textContent = "Rank"; }
+}
+$("srun").onclick = runScreen;
+$("sname").addEventListener("keydown", e => { if (e.key === "Enter") runScreen(); });
+
+const WATCH = [
+  {name: "Gold", sub: "RBI Mumbai, monthly avg", q: "1 year CAGR of gold"},
+  {name: "Silver", sub: "RBI Mumbai, monthly avg", q: "1 year CAGR of silver"},
+  {name: "USD/INR", sub: "RBI reference rate", q: "1 year CAGR of USD/INR"},
+  {name: "SBI Small Cap", sub: "Direct Growth", q: "1 year CAGR of SBI Small Cap"},
+  {name: "Nippon India Small Cap", sub: "Direct Growth", q: "1 year CAGR of Nippon India Small Cap"},
+  {name: "Quant Small Cap", sub: "Direct Growth", q: "1 year CAGR of Quant Small Cap"},
+  {name: "Parag Parikh Flexi Cap", sub: "Direct Growth", q: "1 year CAGR of Parag Parikh Flexi Cap"},
+  {name: "HDFC Flexi Cap", sub: "Direct Growth", q: "1 year CAGR of HDFC Flexi Cap"},
+];
+const arrow = v => v > 0 ? "▲" : v < 0 ? "▼" : "■";
+function spark(vals, up){
+  const n = 40, step = Math.max(1, Math.floor(vals.length / n)), v = vals.filter((_, i) => i % step === 0 || i === vals.length - 1);
+  const lo = Math.min(...v), hi = Math.max(...v), W = 52, H = 26, d = v.map((x, i) => `${i ? "L" : "M"}${(i / (v.length - 1) * W).toFixed(1)} ${(H - 2 - (x - lo) / ((hi - lo) || 1) * (H - 4)).toFixed(1)}`).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" aria-hidden="true"><path d="${d}" fill="none" stroke="var(${up ? "--ok" : "--bad"})" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
+}
+async function loadWatch(){
+  const wl = $("wl"); wl.innerHTML = WATCH.map(w => `<div class="wr load"><div><div class="nm">${esc(w.name)}</div><div class="sub">${esc(w.sub)}</div></div><div></div><div class="vv">00.00%</div></div>`).join("");
+  const res = await Promise.all(WATCH.map(async w => { try {
+      const r = await fetch("/api/ask", {method: "POST", headers: {"Content-Type": "application/json", "X-IMAP-Client": "1"}, body: JSON.stringify({question: w.q})});
+      return {w, j: await r.json()}; } catch (e) { return {w, j: {status: "ERROR"}}; } }));
+  wl.innerHTML = ""; const tape = [], navEnds = [];
+  res.forEach(({w, j}) => {
+    const row = document.createElement("div"); row.className = "wr"; row.tabIndex = 0; row.setAttribute("role", "button"); row.title = w.q;
+    const f = j.status === "ANSWERED" && j.facts && j.facts[0];
+    if (f) {
+      S.nV++; const up = f.value >= 0, vals = j.chart && j.chart.series && j.chart.series[0] ? j.chart.series[0].values : null;
+      if (f.code > 0) navEnds.push(f.end);
+      row.innerHTML = `<div><div class="nm">${esc(w.name)}</div><div class="sub">${esc(w.sub)} · ${new Date(f.end + "T00:00:00").toLocaleDateString("en-IN", {day: "numeric", month: "short"})}</div></div><div>${vals ? spark(vals, up) : ""}</div><div class="vv ${up ? "up" : "down"}">${arrow(f.value)} ${pct(f.value)}</div>`;
+      tape.push(`<span class="tk" role="button" tabindex="0" data-q="${esc(w.q)}"><span class="nm">${esc(w.name)}</span><span class="v ${up ? "up" : "down"}">${arrow(f.value)} ${pct(f.value)}</span><span class="d">1Y · ${esc(f.end)}</span></span>`);
+    } else {
+      S.nW += j.status === "WITHHELD" ? 1 : 0;
+      row.innerHTML = `<div><div class="nm">${esc(w.name)}</div><div class="sub">${esc(w.sub)}</div></div><div></div><div class="vv hold" title="${esc(j.reason || j.error || "")}">withheld</div>`;
+    }
+    if (w.pinned) { const x = document.createElement("button"); x.type = "button"; x.className = "quiet unpin"; x.textContent = "×"; x.title = "Remove from watchlist"; x.setAttribute("aria-label", `Remove ${w.name} from the watchlist`);
+      x.onclick = ev => { ev.stopPropagation(); WATCH.splice(WATCH.indexOf(w), 1); loadWatch(); }; row.appendChild(x); }
+    row.onclick = () => { document.querySelectorAll(".wr.sel").forEach(x => x.classList.remove("sel")); row.classList.add("sel"); const q = w.q.replace("1 year CAGR", "1 year CAGR"); $("q").value = q; ask(q); };
+    row.onkeydown = e => { if (e.key === "Enter") row.click(); };
+    wl.appendChild(row);
+  });
+  bump();
+  if (navEnds.length) { const d = navEnds.sort().pop(); $("asof").textContent = new Date(d + "T00:00:00").toLocaleDateString("en-IN", {day: "numeric", month: "short", year: "numeric"}); }
+  const tr = $("track");
+  if (tape.length) { tr.innerHTML = tape.join("") + tape.join(""); tr.classList.add("run"); tr.querySelectorAll(".tk").forEach(t => { t.onclick = () => { $("q").value = t.dataset.q; ask(t.dataset.q); }; t.onkeydown = e => { if (e.key === "Enter") t.click(); }; }); }
+  else tr.innerHTML = `<span class="empty">No verified figures available.</span>`;
+}
+$("wlrefresh").onclick = loadWatch;
+loadWatch();
 </script>
 </body>
 </html>
