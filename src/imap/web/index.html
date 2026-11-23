@@ -238,6 +238,10 @@
   #scrout table.rank th:nth-child(1){width:44px} #scrout table.rank th:nth-child(3){width:38%} #scrout table.rank th:nth-child(4){width:96px}
   #scrout tbody tr{cursor:pointer}
   .rk{color:var(--faint);font:600 .8rem var(--mono)}
+  /* SIP calculator */
+  .sipf{display:grid;grid-template-columns:1.6fr .8fr .5fr .7fr auto;gap:10px;align-items:end;padding:12px 14px}
+  .sipf label{margin-bottom:4px} .sipf .sum{grid-column:1/-1;margin:0}
+  @media (max-width:800px){ .sipf{grid-template-columns:1fr 1fr} }
   @media (max-width:800px){ .scr{grid-template-columns:1fr 1fr} }
   .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,24px);background:var(--ink);color:var(--bg);padding:8px 15px;border-radius:8px;font-size:.86rem;font-weight:700;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:30}
   .toast.on{opacity:1;transform:translate(-50%,0)}
@@ -328,6 +332,17 @@
         <p class="hint sum" id="shint">Chooses funds by the words in their name; the data has no official category. Each figure is computed twice and shown only if both agree.</p>
       </div>
       <div id="scrout" aria-live="polite"></div>
+    </section>
+    <section class="panel" aria-label="SIP calculator">
+      <div class="hd"><span>SIP CALCULATOR · WHAT A PAST MONTHLY PLAN WOULD HAVE BECOME</span></div>
+      <div class="sipf">
+        <div><label for="sipfund">Fund</label><input id="sipfund" value="SBI Small Cap Direct Growth" autocomplete="off" spellcheck="false"></div>
+        <div><label for="sipamt">Monthly amount (Rs)</label><input id="sipamt" type="number" min="100" max="10000000" step="100" value="5000" inputmode="numeric"></div>
+        <div><label for="sipday">Day</label><input id="sipday" type="number" min="1" max="28" value="5" inputmode="numeric"></div>
+        <div><label for="sipyrs">Period</label><select id="sipyrs"><option value="1">1 year</option><option value="3">3 years</option><option value="5" selected>5 years</option><option value="7">7 years</option><option value="10">10 years</option></select></div>
+        <button id="siprun" type="button">Calculate</button>
+        <p class="hint sum" id="siphint">Looks backwards only: the instalments, what they would have been worth, and the yearly return (XIRR). It is not a forecast. Both engines must agree.</p>
+      </div>
     </section>
     <section id="out" aria-live="polite"><div class="empty"><b>Ask a question, or click a row in the watchlist.</b>Every figure is computed twice by separate code and shown only if both agree.</div></section>
     <div id="portfolio"><div id="gout"></div><div id="casout"></div></div>
@@ -720,6 +735,21 @@ async function runScreen(){
 }
 $("srun").onclick = runScreen;
 $("sname").addEventListener("keydown", e => { if (e.key === "Enter") runScreen(); });
+
+/* ---------- SIP calculator: builds an ordinary question, so the same plan, validator and engines run ---------- */
+function ordinal(n){ const v = n % 100; return n + (v >= 11 && v <= 13 ? "th" : ["th","st","nd","rd"][n % 10 < 4 ? n % 10 : 0]); }
+function runSip(){
+  const fund = $("sipfund").value.trim(), amt = Math.round(Number($("sipamt").value)), day = Math.round(Number($("sipday").value)), yrs = $("sipyrs").value;
+  const h = $("siphint");
+  if (fund.length < 2) { h.textContent = "Type a fund name first."; $("sipfund").focus(); return; }
+  if (!(amt >= 100 && amt <= 10000000)) { h.textContent = "Monthly amount must be between Rs 100 and Rs 1,00,00,000."; $("sipamt").focus(); return; }
+  if (!(day >= 1 && day <= 28)) { h.textContent = "Day must be from 1 to 28."; $("sipday").focus(); return; }
+  h.textContent = "Looks backwards only: the instalments, what they would have been worth, and the yearly return (XIRR). It is not a forecast. Both engines must agree.";
+  const q = `SIP of Rs ${amt} on the ${ordinal(day)} in ${fund} for ${yrs} years`;
+  $("q").value = q; ask(q);
+}
+$("siprun").onclick = runSip;
+for (const id of ["sipfund","sipamt","sipday"]) $(id).addEventListener("keydown", e => { if (e.key === "Enter") runSip(); });
 
 const WATCH = [
   {name: "Gold", sub: "RBI Mumbai, monthly avg", q: "1 year CAGR of gold"},

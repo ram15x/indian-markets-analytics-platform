@@ -136,3 +136,22 @@ def test_estimate_is_labelled_and_refuses_unknown_or_untested_series(base):
     assert post(base, "/api/estimate", {"code": 99999999})[0] == 400 and post(base, "/api/estimate", {"code": "1"})[0] == 400
     _, g = post(base, "/api/ask", {"question": "1 year CAGR of gold"})
     assert post(base, "/api/estimate", {"code": g["facts"][0]["code"]})[0] == 400      # negative codes are not funds
+
+
+def test_sip_calculator_question_and_amount_forms(base):
+    """The SIP panel builds an ordinary question; the scripted planner must read every amount form safely."""
+    html = urllib.request.urlopen(base + "/").read().decode()
+    assert 'id="siprun"' in html and "SIP of Rs" in html
+    for q in ("SIP of Rs 10000 on the 5th in SBI Small Cap Fund - Direct Plan - Growth for 5 years",
+              "SIP of 10000 in SBI Small Cap Fund - Direct Plan - Growth for 5 years",
+              "10000 sip in SBI Small Cap Fund - Direct Plan - Growth for 5 years"):
+        code, j = post(base, "/api/ask", {"question": q})
+        assert code == 200 and j["status"] == "ANSWERED" and j["facts"][0]["code"] == 125497, (q, j.get("text"))
+        assert "60 instalments totalling Rs 6,00,000" in j["facts"][0]["sentence"], j["facts"][0]["sentence"]
+        assert "amount assumed" not in j["facts"][0]["sentence"]
+
+
+def test_sip_without_amount_states_the_assumed_default(base):
+    code, j = post(base, "/api/ask", {"question": "SIP in SBI Small Cap Fund - Direct Plan - Growth for 5 years"})
+    assert code == 200 and j["status"] == "ANSWERED"
+    assert "amount assumed" in j["facts"][0]["sentence"] and "Rs 5,000" in j["facts"][0]["sentence"]

@@ -127,3 +127,8 @@ USD/INR: RBI reference-rate archive, 2,447 days, 2013-01-01 to 2026-11-20. No ra
 
 ## 2026-11-23 (decision): Docker dropped
 The Dockerfile and .dockerignore were never built, so they are git-ignored and the CI docker job was removed. Everything else in CI is unchanged.
+
+## 2026-11-23 (night): SIP calculator panel
+- New panel on the page: fund, monthly amount, day, period. It builds an ordinary question, so the same plan validator and both engines run; nothing new computes a figure. Backward-looking only; it is not a forecast.
+- Fixed a gap in the scripted planner: "SIP of 10000" and "10000 sip" were not read as amounts, so the validator rejected them (safe, but unhelpful). A SIP question with no amount now leaves it out, and the answer says the amount was assumed.
+- MEASURED: 252 tests pass in the sandbox (2 new), ruff and mypy clean; panel checked in a headless browser (Rs 10,000 on the 7th for 7 years: 84 instalments, Rs 8,40,000 invested, XIRR 16.67%, chart agrees with the card). NOT yet checked in Chrome on the Windows machine.

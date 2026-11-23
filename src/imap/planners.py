@@ -24,7 +24,7 @@ class RulePlanner:
             raise ValueError("stand-in planner: no metric word found")
         ym = re.search(r"(\d{1,2})\s*(?:-|\s)?\s*(?:y|yr|yrs|year|years)\b", t)
         years = int(ym.group(1)) if ym else ("inception" if re.search(r"inception|since start|ever", t) else 3)
-        body = re.sub(r"\b(?:rs\.?|inr)\s*\d[\d,]*|₹\s*\d[\d,]*|\b\d[\d,]{2,}\s*(?:rs|inr|₹|a month|per month|monthly)\b", " ", t)
+        body = re.sub(r"\b(?:rs\.?|inr)\s*\d[\d,]*|₹\s*\d[\d,]*|\b\d[\d,]{2,}\s*(?:rs|inr|₹|a month|per month|monthly)\b|\bsip\s*(?:of|for|with)?\s*\d[\d,]{2,}|\b\d[\d,]{2,}\s*sip\b", " ", t)
         body = re.sub(r"\b\d{1,2}\s*(?:-|\s)?\s*(?:y|yr|yrs|year|years)\b", " ", body)
         body = re.sub(r"\bon (?:the )?\d{1,2}(?:st|nd|rd|th)?\b", " ", body)
         body = re.sub(r"\btotal returns?\b", " ", body)          # the measure, not part of a name like "Total Market"
@@ -41,8 +41,8 @@ class RulePlanner:
             steps.append(dict(id=f"f{k}", op="resolve", query=p))
             m = dict(id=f"m{k}", op="metric", metric=metric, fund=f"f{k}", years=years)
             if metric == "sip_xirr":
-                am = re.search(r"(?:\b(?:rs\.?|inr)|₹)\s*(\d[\d,]*)|\b(\d[\d,]{2,})\s*(?:rs|inr|₹|a month|per month|monthly)\b", t)
-                m["amount"] = int((am.group(1) or am.group(2)).replace(",", "")) if am else 5000
+                am = re.search(r"(?:\b(?:rs\.?|inr)|₹)\s*(\d[\d,]*)|\b(\d[\d,]{2,})\s*(?:rs|inr|₹|a month|per month|monthly)\b|\bsip\s*(?:of|for|with)?\s*(\d[\d,]{2,})|\b(\d[\d,]{2,})\s*sip\b", t)
+                if am: m["amount"] = int(next(g for g in am.groups() if g).replace(",", ""))   # no amount written: leave it out; the engine states the assumed default
                 dm = re.search(r"\bon (?:the )?(\d{1,2})(?:st|nd|rd|th)?\b", t)
                 m["day"] = int(dm.group(1)) if dm else 1
             steps.append(m); mids.append(m["id"])
