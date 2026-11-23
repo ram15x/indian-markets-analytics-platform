@@ -1,6 +1,6 @@
 # Indian Markets Analytics Platform
 
-An AI analyst for Indian mutual funds, gold, silver and USD/INR where **every number is computed by code, cross-checked by independent implementations, and verified, or the answer is withheld.** The language model only plans; it never writes a figure. Nothing here is investment advice, and nothing predicts.
+An AI analyst for Indian mutual funds, gold, silver and USD/INR where **every number is computed by code, cross-checked by independent implementations, and shown only if they agree; otherwise the answer is withheld with the reason.** The language model only plans; it never writes a figure. Nothing here is investment advice or a prediction.
 
 > A personal project. Evidence for each claim is in `docs/`; items marked UNVERIFIED have not been proven.
 
@@ -14,7 +14,7 @@ Demo mode runs on **invented** data (a banner says so on every page), so anyone 
 
 ## What you can do
 - **Ask** in plain words: total return, CAGR, max drawdown, volatility, SIP XIRR, rolling returns, Sharpe and Sortino, for 1,772 mutual-fund schemes (AMFI), gold and silver (RBI monthly), USD/INR.
-- **Screen** funds by name, ranked by one measure, with the category median, "beats x%" per row, a survivorship-bias note, and a CSV download.
+- **Screen** funds by name, ranked by one measure, with the median of the ranked funds, "beats x%" per row, a survivorship-bias note, and a CSV download.
 - **Calculate a SIP** and **compare** funds, gold, silver and the dollar on one shared period.
 - **Learn:** every answer has a "Numbers behind this answer" panel (formula, start and end NAV, days, engines) and a plain-words reading. A Learn panel explains CAGR vs total return, NAV, Direct vs Regular, drawdown, XIRR, Sharpe, survivorship bias and more, at three levels. The text is fixed and versioned, not written by a model.
 - Use it from **Claude Desktop** through MCP (`docs/MCP.md`), or read your own CAS statement (in memory only).
@@ -27,12 +27,16 @@ question -> planner (LLM or rules) -> plan (JSON) -> validator (years/amounts mu
          -> resolve fund -> engine A (numpy) + engine B (DuckDB) [+ engine C (Rust)] -> compare every printed field
          -> VERIFIED answer   or   WITHHELD with a reason
 ```
-The language model only plans; it never writes a figure. Data checks run first: SHA-256 manifest (the app refuses to start on a mismatch), pandera schemas, NAV outlier and scale-change detection with an audit trail.
+Data checks run first: SHA-256 manifest (the app refuses to start on a mismatch), pandera schemas, NAV outlier and scale-change detection with an audit trail.
 
 ## Evidence, and what it does not show
 - **Engines agree:** 40,169 figures verified by all engines, 0 disagreements (`docs/HARDENING.md`). Agreement shows the arithmetic is consistent, not that the definition or the data is right.
-- **Checked against fund houses' own documents:** CAGR matches HDFC 12/12, Nippon India 9/9 (plus 3/3 NAVs), Axis 3 of 4 returns (all 4 rupee values match; the 1y percentage differs by 0.09). XIRR solver matches a documented example. Volatility is consistent with one factsheet figure (9.90% vs 9.93%, one fund, secondary source) and Sharpe is close (0.775 vs 0.80, risk-free rate unknown); drawdown and Sortino have no outside check. Details: `docs/ENGINE_RESULTS.md`.
-- **Tests:** 280, plus ruff, mypy and pip-audit clean; mutation testing caught 88% of 1,746 mutants and found two real bugs. CI runs only the tests that do not need the real data (about half); the rest run locally.
+- **Checked against fund houses' own documents** (`docs/ENGINE_RESULTS.md`):
+  - CAGR: HDFC 12/12, Nippon India 9/9 (plus 3/3 NAVs), Axis 3 of 4 returns. All 4 Axis rupee values match; its 1-year percentage differs by 0.09.
+  - XIRR: the solver reproduces a documented example.
+  - Volatility: 9.90% against one factsheet's 9.93% (one fund, secondary source). Sharpe: 0.775 against 0.80 (risk-free rate unknown).
+  - Maximum drawdown and Sortino have no outside check.
+- **Tests:** 280, with ruff, mypy and pip-audit clean. Mutation testing caught 88% of 1,746 mutants and found two real bugs. CI runs only the tests that do not need the real data (about half); the rest run locally.
 - **Planner evaluations** on locked sets, failures kept on record: `docs/PLANNER_EVAL_V3.md`, `docs/PLANNER_EVAL_V4.md`. Experimental forecasting models: `docs/LAB.md` (mostly negative results).
 
 ## Known limits
@@ -43,4 +47,4 @@ The language model only plans; it never writes a figure. Data checks run first: 
 - Full status list: `docs/STATUS.md`. Also a Dockerfile (image not yet built outside CI).
 
 ## Data
-Built locally from the AMFI NAV archive and RBI sources (Handbook, reference rate archive, T-bill yields). `python -m pytest -q` runs everything when the data is present.
+Built locally from the AMFI NAV archive and RBI sources (Handbook, reference rate archive, T-bill yields) by the pipeline scripts (`refresh.py`, `macro.py`; see `docs/STATUS.md`). `python -m pytest -q` runs every test when the data is present.
