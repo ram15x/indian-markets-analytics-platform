@@ -1,0 +1,16 @@
+# Exact versions installed on Ram's Windows machine (Python 3.12) on 2026-11-23, where the suite passed.
+# hypothesis was added afterwards (sandbox: 6.170.17); re-run the suite there to confirm.
+numpy==2.5.5
+pandas==3.1.1
+pyarrow==26.0.1
+duckdb==2.0.1
+scikit-learn==1.9.1
+pytest==9.2.0
+hypothesis==6.170.17
+casparser==1.4.1
+openpyxl==3.1.5
+# openpyxl added 2026-11-23 for the RBI gold\/silver tables (sandbox version); confirm on the Windows machine.
+mcp==2.3.0
+# mcp added 2026-11-23 for the MCP server (sandbox version).
+pandera==0.36.0
+# pandera added 2026-11-23 for data contracts (sandbox version).

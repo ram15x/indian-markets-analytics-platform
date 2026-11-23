@@ -1,0 +1,192 @@
+{
+ "windows": {
+  "train": [
+   "2015-01-01",
+   "2019-10-31"
+  ],
+  "A": [
+   "2019-11-22",
+   "2022-11-21"
+  ],
+  "B": [
+   "2022-11-22",
+   "2025-11-21"
+  ]
+ },
+ "n_funds_B": 477,
+ "n_funds_A": 335,
+ "n_train": 328,
+ "categories": {
+  "elss": 40,
+  "mid_cap": 39,
+  "liquid": 36,
+  "flexi_cap": 33,
+  "overnight": 33,
+  "large_cap": 30,
+  "small_cap": 29,
+  "arbitrage": 27,
+  "balanced_adv": 26,
+  "focused": 24,
+  "value_contra": 22,
+  "large_mid": 21,
+  "equity_savings": 19,
+  "infra": 16,
+  "banking_fin": 14,
+  "multi_cap": 14,
+  "gilt": 10,
+  "gold": 8,
+  "pharma_health": 7,
+  "tech": 6,
+  "silver": 4,
+  "short_dur": 3,
+  "dynamic_bond": 3,
+  "credit_risk": 3,
+  "banking_psu": 3,
+  "corp_bond": 3,
+  "low_dur": 2,
+  "money_market": 2
+ },
+ "precision_at_5": {
+  "CORR": 0.5832285115303985,
+  "FEAT": 0.4859538784067086,
+  "PCA": 0.5924528301886793,
+  "N0": 0.5358490566037736,
+  "N": 0.5400419287211741
+ },
+ "precision_by_category": {
+  "CORR": {
+   "value_contra": 0.227,
+   "liquid": 0.944,
+   "elss": 0.285,
+   "gold": 1.0,
+   "infra": 0.812,
+   "large_cap": 0.8,
+   "flexi_cap": 0.139,
+   "gilt": 0.66,
+   "arbitrage": 0.896,
+   "large_mid": 0.39,
+   "focused": 0.0,
+   "equity_savings": 0.105,
+   "small_cap": 0.993,
+   "mid_cap": 0.954,
+   "tech": 0.867,
+   "banking_fin": 1.0,
+   "balanced_adv": 0.138,
+   "multi_cap": 0.243,
+   "pharma_health": 1.0,
+   "overnight": 0.97
+  },
+  "FEAT": {
+   "value_contra": 0.1,
+   "liquid": 0.956,
+   "elss": 0.175,
+   "gold": 1.0,
+   "infra": 0.312,
+   "large_cap": 0.307,
+   "flexi_cap": 0.079,
+   "gilt": 0.62,
+   "arbitrage": 0.889,
+   "large_mid": 0.095,
+   "focused": 0.158,
+   "equity_savings": 0.863,
+   "small_cap": 0.386,
+   "mid_cap": 0.492,
+   "tech": 0.8,
+   "banking_fin": 0.9,
+   "balanced_adv": 0.823,
+   "multi_cap": 0.071,
+   "pharma_health": 1.0,
+   "overnight": 0.836
+  },
+  "PCA": {
+   "value_contra": 0.255,
+   "liquid": 0.956,
+   "elss": 0.35,
+   "gold": 1.0,
+   "infra": 0.812,
+   "large_cap": 0.627,
+   "flexi_cap": 0.158,
+   "gilt": 0.62,
+   "arbitrage": 0.889,
+   "large_mid": 0.343,
+   "focused": 0.083,
+   "equity_savings": 0.326,
+   "small_cap": 0.924,
+   "mid_cap": 0.959,
+   "tech": 1.0,
+   "banking_fin": 1.0,
+   "balanced_adv": 0.177,
+   "multi_cap": 0.271,
+   "pharma_health": 1.0,
+   "overnight": 0.976
+  },
+  "N0": {
+   "value_contra": 0.191,
+   "liquid": 0.889,
+   "elss": 0.295,
+   "gold": 1.0,
+   "infra": 0.562,
+   "large_cap": 0.46,
+   "flexi_cap": 0.194,
+   "gilt": 0.52,
+   "arbitrage": 0.956,
+   "large_mid": 0.124,
+   "focused": 0.083,
+   "equity_savings": 0.853,
+   "small_cap": 0.434,
+   "mid_cap": 0.615,
+   "tech": 0.7,
+   "banking_fin": 0.8,
+   "balanced_adv": 0.815,
+   "multi_cap": 0.071,
+   "pharma_health": 0.971,
+   "overnight": 0.976
+  },
+  "N": {
+   "value_contra": 0.064,
+   "liquid": 0.933,
+   "elss": 0.335,
+   "gold": 0.95,
+   "infra": 0.388,
+   "large_cap": 0.607,
+   "flexi_cap": 0.139,
+   "gilt": 0.48,
+   "arbitrage": 0.889,
+   "large_mid": 0.152,
+   "focused": 0.1,
+   "equity_savings": 0.726,
+   "small_cap": 0.614,
+   "mid_cap": 0.544,
+   "tech": 0.867,
+   "banking_fin": 0.857,
+   "balanced_adv": 0.877,
+   "multi_cap": 0.157,
+   "pharma_health": 0.829,
+   "overnight": 0.982
+  }
+ },
+ "stability_top5_overlap_A_vs_B": {
+  "CORR": 0.32972972972972975,
+  "FEAT": 0.13513513513513514,
+  "PCA": 0.2378378378378378,
+  "N0": 0.14294294294294294,
+  "N": 0.16036036036036033
+ },
+ "n_both_windows": 333,
+ "best_baseline": "PCA",
+ "N_vs_best_baseline": {
+  "diff": -0.05241090146750524,
+  "ci95": [
+   -0.08385744234800839,
+   -0.021802935010482184
+  ]
+ },
+ "N_vs_random_control": {
+  "diff": 0.004192872117400418,
+  "ci95": [
+   -0.019706498951781972,
+   0.02809224318658281
+  ]
+ },
+ "PASSES_RULE": false
+}

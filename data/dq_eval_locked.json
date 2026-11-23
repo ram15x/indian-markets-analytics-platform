@@ -1,0 +1,24 @@
+{
+ "split": "locked",
+ "n": 300,
+ "types": {
+  "scale": 66,
+  "persistent": 66,
+  "bad": 58,
+  "none": 57,
+  "transient": 53
+ },
+ "scale_recall": 1.0,
+ "scale_k_exact": 1.0,
+ "scale_max_rel_err": 0.0,
+ "adjustments_emitted": 66,
+ "adjustments_true_scale": 66,
+ "scale_precision": 1.0,
+ "bad_recall": 0.9827586206896551,
+ "transient_recall": 1.0,
+ "persistent_flagged_large_move": 1.0,
+ "persistent_over_corrected": 0,
+ "none_with_any_event": 0,
+ "none_with_adjustment": 0,
+ "extra_events_outside_t": 1
+}

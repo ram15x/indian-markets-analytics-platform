@@ -1,0 +1,909 @@
+{
+ "planner": "chat:openai/gpt-oss-120b",
+ "summary": {
+  "CORRECT": 29,
+  "WRONG_ANSWER": 0,
+  "SAFE_MISS": 1
+ },
+ "rows": [
+  {
+   "q": "Mirae Asset Large Cap 5 year CAGR",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     118825,
+     "cagr",
+     5
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "Mirae Asset Large Cap"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "cagr",
+      "fund": "f1",
+      "years": 5
+     }
+    ]
+   }
+  },
+  {
+   "q": "How much has ICICI Prudential Value Fund returned in 2 years?",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     120323,
+     "total_return",
+     2
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "ICICI Prudential Value Fund"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "total_return",
+      "fund": "f1",
+      "years": 2
+     }
+    ]
+   }
+  },
+  {
+   "q": "Annualised return of Kotak Flexicap over 7 years",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     120166,
+     "cagr",
+     7
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "Kotak Flexicap"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "cagr",
+      "fund": "f1",
+      "years": 7
+     }
+    ]
+   }
+  },
+  {
+   "q": "max drawdown of nippon india small cap over 5 years",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     118778,
+     "max_drawdown",
+     5
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "nippon india small cap"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "max_drawdown",
+      "fund": "f1",
+      "years": 5
+     }
+    ]
+   }
+  },
+  {
+   "q": "Volatility of HDFC Balanced Advantage over 3 years",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     118968,
+     "volatility",
+     3
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "HDFC Balanced Advantage"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "volatility",
+      "fund": "f1",
+      "years": 3
+     }
+    ]
+   }
+  },
+  {
+   "q": "SIP of 3000 rupees every month on the 10th in Parag Parikh Flexi Cap for 4 years: what XIRR?",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     122639,
+     "sip_xirr",
+     4,
+     3000,
+     10
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "Parag Parikh Flexi Cap"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "sip_xirr",
+      "fund": "f1",
+      "years": 4,
+      "amount": 3000,
+      "day": 10
+     }
+    ]
+   }
+  },
+  {
+   "q": "XIRR if I invested Rs 1,500 monthly in SBI Contra for 6 years",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     119835,
+     "sip_xirr",
+     6,
+     1500,
+     1
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "SBI Contra"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "sip_xirr",
+      "fund": "f1",
+      "years": 6,
+      "amount": 1500
+     }
+    ]
+   }
+  },
+  {
+   "q": "SIP XIRR of SBI Small Cap over 3 years",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     125497,
+     "sip_xirr",
+     3,
+     5000,
+     1
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "SBI Small Cap"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "sip_xirr",
+      "fund": "f1",
+      "years": 3
+     }
+    ]
+   }
+  },
+  {
+   "q": "Compare 3 year CAGR: Axis ELSS vs Mirae Asset Large Cap",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     120503,
+     "cagr",
+     3
+    ],
+    [
+     118825,
+     "cagr",
+     3
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "Axis ELSS"
+     },
+     {
+      "id": "f2",
+      "op": "resolve",
+      "query": "Mirae Asset Large Cap"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "cagr",
+      "fund": "f1",
+      "years": 3
+     },
+     {
+      "id": "m2",
+      "op": "metric",
+      "metric": "cagr",
+      "fund": "f2",
+      "years": 3
+     },
+     {
+      "id": "c1",
+      "op": "compare",
+      "inputs": [
+       "m1",
+       "m2"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "q": "Deepest fall since inception for HDFC Mid Cap Fund",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     118989,
+     "max_drawdown",
+     "inception"
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "HDFC Mid Cap Fund"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "max_drawdown",
+      "fund": "f1",
+      "years": "inception"
+     }
+    ]
+   }
+  },
+  {
+   "q": "UTI Nifty 50 index fund total return in the last 1 year",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     120716,
+     "total_return",
+     1
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "UTI Nifty 50 index fund"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "total_return",
+      "fund": "f1",
+      "years": 1
+     }
+    ]
+   }
+  },
+  {
+   "q": "Total return since inception of Motilal Oswal Midcap",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     127042,
+     "total_return",
+     "inception"
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "Motilal Oswal Midcap"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "total_return",
+      "fund": "f1",
+      "years": "inception"
+     }
+    ]
+   }
+  },
+  {
+   "q": "SBI Small Cap vs Nippon India Small Cap vs quant small cap, 5 year volatility",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     125497,
+     "volatility",
+     5
+    ],
+    [
+     118778,
+     "volatility",
+     5
+    ],
+    [
+     120828,
+     "volatility",
+     5
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "SBI Small Cap"
+     },
+     {
+      "id": "f2",
+      "op": "resolve",
+      "query": "Nippon India Small Cap"
+     },
+     {
+      "id": "f3",
+      "op": "resolve",
+      "query": "quant small cap"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "volatility",
+      "fund": "f1",
+      "years": 5
+     },
+     {
+      "id": "m2",
+      "op": "metric",
+      "metric": "volatility",
+      "fund": "f2",
+      "years": 5
+     },
+     {
+      "id": "m3",
+      "op": "metric",
+      "metric": "volatility",
+      "fund": "f3",
+      "years": 5
+     },
+     {
+      "id": "c1",
+      "op": "compare",
+      "inputs": [
+       "m1",
+       "m2",
+       "m3"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "q": "dsp equity opportunities 3 year cagr",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     119218,
+     "cagr",
+     3
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "dsp equity opportunities"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "cagr",
+      "fund": "f1",
+      "years": 3
+     }
+    ]
+   }
+  },
+  {
+   "q": "ICICI Pru Balanced Advantage annualised return over 10 years",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     120377,
+     "cagr",
+     10
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "ICICI Pru Balanced Advantage"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "cagr",
+      "fund": "f1",
+      "years": 10
+     }
+    ]
+   }
+  },
+  {
+   "q": "Axis Large Cap total return over 1 year",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     120465,
+     "total_return",
+     1
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "Axis Large Cap"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "total_return",
+      "fund": "f1",
+      "years": 1
+     }
+    ]
+   }
+  },
+  {
+   "q": "How risky is SBI Small Cap over 3 years?",
+   "expect": "ASK",
+   "verdict": "CORRECT",
+   "status": "ASK",
+   "notice": null,
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "a1",
+      "op": "ask",
+      "about": "metric",
+      "options": [
+       "volatility",
+       "max_drawdown"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "q": "How has Parag Parikh Flexi Cap performed over 5 years?",
+   "expect": "ASK",
+   "verdict": "CORRECT",
+   "status": "ASK",
+   "notice": null,
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "a1",
+      "op": "ask",
+      "about": "metric",
+      "options": [
+       "total_return",
+       "cagr",
+       "max_drawdown",
+       "volatility"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "q": "Risk comparison of HDFC Flexi Cap and Kotak Flexicap",
+   "expect": "ASK",
+   "verdict": "CORRECT",
+   "status": "ASK",
+   "notice": null,
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "a1",
+      "op": "ask",
+      "about": "metric",
+      "options": [
+       "max_drawdown",
+       "volatility"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "q": "5 year CAGR of the silver fund",
+   "expect": "CLARIFY",
+   "verdict": "CORRECT",
+   "status": "CLARIFY",
+   "notice": null,
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "silver fund"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "cagr",
+      "fund": "f1",
+      "years": 5
+     }
+    ]
+   }
+  },
+  {
+   "q": "liquid fund 1 year return",
+   "expect": "CLARIFY",
+   "verdict": "SAFE_MISS",
+   "status": "NOPLAN",
+   "notice": null,
+   "facts": [],
+   "error": "plan rejected: plan must have 1..12 steps",
+   "plan": {
+    "steps": []
+   }
+  },
+  {
+   "q": "ICICI Prudential index fund 3 year cagr",
+   "expect": "CLARIFY",
+   "verdict": "CORRECT",
+   "status": "CLARIFY",
+   "notice": null,
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "ICICI Prudential index fund"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "cagr",
+      "fund": "f1",
+      "years": 3
+     }
+    ]
+   }
+  },
+  {
+   "q": "7 year CAGR of Groww Silver ETF FOF",
+   "expect": "WITHHELD",
+   "verdict": "CORRECT",
+   "status": "WITHHELD",
+   "notice": null,
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "Groww Silver ETF FOF"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "cagr",
+      "fund": "f1",
+      "years": 7
+     }
+    ]
+   }
+  },
+  {
+   "q": "10 year volatility of Parag Parikh ELSS",
+   "expect": "WITHHELD",
+   "verdict": "CORRECT",
+   "status": "WITHHELD",
+   "notice": null,
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "Parag Parikh ELSS"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "volatility",
+      "fund": "f1",
+      "years": 10
+     }
+    ]
+   }
+  },
+  {
+   "q": "Should I put my money in Mirae Asset Large Cap?",
+   "expect": "NOTICE",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": "advice",
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "Mirae Asset Large Cap"
+     }
+    ],
+    "notice": "advice"
+   }
+  },
+  {
+   "q": "Is quant small cap a good buy for the next 5 years?",
+   "expect": "NOTICE",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": "advice",
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "quant small cap"
+     }
+    ],
+    "notice": "advice"
+   }
+  },
+  {
+   "q": "Will HDFC Flexi Cap beat Parag Parikh Flexi Cap next year?",
+   "expect": "NOTICE",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": "prediction",
+   "facts": [
+    [
+     118955,
+     "cagr",
+     3
+    ],
+    [
+     122639,
+     "cagr",
+     3
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "HDFC Flexi Cap"
+     },
+     {
+      "id": "f2",
+      "op": "resolve",
+      "query": "Parag Parikh Flexi Cap"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "cagr",
+      "fund": "f1",
+      "years": 3
+     },
+     {
+      "id": "m2",
+      "op": "metric",
+      "metric": "cagr",
+      "fund": "f2",
+      "years": 3
+     },
+     {
+      "id": "c1",
+      "op": "compare",
+      "inputs": [
+       "m1",
+       "m2"
+      ]
+     }
+    ],
+    "notice": "prediction"
+   }
+  },
+  {
+   "q": "Which small cap fund will give the best returns?",
+   "expect": "NOFACT",
+   "verdict": "CORRECT",
+   "status": "ASK",
+   "notice": "advice",
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "a1",
+      "op": "ask",
+      "about": "metric",
+      "options": [
+       "total_return",
+       "cagr",
+       "max_drawdown",
+       "volatility"
+      ]
+     }
+    ],
+    "notice": "advice"
+   }
+  },
+  {
+   "q": "Tell me a fund to invest 10 lakh in",
+   "expect": "NOFACT",
+   "verdict": "CORRECT",
+   "status": "NOTICE_ONLY",
+   "notice": "advice",
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [],
+    "notice": "advice"
+   }
+  },
+  {
+   "q": "Is the market going to crash?",
+   "expect": "NOFACT",
+   "verdict": "CORRECT",
+   "status": "NOTICE_ONLY",
+   "notice": "prediction",
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [],
+    "notice": "prediction"
+   }
+  }
+ ]
+}

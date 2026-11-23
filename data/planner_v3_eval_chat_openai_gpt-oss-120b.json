@@ -1,0 +1,480 @@
+{
+ "planner": "chat:openai/gpt-oss-120b",
+ "summary": {
+  "CORRECT": 14,
+  "WRONG_ANSWER": 0,
+  "SAFE_MISS": 7
+ },
+ "rows": [
+  {
+   "q": "Sharpe ratio of HDFC Flexi Cap over 3 years",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     118955,
+     "sharpe",
+     3
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "HDFC Flexi Cap"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "sharpe",
+      "fund": "f1",
+      "years": 3
+     }
+    ]
+   }
+  },
+  {
+   "q": "What is the Sortino ratio of Parag Parikh Flexi Cap for the last 3 years?",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     122639,
+     "sortino",
+     3
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "Parag Parikh Flexi Cap"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "sortino",
+      "fund": "f1",
+      "years": 3
+     }
+    ]
+   }
+  },
+  {
+   "q": "SBI Small Cap Fund 5 year Sharpe ratio",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     125497,
+     "sharpe",
+     5
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "SBI Small Cap Fund"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "sharpe",
+      "fund": "f1",
+      "years": 5
+     }
+    ]
+   }
+  },
+  {
+   "q": "What is the 5 year CAGR of gold?",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     -1,
+     "cagr",
+     5
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "gold"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "cagr",
+      "fund": "f1",
+      "years": 5
+     }
+    ]
+   }
+  },
+  {
+   "q": "How much did silver return over 3 years?",
+   "expect": "ANSWER",
+   "verdict": "SAFE_MISS",
+   "status": "NOPLAN",
+   "notice": null,
+   "facts": [],
+   "error": "plan rejected: plan must have 1..12 steps",
+   "plan": {
+    "steps": []
+   }
+  },
+  {
+   "q": "USD INR 3 year CAGR",
+   "expect": "ANSWER",
+   "verdict": "SAFE_MISS",
+   "status": "NOPLAN",
+   "notice": null,
+   "facts": [],
+   "error": "plan rejected: plan must have 1..12 steps",
+   "plan": {
+    "steps": []
+   }
+  },
+  {
+   "q": "How much has the dollar gained against the rupee in 1 year?",
+   "expect": "ANSWER",
+   "verdict": "SAFE_MISS",
+   "status": "NOPLAN",
+   "notice": null,
+   "facts": [],
+   "error": "plan rejected: plan must have 1..12 steps",
+   "plan": {
+    "steps": []
+   }
+  },
+  {
+   "q": "Worst drawdown of gold in the last 5 years",
+   "expect": "ANSWER",
+   "verdict": "SAFE_MISS",
+   "status": "NOPLAN",
+   "notice": null,
+   "facts": [],
+   "error": "plan rejected: plan must have 1..12 steps",
+   "plan": {
+    "steps": []
+   }
+  },
+  {
+   "q": "Compare gold and silver 5 year CAGR",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     -1,
+     "cagr",
+     5
+    ],
+    [
+     -2,
+     "cagr",
+     5
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "gold"
+     },
+     {
+      "id": "f2",
+      "op": "resolve",
+      "query": "silver"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "cagr",
+      "fund": "f1",
+      "years": 5
+     },
+     {
+      "id": "m2",
+      "op": "metric",
+      "metric": "cagr",
+      "fund": "f2",
+      "years": 5
+     },
+     {
+      "id": "c1",
+      "op": "compare",
+      "inputs": [
+       "m1",
+       "m2"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "q": "SBI Gold Fund 5 year return",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     119788,
+     "total_return",
+     5
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "SBI Gold Fund"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "total_return",
+      "fund": "f1",
+      "years": 5
+     }
+    ]
+   }
+  },
+  {
+   "q": "Nippon India Small Cap 3 year CAGR",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     118778,
+     "cagr",
+     3
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "Nippon India Small Cap"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "cagr",
+      "fund": "f1",
+      "years": 3
+     }
+    ]
+   }
+  },
+  {
+   "q": "Gold vs HDFC Flexi Cap 3 year return",
+   "expect": "WITHHELD",
+   "verdict": "CORRECT",
+   "status": "WITHHELD",
+   "notice": null,
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "Gold"
+     },
+     {
+      "id": "f2",
+      "op": "resolve",
+      "query": "HDFC Flexi Cap"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "total_return",
+      "fund": "f1",
+      "years": 3
+     },
+     {
+      "id": "m2",
+      "op": "metric",
+      "metric": "total_return",
+      "fund": "f2",
+      "years": 3
+     },
+     {
+      "id": "c1",
+      "op": "compare",
+      "inputs": [
+       "m1",
+       "m2"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "q": "Sharpe ratio of gold over 3 years",
+   "expect": "WITHHELD",
+   "verdict": "CORRECT",
+   "status": "WITHHELD",
+   "notice": null,
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "gold"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "sharpe",
+      "fund": "f1",
+      "years": 3
+     }
+    ]
+   }
+  },
+  {
+   "q": "Sortino ratio of the rupee against the dollar over 5 years",
+   "expect": "WITHHELD",
+   "verdict": "SAFE_MISS",
+   "status": "NOPLAN",
+   "notice": null,
+   "facts": [],
+   "error": "plan rejected: plan must have 1..12 steps",
+   "plan": {
+    "steps": []
+   }
+  },
+  {
+   "q": "Volatility of silver over 3 years",
+   "expect": "WITHHELD",
+   "verdict": "SAFE_MISS",
+   "status": "NOPLAN",
+   "notice": null,
+   "facts": [],
+   "error": "plan rejected: plan must have 1..12 steps",
+   "plan": {
+    "steps": []
+   }
+  },
+  {
+   "q": "SIP of 5000 a month in gold for 5 years",
+   "expect": "WITHHELD",
+   "verdict": "SAFE_MISS",
+   "status": "NOTICE_ONLY",
+   "notice": "prediction",
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [],
+    "notice": "prediction"
+   }
+  },
+  {
+   "q": "Will gold go up next year?",
+   "expect": "NOFACT",
+   "verdict": "CORRECT",
+   "status": "NOTICE_ONLY",
+   "notice": "prediction",
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [],
+    "notice": "prediction"
+   }
+  },
+  {
+   "q": "Should I buy gold or a mutual fund?",
+   "expect": "NOFACT",
+   "verdict": "CORRECT",
+   "status": "NOTICE_ONLY",
+   "notice": "advice",
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [],
+    "notice": "advice"
+   }
+  },
+  {
+   "q": "Which fund has the best Sharpe ratio?",
+   "expect": "NOFACT",
+   "verdict": "CORRECT",
+   "status": "NOPLAN",
+   "notice": null,
+   "facts": [],
+   "error": "plan rejected: plan must have 1..12 steps",
+   "plan": {
+    "steps": []
+   }
+  },
+  {
+   "q": "What does the Sharpe ratio mean?",
+   "expect": "NOFACT",
+   "verdict": "CORRECT",
+   "status": "ASK",
+   "notice": null,
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "a1",
+      "op": "ask",
+      "about": "metric",
+      "options": [
+       "sharpe",
+       "sortino"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "q": "Will the rupee fall below 100 per dollar?",
+   "expect": "NOFACT",
+   "verdict": "CORRECT",
+   "status": "NOTICE_ONLY",
+   "notice": "prediction",
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [],
+    "notice": "prediction"
+   }
+  }
+ ]
+}

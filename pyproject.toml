@@ -1,0 +1,32 @@
+[tool.ruff]
+line-length = 140
+extend-exclude = ["mutants"]
+[tool.ruff.lint]
+select = ["E9", "F", "B"]   # syntax errors, pyflakes, bugbear
+[tool.ruff.lint.per-file-ignores]
+"scripts/eval_*.py" = ["B007"]   # finished, scored evaluation scripts are kept unchanged as records
+
+[tool.pytest.ini_options]
+addopts = "--basetemp=.pytest_tmp"   # keep temp dirs inside the project (Windows %TEMP% permission issue seen 2026-11-23)
+pythonpath = ["src"]
+testpaths = ["tests"]
+norecursedirs = [".*", "mutants", "engine_c", "build", "dist", "venv", "node_modules", "*.egg"]
+
+[tool.mypy]
+python_version = "3.12"
+files = ["src/imap"]
+ignore_missing_imports = true      # casparser, duckdb, scipy, openpyxl, imap_engine_c ship no stubs
+warn_unused_ignores = true
+warn_redundant_casts = true
+no_implicit_optional = true
+check_untyped_defs = true         # also check the bodies of functions without annotations
+
+[tool.mutmut]
+# Mutation testing: mutmut changes the code (e.g. < to <=, + to -, a constant to another) and re-runs the tests.
+# A mutant that no test notices ("survived") is a place where a real bug could hide.
+# Scope: the two maths implementations and the agreement gate, with the fast tests that need no data files.
+source_paths = ["src/imap"]
+only_mutate = ["src/imap/metrics_a.py", "src/imap/metrics_b.py", "src/imap/engine.py"]
+also_copy = ["tests"]
+pytest_add_cli_args_test_selection = ["tests/test_metrics.py", "tests/test_properties.py", "tests/test_published_figures.py", "tests/test_engine_gate.py", "tests/test_edges.py", "tests/test_ratios.py"]
+mutate_only_covered_lines = true

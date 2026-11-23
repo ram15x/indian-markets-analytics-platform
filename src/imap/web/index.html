@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Indian Markets Analytics Platform</title>
+<style>
+  :root{
+    --paper:#EDF0F2; --sheet:#F8F9FA; --ink:#1B2733; --muted:#5C6B78; --rule:#C9D1D8;
+    --blue:#1E4E79; --up:#2F6B3F; --down:#9E3A2E; --note:#7A5B12;
+    --serif: Charter, "Bitstream Charter", "Iowan Old Style", Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 var(--sans)}
+  main{max-width:780px;margin:0 auto;padding:40px 24px 80px}
+  header p{margin:.2rem 0 0;color:var(--muted);max-width:62ch}
+  h1{font:600 1.15rem/1.3 var(--serif);margin:0;letter-spacing:.01em}
+  .ask{margin-top:32px}
+  label{display:block;font-weight:600;margin-bottom:6px}
+  textarea,input,select{font:inherit;color:inherit;background:var(--sheet);border:1px solid var(--rule);border-radius:6px;padding:12px 14px;width:100%}
+  textarea{font:1.35rem/1.4 var(--serif);min-height:88px;resize:vertical}
+  textarea:focus,input:focus,select:focus,button:focus-visible,a:focus-visible{outline:3px solid #7FA6CF;outline-offset:1px}
+  .row{display:flex;gap:12px;align-items:center;margin-top:12px;flex-wrap:wrap}
+  button{font:600 1rem var(--sans);border:0;border-radius:6px;padding:11px 20px;background:var(--blue);color:#fff;cursor:pointer}
+  button.quiet{background:transparent;color:var(--blue);border:1px solid var(--rule);font-weight:500;padding:8px 12px}
+  button:disabled{opacity:.55;cursor:wait}
+  .examples{color:var(--muted);font-size:.95rem}
+  .examples a{color:var(--blue);text-decoration:underline;text-underline-offset:2px;cursor:pointer;margin-right:14px;white-space:nowrap}
+  details.key{margin-top:22px;border-top:1px solid var(--rule);padding-top:12px}
+  details.key summary{cursor:pointer;color:var(--blue)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  .grid .wide{grid-column:1/-1}
+  .hint{color:var(--muted);font-size:.9rem;margin:.4rem 0 0}
+  #out{margin-top:36px}
+  .banner{background:#F3ECDD;border-left:4px solid var(--note);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:20px}
+  .err{background:#F6E3E0;border-left:4px solid var(--down);padding:12px 16px;border-radius:0 6px 6px 0}
+  .line{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:20px 22px;margin-bottom:14px}
+  .line .fund{font:600 1.05rem/1.35 var(--serif)}
+  .line .meta{color:var(--muted);font-size:.92rem;margin-top:2px}
+  .fig{font:400 2.6rem/1.1 var(--serif);font-variant-numeric:tabular-nums lining-nums;margin:14px 0 6px;padding-top:12px;border-top:1px solid var(--rule)}
+  .fig.up{color:var(--up)} .fig.down{color:var(--down)}
+  .line p{margin:.3rem 0 0}
+  .note{color:var(--note);font-size:.92rem}
+  table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;margin:6px 0 18px}
+  th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--rule)} td.n{text-align:right;font-family:var(--serif);font-size:1.1rem;white-space:nowrap}
+  th{font-weight:600;color:var(--muted);font-size:.9rem}
+  .choices button{margin:6px 8px 0 0}
+  .glossary{margin-top:22px;border-top:1px solid var(--rule);padding-top:12px}
+  .glossary h2,.how h2{font:600 1rem var(--serif);margin:0 0 6px}
+  .glossary dt{font-weight:600;margin-top:8px} .glossary dd{margin:2px 0 0}
+  .matched,.warn{color:var(--muted);font-size:.92rem;margin-top:14px}
+  .how{margin-top:18px} .how summary{cursor:pointer;color:var(--blue);font-size:.92rem}
+  pre{background:var(--sheet);border:1px solid var(--rule);border-radius:6px;padding:12px;overflow:auto;font-size:.82rem}
+
+  .chart{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:16px 18px 10px;margin:4px 0 16px;position:relative}
+  .chart h2{font:600 1rem var(--serif);margin:0}
+  .chart .sub{color:var(--muted);font-size:.88rem;margin:2px 0 8px}
+  .chart svg{width:100%;height:auto;display:block;touch-action:none}
+  .chart svg text.lab{paint-order:stroke;stroke:#F8F9FA;stroke-width:4px;stroke-linejoin:round}
+  .chart .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.88rem;color:var(--ink);margin:6px 0 2px}
+  .chart .legend i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:6px}
+  .tip{position:absolute;pointer-events:none;background:#fff;border:1px solid var(--rule);border-radius:6px;padding:6px 9px;font-size:.85rem;box-shadow:0 2px 6px rgba(27,39,51,.12);white-space:nowrap;display:none}
+  .tip b{font-variant-numeric:tabular-nums}
+  .chart details summary{cursor:pointer;color:var(--blue);font-size:.88rem;margin-top:6px}
+  .chart table{font-size:.85rem}
+  @media (max-width:600px){ .grid{grid-template-columns:1fr} .fig{font-size:2.1rem} main{padding:28px 16px 60px} }
+  @media (prefers-reduced-motion:no-preference){ #out.fresh{animation:in .25s ease-out} @keyframes in{from{opacity:.0}to{opacity:1}} }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Indian Markets Analytics Platform</h1>
+    <p>Past figures for 1,772 Direct Growth mutual funds, computed from AMFI NAVs and checked twice by code. Facts only: no advice, no predictions.</p>
+  </header>
+
+  <section class="ask" aria-label="Ask a question">
+    <label for="q">Ask about a fund</label>
+    <textarea id="q" placeholder="For example: 5 year CAGR of Parag Parikh Flexi Cap vs HDFC Flexi Cap"></textarea>
+    <div class="row">
+      <button id="go">Get figures</button>
+      <span id="who" class="hint"></span>
+    </div>
+    <p class="examples">Try:
+      <a data-q="What is the 3 year CAGR of SBI Small Cap?">3 year CAGR</a>
+      <a data-q="SIP of Rs 5000 on the 5th in quant small cap for 5 years, what XIRR?">SIP XIRR</a>
+      <a data-q="Max drawdown of Axis Bluechip since inception">old fund name</a>
+      <a data-q="Compare 5 year volatility of SBI Small Cap vs Nippon India Small Cap">compare</a>
+    </p>
+
+    <details class="key">
+      <summary>Use your own model key (optional)</summary>
+      <p class="hint">Without a key, a simple scripted parser reads your question; it understands fewer phrasings. With a key, your chosen model plans the question and code checks the plan. The key stays in this page's memory and is sent only to your local server for each request. It is never saved.</p>
+      <div class="grid">
+        <div><label for="kname">Key name</label><input id="kname" placeholder="e.g. Ram's Groq key" autocomplete="off"></div>
+        <div><label for="model">Model</label><select id="model"><option>openai/gpt-oss-120b</option></select></div>
+        <div class="wide"><label for="key">Groq API key</label><input id="key" type="password" autocomplete="off" spellcheck="false" placeholder="gsk_…"></div>
+      </div>
+      <div class="row"><button class="quiet" id="list">Load my models</button><button class="quiet" id="forget">Forget key</button><span id="kmsg" class="hint"></span></div>
+    </details>
+    <details class="key" id="gw">
+      <summary>My Groww stock holdings (optional, read-only)</summary>
+      <p class="hint">Reads your stock holdings from Groww's official API using an access token you generate in Groww Cloud. Read-only: this app has no code that can place or change orders. The token stays in this page's memory and is never saved. Value uses NSE's end-of-day closing prices once you run <code>python prices.py</code> (not live). Mutual funds are not included in this API; use the CAS section for those.</p>
+      <div class="grid"><div class="wide"><label for="gtok">Groww access token</label><input id="gtok" type="password" autocomplete="off" spellcheck="false"></div></div>
+      <div class="row"><button class="quiet" id="gload">Load holdings</button><button class="quiet" id="gforget">Forget token</button><span id="gmsg" class="hint"></span></div>
+      <div id="gout"></div>
+    </details>
+    <details class="key" id="casbox">
+      <summary>My mutual funds from a CAS statement (optional)</summary>
+      <p class="hint">Use the DETAILED Consolidated Account Statement that CAMS or KFintech email you (a PDF, usually locked with your PAN in capitals). It is read on this computer only, in memory: not saved, not sent anywhere else. Your name, PAN, email and address are never shown or kept; folio numbers are masked. Values are as printed in the statement on its date.</p>
+      <div class="grid">
+        <div class="wide"><label for="casfile">CAS PDF</label><input id="casfile" type="file" accept="application/pdf"></div>
+        <div class="wide"><label for="caspw">PDF password</label><input id="caspw" type="password" autocomplete="off" spellcheck="false"></div>
+      </div>
+      <div class="row"><button class="quiet" id="casload">Read statement</button><button class="quiet" id="casforget">Clear</button><span id="casmsg" class="hint"></span></div>
+      <div id="casout"></div>
+    </details>
+  </section>
+
+  <section id="out" aria-live="polite"></section>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const S = { key: "", lastQ: "", picks: {} };          // key lives here only; never in storage
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pct = v => (v < 0 ? "−" : "") + (Math.abs(v) * 100).toFixed(2) + "%";
+const win = f => f.years === "inception" ? "since inception" : `${f.years} year${f.years > 1 ? "s" : ""}`;
+
+function who(){
+  const k = $("key").value.trim(); S.key = k;
+  $("who").textContent = k ? `Planning with ${$("kname").value.trim() || "your key"} · ${$("model").value}` : "Planning with the scripted parser (no key)";
+}
+["key","kname","model"].forEach(id => $(id).addEventListener("input", who)); who();
+$("forget").onclick = () => { $("key").value = ""; S.key = ""; who(); $("kmsg").textContent = "Key cleared from this page."; };
+
+$("gforget").onclick = () => { $("gtok").value = ""; $("gout").innerHTML = ""; $("gmsg").textContent = "Token cleared from this page."; };
+$("gload").onclick = async () => {
+  const t = $("gtok").value.trim(); if (!t) { $("gmsg").textContent = "Paste a token first."; return; }
+  $("gmsg").textContent = "Loading…";
+  const r = await fetch("/api/holdings", {method:"POST", headers:{"Content-Type":"application/json","X-IMAP-Client":"1"}, body: JSON.stringify({groww_token: t})});
+  const j = await r.json().catch(() => ({error: `server returned ${r.status}`}));
+  if (!r.ok) { $("gmsg").textContent = j.error; $("gout").innerHTML = ""; return; }
+  $("gmsg").textContent = `${j.count} holding${j.count === 1 ? "" : "s"}.`;
+  const inr = x => "Rs " + Math.round(x).toLocaleString("en-IN");
+  const v = j.valuation || {}, hasP = !!v.price_date, sgn = x => (x > 0 ? "+" : x < 0 ? "−" : "") ;
+  $("gout").innerHTML = `<table><thead><tr><th>Stock</th><th style="text-align:right">Qty</th><th style="text-align:right">Avg buy</th><th style="text-align:right">Cost</th>${hasP ? `<th style="text-align:right">Close</th><th style="text-align:right">Value</th><th style="text-align:right">Gain</th>` : `<th style="text-align:right">Share of cost</th>`}</tr></thead><tbody>` +
+    j.rows.map(x => `<tr><td>${esc(x.symbol)}<div class="hint">${esc(x.isin)}${x.t1 ? ` · ${x.t1} in T1` : ""}${x.pledged ? ` · ${x.pledged} pledged` : ""}</div></td><td class="n">${x.quantity}</td><td class="n">${x.average_price.toFixed(2)}</td><td class="n">${inr(x.cost)}</td>` +
+      (hasP ? (x.value == null ? `<td class="n">–</td><td class="n">no price</td><td class="n">–</td>` :
+        `<td class="n">${x.close.toFixed(2)}</td><td class="n">${inr(x.value)}</td><td class="n">${sgn(x.gain)}${inr(Math.abs(x.gain)).replace("Rs ", "Rs ")} (${sgn(x.gain)}${Math.abs(x.gain_pct*100).toFixed(1)}%)</td>`)
+            : `<td class="n">${(x.share_of_cost*100).toFixed(1)}%</td>`) + `</tr>`).join("") +
+    `</tbody><tfoot><tr><th>Total</th><td></td><td></td><td class="n">${inr(j.total_cost)}</td>${hasP ? `<td></td><td class="n">${inr(v.total_value_priced)}</td><td class="n">${sgn(v.total_gain_priced)}${inr(Math.abs(v.total_gain_priced))}</td>` : `<td></td>`}</tr></tfoot></table>` +
+    `<p class="hint">${esc(hasP ? v.note + (v.unpriced ? ` ${v.unpriced} holding(s) had no price in that file; totals cover priced holdings only.` : "") : (v.note || j.limits))}</p>`;
+};
+
+$("casforget").onclick = () => { $("casfile").value = ""; $("caspw").value = ""; $("casout").innerHTML = ""; $("casmsg").textContent = "Cleared from this page."; };
+$("casload").onclick = async () => {
+  const f = $("casfile").files[0], pw = $("caspw").value;
+  if (!f || !pw) { $("casmsg").textContent = "Choose the PDF and type its password."; return; }
+  if (f.size > 10e6) { $("casmsg").textContent = "That file is over 10 MB; a CAS is usually much smaller."; return; }
+  $("casmsg").textContent = "Reading…";
+  const b64 = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.onerror = rej; r.readAsDataURL(f); });
+  const r = await fetch("/api/cas", {method:"POST", headers:{"Content-Type":"application/json","X-IMAP-Client":"1"}, body: JSON.stringify({pdf_base64: b64, cas_password: pw})});
+  $("caspw").value = "";                                     // do not keep the password on the page
+  const j = await r.json().catch(() => ({error: `server returned ${r.status}`}));
+  if (!r.ok) { $("casmsg").textContent = j.error; $("casout").innerHTML = ""; return; }
+  $("casmsg").textContent = `${j.schemes.length} scheme${j.schemes.length === 1 ? "" : "s"} read.`;
+  const inr = x => x == null ? "–" : "Rs " + Math.round(x).toLocaleString("en-IN");
+  const p = j.portfolio;
+  let h = j.parser_warnings.length ? `<div class="err">The statement parser reported problems; affected figures may be wrong: ${j.parser_warnings.map(esc).join("; ")}</div>` : "";
+  h += `<article class="line"><div class="fund">Your mutual fund portfolio</div><div class="meta">${p.schemes_held} scheme${p.schemes_held === 1 ? "" : "s"} held · value as printed in the statement</div>
+        <div class="fig">${inr(p.value)}</div><p>${p.xirr_status === "VERIFIED" ? `Your overall annualised return (XIRR) on these schemes: <b>${(p.xirr*100).toFixed(2)}%</b>, computed twice and checked.` : `Overall XIRR withheld.`} ${esc(p.note)}</p></article>`;
+  h += `<table><thead><tr><th>Scheme</th><th style="text-align:right">Units</th><th style="text-align:right">Net invested</th><th style="text-align:right">Value</th><th style="text-align:right">XIRR</th></tr></thead><tbody>` +
+    j.schemes.map(x => `<tr><td>${esc(x.name)}<div class="hint">${esc(x.amc)} · folio ${esc(x.folio)}${x.valuation_date ? ` · valued ${esc(x.valuation_date)}` : ""}</div>${x.checks.map(c => `<div class="note">${esc(c)}</div>`).join("")}</td>
+      <td class="n">${x.units.toFixed(3)}</td><td class="n">${inr(x.invested_net)}</td><td class="n">${inr(x.value)}</td><td class="n">${x.xirr_status === "VERIFIED" ? (x.xirr*100).toFixed(2) + "%" : "withheld"}</td></tr>`).join("") + `</tbody></table>`;
+  h += `<p class="hint">${esc(j.limits)} Net invested = purchases and stamp duty minus redemption amounts. Past figures only; not advice.</p>`;
+  $("casout").innerHTML = h;
+};
+
+async function post(path, body){
+  const r = await fetch(path, {method:"POST", headers:{"Content-Type":"application/json","X-IMAP-Client":"1"}, body: JSON.stringify({...body, key: S.key || undefined})});
+  const j = await r.json().catch(() => ({error: `server returned ${r.status}`}));
+  return {ok: r.ok, j};
+}
+
+$("list").onclick = async () => {
+  $("kmsg").textContent = "Loading…";
+  const {ok, j} = await post("/api/models", {});
+  if (!ok) { $("kmsg").textContent = j.error; return; }
+  const cur = $("model").value;
+  $("model").innerHTML = j.models.map(m => `<option${m === cur ? " selected" : ""}>${esc(m)}</option>`).join("");
+  $("kmsg").textContent = `${j.models.length} chat models available to this key.`; who();
+};
+
+document.querySelectorAll(".examples a").forEach(a => a.onclick = () => { $("q").value = a.dataset.q; ask(); });
+$("go").onclick = () => ask();
+$("q").addEventListener("keydown", e => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) ask(); });
+
+async function ask(question, keepPicks){
+  const q = (question ?? $("q").value).trim();
+  if (q.length < 3) { $("q").focus(); return; }
+  if (!keepPicks) S.picks = {};
+  S.lastQ = q; $("go").disabled = true; $("out").innerHTML = `<p class="hint">Working…</p>`;
+  try {
+    const {ok, j} = await post("/api/ask", {question: q, model: $("model").value, picks: S.picks});
+    show(ok ? j : {status: "ERROR", error: j.error});
+  } catch (e) { show({status: "ERROR", error: "could not reach the local server"}); }
+  finally { $("go").disabled = false; }
+}
+
+
+const SERIES = ["#2a78d6", "#eb6834", "#1baf7a"];   // validated: light surface, all pairs (dataviz validator)
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent){ const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent && parent.appendChild(e); return e; }
+const fmtVal = (c, v) => c.kind === "sip" ? "Rs " + Math.round(v).toLocaleString("en-IN") : (c.kind === "drawdown" || c.kind === "rolling") ? v.toFixed(2) + "%" : v.toFixed(1);
+const fmtAxis = (c, v) => c.kind === "sip" ? (v >= 1e5 ? (v / 1e5).toFixed(v % 1e5 ? 1 : 0) + " lakh" : Math.round(v / 1000) + "k") : (c.kind === "drawdown" || c.kind === "rolling") ? Math.round(v) + "%" : String(Math.round(v));
+function niceTicks(lo, hi, n){ const raw = (hi - lo) / n, mag = 10 ** Math.floor(Math.log10(raw)), st = [1, 2, 2.5, 5, 10].map(x => x * mag).find(x => raw <= x);
+  const a = Math.floor(lo / st) * st, out = []; for (let v = a; v <= hi + st * 1e-9; v += st) out.push(+v.toFixed(10)); return {ticks: out, lo: a, hi: out[out.length - 1]}; }
+const lineColor = (c, i) => c.kind === "sip" && i === 1 ? "#5C6B78" : SERIES[i];
+const niceDate = s => new Date(s + "T00:00:00").toLocaleDateString("en-IN", {day:"numeric", month:"short", year:"numeric"});
+
+function drawChart(c, host){
+  const title = c.kind === "indexed" ? (c.series.length > 1 ? "Growth of each fund, same start = 100" : "NAV growth, start = 100")
+              : c.kind === "drawdown" ? "Fall from previous high" : c.kind === "rolling" ? "Rolling returns: each period's yearly return, by when it ended" : "SIP: value against amount invested";
+  const box = document.createElement("div"); box.className = "chart"; host.appendChild(box);
+  box.innerHTML = `<h2>${title}</h2><p class="sub">${niceDate(c.start)} to ${niceDate(c.end)} · ${esc(c.unit)} · drawn from the same adjusted NAVs; the checked figures are in the cards above.</p>`;
+  if (c.series.length > 1) box.insertAdjacentHTML("beforeend", `<div class="legend">${c.series.map((s,i) => `<span><i style="background:${c.kind === "sip" && i === 1 ? "repeating-linear-gradient(90deg,#5C6B78 0 5px,transparent 5px 9px)" : SERIES[i]}"></i>${esc(s.name)}</span>`).join("")}</div>`);
+  const W = Math.max(320, Math.round(box.clientWidth - 36)), narrow = W < 560, H = narrow ? 240 : 300;
+  const m = {l: c.kind === "sip" ? 62 : 46, r: c.series.length > 1 && !narrow ? 140 : 14, t: 22, b: 30};
+  const svg = el("svg", {viewBox:`0 0 ${W} ${H}`, role:"img", "aria-label": title}, box);
+  const t0 = Date.parse(c.start), t1 = Date.parse(c.end) || t0 + 1;
+  const all = c.series.flatMap(s => s.values); let lo = Math.min(...all), hi = Math.max(...all);
+  if (c.kind === "drawdown") hi = 0; if (c.kind === "sip") lo = 0; if (c.kind === "indexed") { lo = Math.min(lo, 100); hi = Math.max(hi, 100); }
+  const nt = niceTicks(lo, hi, narrow ? 3 : 4); lo = nt.lo; hi = Math.max(nt.hi, hi);
+  const X = t => m.l + (t - t0) / (t1 - t0) * (W - m.l - m.r), Y = v => m.t + (hi - v) / (hi - lo) * (H - m.t - m.b);
+  const g = el("g", {}, svg);
+  // recessive grid + y labels
+  for (const v of nt.ticks) { const y = Y(v);
+    el("line", {x1:m.l, x2:W-m.r, y1:y, y2:y, stroke:"#DCE2E8", "stroke-width":1}, g);
+    const tx = el("text", {x:m.l-8, y:y+4, "text-anchor":"end", "font-size":11, fill:"#5C6B78"}, g); tx.textContent = fmtAxis(c, v); }
+  if (c.kind === "rolling" && lo < 0 && hi > 0) { const y = Y(0); el("line", {x1:m.l, x2:W-m.r, y1:y, y2:y, stroke:"#8A97A3", "stroke-width":1, "stroke-dasharray":"3 3"}, g); }
+  if (c.kind === "indexed") { const y = Y(100); el("line", {x1:m.l, x2:W-m.r, y1:y, y2:y, stroke:"#8A97A3", "stroke-width":1, "stroke-dasharray":"3 3"}, g); }
+  // x labels: years
+  const y0 = new Date(t0).getFullYear(), y1 = new Date(t1).getFullYear(), stepY = Math.max(1, Math.ceil((y1 - y0 + 1) / 7));
+  for (let yr = y0 + 1; yr <= y1; yr += stepY) { const t = Date.parse(`${yr}-01-01`); if (t <= t0 || t >= t1) continue;
+    const tx = el("text", {x:X(t), y:H-10, "text-anchor":"middle", "font-size":11, fill:"#5C6B78"}, g); tx.textContent = yr; }
+  if (y0 === y1 || (y1 - y0) < 1) { [t0, t1].forEach((t,i) => { const tx = el("text", {x:X(t), y:H-10, "text-anchor":i?"end":"start", "font-size":11, fill:"#5C6B78"}, g); tx.textContent = niceDate(new Date(t).toISOString().slice(0,10)); }); }
+  // series
+  c.series.forEach((s, i) => {
+    const pts = s.dates.map((d, k) => [X(Date.parse(d)), Y(s.values[k])]);
+    const dpath = pts.map((p, k) => (k ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join("");
+    if (c.kind === "drawdown") el("path", {d: dpath + `L${pts[pts.length-1][0]} ${Y(0)}L${pts[0][0]} ${Y(0)}Z`, fill: SERIES[0], "fill-opacity": .12}, g);
+    el("path", {d: dpath, fill:"none", stroke: lineColor(c, i), "stroke-width":2, "stroke-linejoin":"round", "stroke-dasharray": c.kind === "sip" && i === 1 ? "5 4" : "none"}, g);
+    if (c.series.length > 1 && !narrow) { const p = pts[pts.length-1]; const tx = el("text", {x:p[0]+6, y:p[1]+4, "font-size":11, fill:"#1B2733", class:"lab"}, g);
+      tx.textContent = (c.kind === "sip" ? s.name : s.name.split(" - ")[0].replace(/ Fund$/, "")).slice(0, 24); }
+    // flagged dates: small ticks on the baseline
+    s.excluded.forEach(d => el("path", {d:`M${X(Date.parse(d))} ${H-m.b} l-4 7 h8 z`, fill:"#9E3A2E"}, g));
+    s.large_moves.forEach(d => el("line", {x1:X(Date.parse(d)), x2:X(Date.parse(d)), y1:H-m.b, y2:H-m.b+6, stroke:"#7A5B12", "stroke-width":2}, g));
+  });
+  if (c.marks) { [["peak", c.marks.peak], ["low", c.marks.trough]].forEach(([lab, d]) => {
+      const s = c.series[0], k = s.dates.indexOf(d); if (k < 0) return; const x = X(Date.parse(d)), y = Y(s.values[k]);
+      el("circle", {cx:x, cy:y, r:4.5, fill:"#fff", stroke:"#1B2733", "stroke-width":2}, g);
+      const tx = lab === "peak" ? el("text", {x:x-9, y:y+16, "text-anchor":"end", "font-size":11, fill:"#1B2733", class:"lab"}, g)
+                                : el("text", {x:x+9, y:y+4, "text-anchor":"start", "font-size":11, fill:"#1B2733", class:"lab"}, g);
+      tx.textContent = `${lab} ${niceDate(d)}`; }); }
+  const flags = c.series.some(s => s.excluded.length || s.large_moves.length);
+  if (flags) box.insertAdjacentHTML("beforeend", `<p class="sub">Marks on the bottom edge: <span style="color:#9E3A2E">▲</span> NAV left out as a suspected bad value · <span style="color:#7A5B12">|</span> large move flagged by the data checks.</p>`);
+  // crosshair + tooltip
+  const cross = el("line", {y1:m.t, y2:H-m.b, stroke:"#1B2733", "stroke-width":1, opacity:0}, g);
+  const dots = c.series.map((s,i) => el("circle", {r:4, fill: lineColor(c, i), stroke:"#fff", "stroke-width":2, opacity:0}, g));
+  const tip = document.createElement("div"); tip.className = "tip"; box.appendChild(tip);
+  const hit = el("rect", {x:m.l, y:m.t, width:W-m.l-m.r, height:H-m.t-m.b, fill:"transparent"}, svg);
+  const ts = c.series.map(s => s.dates.map(d => Date.parse(d)));
+  function move(ev){
+    const r = svg.getBoundingClientRect(), px = (ev.clientX - r.left) * W / r.width, t = t0 + (px - m.l) / (W - m.l - m.r) * (t1 - t0);
+    let rows = [], cx = null;
+    c.series.forEach((s, i) => { const a = ts[i]; let lo2 = 0, hi2 = a.length - 1; while (hi2 - lo2 > 1) { const mid = (lo2 + hi2) >> 1; (a[mid] < t ? lo2 = mid : hi2 = mid); }
+      const k = Math.abs(a[lo2] - t) < Math.abs(a[hi2] - t) ? lo2 : hi2; cx ??= X(a[k]);
+      dots[i].setAttribute("cx", X(a[k])); dots[i].setAttribute("cy", Y(s.values[k])); dots[i].setAttribute("opacity", 1);
+      rows.push(`<div>${c.series.length > 1 ? `<span style="color:${lineColor(c, i)}">●</span> ${esc(s.name.split(" - ")[0])}: ` : ""}<b>${fmtVal(c, s.values[k])}</b></div>`);
+      if (i === 0) rows.unshift(`<div class="hint">${niceDate(s.dates[k])}</div>`); });
+    cross.setAttribute("x1", cx); cross.setAttribute("x2", cx); cross.setAttribute("opacity", .35);
+    tip.innerHTML = rows.join(""); tip.style.display = "block";
+    const bx = box.getBoundingClientRect(), left = ev.clientX - bx.left + 14;
+    tip.style.left = Math.min(left, bx.width - tip.offsetWidth - 8) + "px"; tip.style.top = (ev.clientY - bx.top - 10) + "px";
+  }
+  hit.addEventListener("pointermove", move); hit.addEventListener("pointerleave", () => { tip.style.display = "none"; cross.setAttribute("opacity", 0); dots.forEach(d => d.setAttribute("opacity", 0)); });
+  // table view (accessibility and exact values); thinned to about 24 rows
+  const s0 = c.series[0], every = Math.max(1, Math.floor(s0.dates.length / 24)), rowsIdx = s0.dates.map((_, k) => k).filter(k => k % every === 0 || k === s0.dates.length - 1);
+  box.insertAdjacentHTML("beforeend", `<details><summary>Show as a table</summary><table><thead><tr><th>Date</th>${c.series.map(s => `<th style="text-align:right">${esc(s.name.split(" - ")[0])}</th>`).join("")}</tr></thead><tbody>` +
+    rowsIdx.map(k => `<tr><td>${esc(s0.dates[k])}</td>${c.series.map(s => { const j = s.dates.indexOf(s0.dates[k]); return `<td class="n">${j < 0 ? "–" : fmtVal(c, s.values[j])}</td>`; }).join("")}</tr>`).join("") + `</tbody></table></details>`);
+}
+
+function show(r){
+  const o = $("out"); o.classList.remove("fresh"); void o.offsetWidth; o.classList.add("fresh");
+  let h = r.notice ? `<div class="banner">${esc(r.notice)}</div>` : "";
+  if (r.status === "ERROR" || r.status === "NOPLAN") h += `<div class="err">${esc(r.error)}</div>`;
+  if (r.status === "WITHHELD") h += `<div class="err">Withheld: ${esc(r.reason)}</div>`;
+  if (r.status === "NOTICE_ONLY") h += `<p>Name a fund if you'd like its past figures.</p>`;
+  if (r.status === "CLARIFY") {
+    const c = r.clarify;
+    h += `<p>“${esc(c.query)}” matches more than one fund. Which one did you mean?</p><div class="choices">` +
+      c.candidates.map(x => `<button class="quiet" data-pick="${x.code}" data-query="${esc(c.query)}">${esc(x.name)} · ${x.code}</button>`).join("") + `</div>`;
+  }
+  if (r.status === "ASK") {
+    h += `<p>Which measure do you mean?</p><div class="choices">` + r.ask.map(x => `<button class="quiet" data-metric="${esc(x.label)}">${esc(x.label)}</button>`).join("") + `</div>`;
+  }
+  if (r.status === "ANSWERED") {
+    for (const f of r.facts) {
+      const dir = f.metric === "volatility" ? "" : f.value > 0 ? "up" : f.value < 0 ? "down" : "";
+      h += `<article class="line"><div class="fund">${esc(f.fund)}</div>
+        <div class="meta">${esc(f.label)} · ${win(f)}${f.start ? ` · ${esc(f.start)} to ${esc(f.end)}` : ""} · scheme ${f.code}</div>
+        <div class="fig ${dir}">${pct(f.value)}</div><p>${esc(f.sentence.startsWith(f.fund + ": ") ? f.sentence.slice(f.fund.length + 2).replace(/^./, c => c.toUpperCase()) : f.sentence)}</p>
+        ${f.notes.map(n => `<p class="note">${esc(n)}</p>`).join("")}</article>`;
+    }
+    if (r.ranking && r.ranking.length) {
+      h += `<table><caption class="hint" style="text-align:left">Ordered from highest to lowest value</caption><thead><tr><th>Fund</th><th style="text-align:right">Value</th></tr></thead><tbody>` +
+        r.ranking.map(x => `<tr><td>${esc(x.fund)}</td><td class="n">${["sharpe", "sortino"].includes(r.facts[0].metric) ? x.value.toFixed(2) : pct(x.value)}</td></tr>`).join("") + `</tbody></table>`;
+    }
+    h += `<div id="chartHost"></div>`;
+    h += `<p class="matched">Matched: ${r.facts.map(f => `${esc(f.fund)} (${f.code < 0 ? "RBI series" : "scheme " + f.code})`).join("; ")}. Check these are what you meant.</p>`;
+    h += `<div class="glossary"><h2>What ${r.glossary.entries.length > 1 ? "these measures mean" : "this measure means"}</h2><dl>` +
+      r.glossary.entries.map(g => `<dt>${esc(g.label)}</dt><dd>${esc(g.text)}</dd>`).join("") + `</dl><p class="hint">Glossary version ${esc(r.glossary.version)}</p></div>`;
+  }
+  if (r.warning) h += `<p class="warn">${esc(r.warning)}</p>`;
+  if (r.plan || r.planner) h += `<details class="how"><summary>How this was answered</summary><p class="hint">Planned by: ${esc(r.planner)}. The plan below was checked by code; every figure was computed twice by separate code and only shown when both agreed.</p><pre>${esc(JSON.stringify(r.plan, null, 1))}</pre></details>`;
+  o.innerHTML = h;
+  if (r.chart) { try { drawChart(r.chart, $("chartHost")); } catch (e) { $("chartHost").innerHTML = `<p class="hint">Chart could not be drawn: ${esc(e.message)}</p>`; } }
+  o.querySelectorAll("[data-pick]").forEach(b => b.onclick = () => { S.picks[b.dataset.query.toLowerCase()] = +b.dataset.pick; ask(S.lastQ, true); });
+  o.querySelectorAll("[data-metric]").forEach(b => b.onclick = () => { const q = `${S.lastQ} Use ${b.dataset.metric}.`; $("q").value = q; ask(q); });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{
+ "split": "dev",
+ "n": 400,
+ "resolved_wrong_total": 0,
+ "coverage_amc_present_plain": [
+  1.0,
+  185
+ ],
+ "coverage_amc_present_alias_known": [
+  1.0,
+  13
+ ],
+ "coverage_amc_present_typo": [
+  1.0,
+  113
+ ],
+ "coverage_amc_present_short": [
+  0.9428571428571428,
+  35
+ ],
+ "amc_absent": 32,
+ "amc_absent_resolved": 0,
+ "amc_absent_small_true_in_top5": [
+  1.0,
+  18
+ ],
+ "ambiguous": 41,
+ "ambiguous_resolved": 0,
+ "rename_n": 31,
+ "rename_outcomes": {
+  "RESOLVED_CORRECT": 20,
+  "CLARIFY_TRUE_IN_TOP5": 11
+ },
+ "rename_ok_rate": 1.0,
+ "regression": {
+  "axis elss": "PASS",
+  "parag parikh elss": "PASS",
+  "axis bluechip": "PASS",
+  "hdfc top 100": "PASS",
+  "icici pru bluechip": "PASS",
+  "kotak emerging equity (must not resolve to 1st v1 pick)": "PASS",
+  "hdfc nifty 50 index (known failure)": "RESOLVED 149288"
+ }
+}

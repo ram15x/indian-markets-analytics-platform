@@ -1,0 +1,57 @@
+{
+ "split": "locked",
+ "n": 400,
+ "resolved_wrong_total": 0,
+ "coverage_amc_present_plain": [
+  1.0,
+  177
+ ],
+ "coverage_amc_present_alias_known": [
+  1.0,
+  18
+ ],
+ "coverage_amc_present_typo": [
+  1.0,
+  101
+ ],
+ "coverage_amc_present_short": [
+  0.5094339622641509,
+  53
+ ],
+ "amc_absent": 31,
+ "amc_absent_resolved": 0,
+ "amc_absent_small_true_in_top5": [
+  1.0,
+  21
+ ],
+ "ambiguous": 37,
+ "ambiguous_resolved": 0,
+ "rename_n": 29,
+ "rename_outcomes": {
+  "CLARIFY_TRUE_IN_TOP5": 15,
+  "RESOLVED_CORRECT": 14
+ },
+ "rename_ok_rate": 1.0,
+ "regression": {
+  "axis bluechip": [
+   "RESOLVED",
+   "Axis Large Cap Fund - Direct Plan - Growth"
+  ],
+  "hdfc top 100": [
+   "RESOLVED",
+   "HDFC Large Cap Fund - Growth Option - Direct Plan"
+  ],
+  "icici pru bluechip": [
+   "RESOLVED",
+   "ICICI Prudential Large Cap Fund (erstwhile Bluechip Fund) - "
+  ],
+  "kotak emerging equity": [
+   "CLARIFY",
+   "Kotak Global Emerging Market overseas Equity Omni FOF - Grow"
+  ],
+  "hdfc nifty 50 index": [
+   "RESOLVED",
+   "HDFC NIFTY Next 50 Index Fund - Direct Plan - Growth Option"
+  ]
+ }
+}

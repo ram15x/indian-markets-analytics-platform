@@ -1,0 +1,169 @@
+[
+ {
+  "q": "Sharpe ratio of HDFC Flexi Cap over 3 years",
+  "expect": "ANSWER",
+  "facts": [
+   [
+    118955,
+    "sharpe",
+    3
+   ]
+  ]
+ },
+ {
+  "q": "What is the Sortino ratio of Parag Parikh Flexi Cap for the last 3 years?",
+  "expect": "ANSWER",
+  "facts": [
+   [
+    122639,
+    "sortino",
+    3
+   ]
+  ]
+ },
+ {
+  "q": "SBI Small Cap Fund 5 year Sharpe ratio",
+  "expect": "ANSWER",
+  "facts": [
+   [
+    125497,
+    "sharpe",
+    5
+   ]
+  ]
+ },
+ {
+  "q": "What is the 5 year CAGR of gold?",
+  "expect": "ANSWER",
+  "facts": [
+   [
+    -1,
+    "cagr",
+    5
+   ]
+  ]
+ },
+ {
+  "q": "How much did silver return over 3 years?",
+  "expect": "ANSWER",
+  "facts": [
+   [
+    -2,
+    "total_return",
+    3
+   ]
+  ]
+ },
+ {
+  "q": "USD INR 3 year CAGR",
+  "expect": "ANSWER",
+  "facts": [
+   [
+    -3,
+    "cagr",
+    3
+   ]
+  ]
+ },
+ {
+  "q": "How much has the dollar gained against the rupee in 1 year?",
+  "expect": "ANSWER",
+  "facts": [
+   [
+    -3,
+    "total_return",
+    1
+   ]
+  ]
+ },
+ {
+  "q": "Worst drawdown of gold in the last 5 years",
+  "expect": "ANSWER",
+  "facts": [
+   [
+    -1,
+    "max_drawdown",
+    5
+   ]
+  ]
+ },
+ {
+  "q": "Compare gold and silver 5 year CAGR",
+  "expect": "ANSWER",
+  "facts": [
+   [
+    -1,
+    "cagr",
+    5
+   ],
+   [
+    -2,
+    "cagr",
+    5
+   ]
+  ],
+  "compare": true
+ },
+ {
+  "q": "SBI Gold Fund 5 year return",
+  "expect": "ANSWER",
+  "facts": [
+   [
+    119788,
+    "total_return",
+    5
+   ]
+  ]
+ },
+ {
+  "q": "Nippon India Small Cap 3 year CAGR",
+  "expect": "ANSWER",
+  "facts": [
+   [
+    118778,
+    "cagr",
+    3
+   ]
+  ]
+ },
+ {
+  "q": "Gold vs HDFC Flexi Cap 3 year return",
+  "expect": "WITHHELD"
+ },
+ {
+  "q": "Sharpe ratio of gold over 3 years",
+  "expect": "WITHHELD"
+ },
+ {
+  "q": "Sortino ratio of the rupee against the dollar over 5 years",
+  "expect": "WITHHELD"
+ },
+ {
+  "q": "Volatility of silver over 3 years",
+  "expect": "WITHHELD"
+ },
+ {
+  "q": "SIP of 5000 a month in gold for 5 years",
+  "expect": "WITHHELD"
+ },
+ {
+  "q": "Will gold go up next year?",
+  "expect": "NOFACT"
+ },
+ {
+  "q": "Should I buy gold or a mutual fund?",
+  "expect": "NOFACT"
+ },
+ {
+  "q": "Which fund has the best Sharpe ratio?",
+  "expect": "NOFACT"
+ },
+ {
+  "q": "What does the Sharpe ratio mean?",
+  "expect": "NOFACT"
+ },
+ {
+  "q": "Will the rupee fall below 100 per dollar?",
+  "expect": "NOFACT"
+ }
+]

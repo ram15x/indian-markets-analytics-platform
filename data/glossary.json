@@ -1,0 +1,17 @@
+{
+ "version": "2026-11-23c",
+ "author": "written by the assistant on 2026-11-23 to match the engine's conventions (src/imap/metrics_a.py); reviewed and approved by Ram in chat on 2026-11-23, no changes; rolling_return entry added 2026-11-23 by the assistant, NOT yet reviewed by Ram",
+ "measures": {
+  "total_return": "Total return is how much the NAV changed from the start of the period to the end, as a share of where it started. These are Growth options: no income is paid out, so everything the fund earns is already inside the NAV.",
+  "cagr": "CAGR (compound annual growth rate) is the single steady yearly rate that would take the starting NAV to the ending NAV over the period. Real years are uneven; CAGR averages them into one figure and says nothing about how bumpy the path was.",
+  "max_drawdown": "Maximum drawdown is the largest fall from a previous high to a later low within the period. It describes the worst stretch someone holding the fund through the whole period would have sat through, not what they actually lost unless they sold at the low.",
+  "volatility": "Annualised volatility measures how widely the daily NAV changes swung around their average, scaled up to a year (252 trading days). It describes the size of the ups and downs, not their direction.",
+  "sip_xirr": "SIP XIRR is the yearly return of a monthly investment plan. Each instalment was invested on a different date and for a different length of time, and XIRR uses those exact dates to find the one yearly rate that turns all the instalments into the final value.",
+  "rolling_return": "Rolling returns look at every possible period of the same length (for example every three-year stretch) instead of one start date, and show how widely the yearly return varied depending on when someone started. The past range is not a forecast.",
+  "sharpe": "Sharpe ratio: the average daily return above the risk-free rate (here the yield on RBI's three-month treasury bills), divided by how much those daily excess returns varied, scaled to a year. Higher means more return per unit of ups and downs. It treats rises and falls alike, and a figure from one period can differ a lot from another period.",
+  "sortino": "Sortino ratio: like the Sharpe ratio, but only days that fell short of the risk-free rate count as risk, so large rises are not penalised. Higher means more return per unit of shortfall. Not comparable with a Sharpe ratio."
+ },
+ "notes": {
+  "past_only": "All figures are calculated from past NAVs. They do not tell you what will happen next."
+ }
+}

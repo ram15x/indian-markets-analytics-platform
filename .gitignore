@@ -1,0 +1,25 @@
+# never publish: raw downloads, exchange price data, backups, run reports, caches
+data/raw/
+data/prices/
+data/refresh_reports/
+data/*.bak
+data/*.tmp
+data/refresh_log.txt
+__pycache__/
+.pytest_cache/
+.hypothesis/
+*.pyc
+.pytest_tmp/
+mutants/
+engine_c/target/
+_to_delete/
+data/macro/_tbill_check.csv
+
+# never publish data built from AMFI/RBI/NSE sources (reuse terms unverified); rebuild locally with the pipeline
+data/*.parquet
+data/macro/
+data/renames.csv
+data/published_check_hdfc.csv
+.mypy_cache/
+.ruff_cache/
+lab/results/*.parquet

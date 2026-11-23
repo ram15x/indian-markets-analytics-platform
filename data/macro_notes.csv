@@ -1,0 +1,2 @@
+month,table,field,note
+2019-07,162,gold_spread_inr,"Printed spread 3254.37; Mumbai minus London is 3264.37 (Rs 10, 0.03% of the price). London leg checked: implied USD/INR from gold (68.77) and from silver (68.81) agree, so the London price is consistent. Whether the Mumbai price or the spread is the misprint cannot be settled from this table; Mumbai price used as printed."

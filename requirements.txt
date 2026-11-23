@@ -1,0 +1,11 @@
+numpy>=2.0,<3
+pandas>=2.2,<4
+pyarrow>=15,<27
+duckdb>=1.0,<3
+scikit-learn>=1.4,<2
+pytest>=8,<10
+hypothesis>=6,<7
+casparser>=1.4,<2
+openpyxl>=3.1,<4
+mcp>=2.3,<3
+pandera>=0.36,<0.40

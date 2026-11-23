@@ -1,0 +1,50 @@
+{
+ "written_at": "2026-11-23T04:10:31",
+ "source": "macro build 2026-11-23T04:10:30: gold/silver Apr 2017..Apr 2026, USD/INR 2013-01-01..2026-11-20",
+ "files": {
+  "nav_raw.parquet": {
+   "sha256": "13936ceefed8ba64e0b50bc8c67376c4677b570dd01576ed37252a3029f8dde7",
+   "bytes": 21525072
+  },
+  "schemes.parquet": {
+   "sha256": "ec0d1ed6f670d0031c745b08223376a2ccf5e1671991fc28bfbdceea184fa8ad",
+   "bytes": 58032
+  },
+  "dq_events.parquet": {
+   "sha256": "db258cbcc9240b0b16ed53731490b8bc59f6a9652b955a03c5caab84601c168d",
+   "bytes": 14987
+  },
+  "dq_adjustments.parquet": {
+   "sha256": "cb86307c0ac0afcf673381eef7f5d0a0fcd2433d1f5bc948500036939755f2b4",
+   "bytes": 3731
+  },
+  "renames.csv": {
+   "sha256": "397b033bafa3a37ec8dc8e3d6c77504c8c50a17c677f405cb9dd4eca2b9c7cbe",
+   "bytes": 1997
+  },
+  "glossary.json": {
+   "sha256": "f52780699764bef66a44adbdbc81e165ff065f6092c8bb292fdfd2c60e408fa7",
+   "bytes": 2548
+  },
+  "macro/metals_monthly.parquet": {
+   "sha256": "016fa6e6e75e6c4f9505447d232ed6fba2ecc16dcfaebd8191f74767a34446e1",
+   "bytes": 14286
+  },
+  "macro/usd_inr_daily.parquet": {
+   "sha256": "517097753a862a9df32df0a6698d512a1aaf973d6b46033c62b0092a43c973b7",
+   "bytes": 40649
+  },
+  "macro/report.json": {
+   "sha256": "2152302d64832391dbf0dd9433b061f2db90a8a96ba15c1db92a2e9797e6f96d",
+   "bytes": 7156
+  },
+  "macro_notes.csv": {
+   "sha256": "b3cc966e7496ba15586962a29b544f5673927fccdcd02bac062b6c51527309c3",
+   "bytes": 377
+  },
+  "macro/tbill_91d.parquet": {
+   "sha256": "b315f47417d65c7934a8023ce114c369039d1c8949162febd3dcfc5dccaccad6",
+   "bytes": 10476
+  }
+ }
+}

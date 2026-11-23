@@ -1,0 +1,30 @@
+{
+ "split": "locked",
+ "n": 400,
+ "unique": 377,
+ "ambiguous": 23,
+ "confident_wrong_on_unique": 0.0,
+ "overconfident_on_ambiguous": 0.0,
+ "coverage_plain": [
+  1.0,
+  218
+ ],
+ "coverage_alias_known": [
+  1.0,
+  19
+ ],
+ "coverage_alias_unseen": [
+  1.0,
+  18
+ ],
+ "coverage_typo": [
+  0.9736842105263158,
+  76
+ ],
+ "coverage_short": [
+  1.0,
+  46
+ ],
+ "clarify_true_in_top5": 1.0,
+ "ambiguous_small_clarify_has_true": 1.0
+}

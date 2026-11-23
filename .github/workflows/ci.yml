@@ -1,0 +1,42 @@
+name: ci
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install
+        run: |
+          pip install -r requirements.txt -c requirements-lock.txt
+          pip install -r requirements-dev.txt
+      - name: Engine C (Rust) unit tests and build
+        run: |
+          cd engine_c && cargo test --release --no-default-features
+          maturin build --release --out dist && pip install dist/*.whl
+      - name: Lint
+        run: ruff check .
+      - name: Types
+        run: mypy
+      - name: Known vulnerabilities in pinned dependencies
+        run: pip-audit -r requirements-lock.txt
+      - name: Tests
+        # The data files are not published, so tests marked `data` are skipped here (and say so).
+        run: IMAP_REQUIRE_C=1 python -m pytest -q -rs
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: python
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image (includes engine C and its Rust tests)
+        run: docker build -t imap .
+      - name: Engine C is installed in the image
+        run: docker run --rm imap python -c "import imap_engine_c as c; print('engine C', c.VERSION)"

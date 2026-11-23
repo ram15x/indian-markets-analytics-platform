@@ -1,0 +1,534 @@
+{
+ "planner": "chat:openai/gpt-oss-120b",
+ "summary": {
+  "CORRECT": 15,
+  "WRONG_ANSWER": 0,
+  "SAFE_MISS": 2
+ },
+ "rows": [
+  {
+   "q": "Gold returns over the past 5 years",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     -1,
+     "total_return",
+     5
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "gold"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "total_return",
+      "fund": "f1",
+      "years": 5
+     }
+    ]
+   }
+  },
+  {
+   "q": "silver CAGR 3 years",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     -2,
+     "cagr",
+     3
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "silver"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "cagr",
+      "fund": "f1",
+      "years": 3
+     }
+    ]
+   }
+  },
+  {
+   "q": "How has the rupee done against the US dollar over 5 years, annualised?",
+   "expect": "ANSWER",
+   "verdict": "SAFE_MISS",
+   "status": "WITHHELD",
+   "notice": null,
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "USD/INR"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "cagr",
+      "fund": "f1",
+      "years": 5
+     }
+    ]
+   }
+  },
+  {
+   "q": "Biggest fall in silver over 3 years",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     -2,
+     "max_drawdown",
+     3
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "silver"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "max_drawdown",
+      "fund": "f1",
+      "years": 3
+     }
+    ]
+   }
+  },
+  {
+   "q": "Compare gold and silver total return over 3 years",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     -1,
+     "total_return",
+     3
+    ],
+    [
+     -2,
+     "total_return",
+     3
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "gold"
+     },
+     {
+      "id": "f2",
+      "op": "resolve",
+      "query": "silver"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "total_return",
+      "fund": "f1",
+      "years": 3
+     },
+     {
+      "id": "m2",
+      "op": "metric",
+      "metric": "total_return",
+      "fund": "f2",
+      "years": 3
+     },
+     {
+      "id": "c1",
+      "op": "compare",
+      "inputs": [
+       "m1",
+       "m2"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "q": "Sortino ratio for Mirae Asset Large Cap over 3 years",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     118825,
+     "sortino",
+     3
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "Mirae Asset Large Cap"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "sortino",
+      "fund": "f1",
+      "years": 3
+     }
+    ]
+   }
+  },
+  {
+   "q": "Kotak Flexicap Sharpe ratio, 5 years",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     120166,
+     "sharpe",
+     5
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "Kotak Flexicap"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "sharpe",
+      "fund": "f1",
+      "years": 5
+     }
+    ]
+   }
+  },
+  {
+   "q": "Risk adjusted return using Sharpe for ICICI Prudential Value Fund over 3 years",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     120323,
+     "sharpe",
+     3
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "ICICI Prudential Value Fund"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "sharpe",
+      "fund": "f1",
+      "years": 3
+     }
+    ]
+   }
+  },
+  {
+   "q": "1 year change in USD/INR",
+   "expect": "ANSWER",
+   "verdict": "SAFE_MISS",
+   "status": "ASK",
+   "notice": null,
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "USD/INR"
+     },
+     {
+      "id": "a1",
+      "op": "ask",
+      "about": "metric",
+      "options": [
+       "total_return",
+       "cagr",
+       "volatility",
+       "max_drawdown",
+       "sharpe"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "q": "Nippon India Small Cap vs SBI Small Cap Fund Sharpe ratio 3 years",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     118778,
+     "sharpe",
+     3
+    ],
+    [
+     125497,
+     "sharpe",
+     3
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "Nippon India Small Cap"
+     },
+     {
+      "id": "f2",
+      "op": "resolve",
+      "query": "SBI Small Cap Fund"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "sharpe",
+      "fund": "f1",
+      "years": 3
+     },
+     {
+      "id": "m2",
+      "op": "metric",
+      "metric": "sharpe",
+      "fund": "f2",
+      "years": 3
+     },
+     {
+      "id": "c1",
+      "op": "compare",
+      "inputs": [
+       "m1",
+       "m2"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "q": "Annual volatility of the dollar-rupee rate over 3 years",
+   "expect": "ANSWER",
+   "verdict": "CORRECT",
+   "status": "ANSWERED",
+   "notice": null,
+   "facts": [
+    [
+     -3,
+     "volatility",
+     3
+    ]
+   ],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "USD/INR"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "volatility",
+      "fund": "f1",
+      "years": 3
+     }
+    ]
+   }
+  },
+  {
+   "q": "Sharpe ratio of silver for 5 years",
+   "expect": "WITHHELD",
+   "verdict": "CORRECT",
+   "status": "WITHHELD",
+   "notice": null,
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "silver"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "sharpe",
+      "fund": "f1",
+      "years": 5
+     }
+    ]
+   }
+  },
+  {
+   "q": "5000 rupee monthly SIP in silver over 5 years",
+   "expect": "WITHHELD",
+   "verdict": "CORRECT",
+   "status": "WITHHELD",
+   "notice": null,
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "silver"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "sip_xirr",
+      "fund": "f1",
+      "years": 5,
+      "amount": 5000
+     }
+    ]
+   }
+  },
+  {
+   "q": "Sortino ratio of USD/INR over 3 years",
+   "expect": "WITHHELD",
+   "verdict": "CORRECT",
+   "status": "WITHHELD",
+   "notice": null,
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "f1",
+      "op": "resolve",
+      "query": "USD/INR"
+     },
+     {
+      "id": "m1",
+      "op": "metric",
+      "metric": "sortino",
+      "fund": "f1",
+      "years": 3
+     }
+    ]
+   }
+  },
+  {
+   "q": "Is gold a good investment right now?",
+   "expect": "NOFACT",
+   "verdict": "CORRECT",
+   "status": "ASK",
+   "notice": "advice",
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "a1",
+      "op": "ask",
+      "about": "metric",
+      "options": [
+       "total_return",
+       "cagr",
+       "max_drawdown",
+       "volatility",
+       "sharpe"
+      ]
+     }
+    ],
+    "notice": "advice"
+   }
+  },
+  {
+   "q": "Where will the dollar be against the rupee in 2030?",
+   "expect": "NOFACT",
+   "verdict": "CORRECT",
+   "status": "NOTICE_ONLY",
+   "notice": "prediction",
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [],
+    "notice": "prediction"
+   }
+  },
+  {
+   "q": "What is the Sortino ratio?",
+   "expect": "NOFACT",
+   "verdict": "CORRECT",
+   "status": "ASK",
+   "notice": null,
+   "facts": [],
+   "error": null,
+   "plan": {
+    "steps": [
+     {
+      "id": "a1",
+      "op": "ask",
+      "about": "metric",
+      "options": [
+       "sortino",
+       "sharpe",
+       "cagr",
+       "total_return",
+       "volatility"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

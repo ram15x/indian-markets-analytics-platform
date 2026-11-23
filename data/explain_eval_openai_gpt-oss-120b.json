@@ -1,0 +1,105 @@
+{
+ "model": "openai/gpt-oss-120b",
+ "accepted": 1,
+ "n": 10,
+ "rows": [
+  {
+   "q": "What is the 3 year CAGR of SBI Small Cap?",
+   "accepted": false,
+   "reason": "direction word outside {fN.direction}: 'growth'",
+   "raw": "The compound annual growth rate tells you the average yearly return you would have earned if the performance were spread evenly over time. Over the past {f1.window}, the fund\u2019s CAGR is {f1.value}, and it has {f1.direction} to that level.",
+   "filled": null
+  },
+  {
+   "q": "sbi small cap 5y annualised return",
+   "accepted": false,
+   "reason": "direction word outside {fN.direction}: 'growth'",
+   "raw": "The {f1.metric} shows the average yearly growth you would get if the return were spread evenly across each year. For the {f1.fund}, over a {f1.window} period, the {f1.metric} is {f1.value}. The performance {f1.direction} during that time.",
+   "filled": null
+  },
+  {
+   "q": "How much did Parag Parikh Flexi Cap return in the last 1 year?",
+   "accepted": true,
+   "reason": "ok",
+   "raw": "The \u201ctotal return\u201d tells you the overall change in the amount you would have after staying invested for the period, including price movement and any earnings that were added back. For {f1.fund}, the total return {f1.direction} by {f1.value} over the past {f1.window}.",
+   "filled": "The \u201ctotal return\u201d tells you the overall change in the amount you would have after staying invested for the period, including price movement and any earnings that were added back. For Parag Parikh Flexi Cap Fund - Direct Plan - Growth, the total return rose by 1.10% over the past 1 year(s)."
+  },
+  {
+   "q": "Compare 5 year CAGR of parag parikh flexi cap vs hdfc flexi cap",
+   "accepted": false,
+   "reason": "direction word outside {fN.direction}: 'growth'",
+   "raw": "CAGR, or compound annual growth rate, tells you the average yearly change you would see if the investment grew at a steady pace over the whole period.  \n\nFor the first fund, the {f1.metric} over the {f1.window} {f1.direction} to {f1.value}.  \n\nFor the second fund, the {f2.metric} over the {f2.window} {f2.direction} to {f2.value}.  \n\nAccording to the provided {ranking}, the second fund appears first in the list, followed by the first fund.",
+   "filled": null
+  },
+  {
+   "q": "Which grew faster over 3 years: Mirae Asset Large Cap, HDFC Large Cap or Axis Large Cap? Use CAGR.",
+   "skipped": "CLARIFY"
+  },
+  {
+   "q": "If I had done a SIP of Rs 5000 on the 5th in quant small cap for 5 years, what is the XIRR?",
+   "skipped": "CLARIFY"
+  },
+  {
+   "q": "xirr for monthly sip of 10000 rupees in nippon india small cap, 3 years, on the 1st",
+   "skipped": "CLARIFY"
+  },
+  {
+   "q": "What was the worst fall (max drawdown) of Motilal Oswal Midcap since inception?",
+   "accepted": false,
+   "reason": "direction word outside {fN.direction}: 'drop'",
+   "raw": "The maximum drawdown tells you the biggest percentage drop the fund experienced from a high point to a low point. For this fund, the {f1.metric} was {f1.value} {f1.window}, happening between {f1.peak_date} and {f1.trough_date}.",
+   "filled": null
+  },
+  {
+   "q": "How volatile has the UTI Nifty 50 index fund been over 3 years?",
+   "skipped": "CLARIFY"
+  },
+  {
+   "q": "Axis Bluechip 5 year CAGR",
+   "accepted": false,
+   "reason": "direction word outside {fN.direction}: 'growth'",
+   "raw": "The metric called {f1.metric} shows the average yearly growth over a period. It smooths out yearly ups and downs to give a single rate that represents how the investment performed each year on average. For this fund, over the {f1.window} period from {f1.start_date} to {f1.end_date}, the rate {f1.direction} to {f1.value}.",
+   "filled": null
+  },
+  {
+   "q": "hdfc top 100 returns over 3 years, annualised",
+   "accepted": false,
+   "reason": "direction word outside {fN.direction}: 'growth'",
+   "raw": "Compound annual growth rate, or {f1.metric}, tells you the average yearly return if the investment grew at a steady pace. For {f1.fund}, the {f1.metric} over {f1.window} is {f1.value}, and it has {f1.direction} during the period from {f1.start_date} to {f1.end_date}.",
+   "filled": null
+  },
+  {
+   "q": "Risk of ICICI Prudential Balanced Advantage vs HDFC Balanced Advantage, 5 years",
+   "accepted": false,
+   "reason": "advice or prediction word: 'expect'",
+   "raw": "Annualised volatility tells you how much a fund\u2019s returns tend to swing around their average \u2013 think of it as the \u201cwiggle\u2011room\u201d of the investment over time.  \n\nAccording to {ranking}:  \n\n- {f2.fund} shows an annualised volatility of {f2.value}.  \n- {f1.fund} shows an annualised volatility of {f1.value}.  \n\nThese numbers reflect the typical range of movement you might expect for each fund over the past {f2.window}.",
+   "filled": null
+  },
+  {
+   "q": "SBI Contra drawdown in the last 3 years",
+   "accepted": false,
+   "reason": "direction word outside {fN.direction}: 'decline'",
+   "raw": "Maximum drawdown tells you how much the fund\u2019s value slipped from its highest point to its lowest point within a chosen time span. Over the past {f1.window}, the fund moved from a peak on {f1.peak_date} to a trough on {f1.trough_date}. The size of that decline is {f1.value}.",
+   "filled": null
+  },
+  {
+   "q": "Total return of HDFC Liquid Fund over 1 year",
+   "skipped": "CLARIFY"
+  },
+  {
+   "q": "kotak flexicap cagr 10 years",
+   "accepted": false,
+   "reason": "direction word outside {fN.direction}: 'growth'",
+   "raw": "The {f1.metric} tells you the average yearly growth rate, smoothing out the ups and downs that happen each year. For {f1.fund}, over the {f1.window} from {f1.start_date} to {f1.end_date}, the rate {f1.direction} to {f1.value}.",
+   "filled": null
+  },
+  {
+   "q": "Axis ELSS and Parag Parikh ELSS, 3 year CAGR each",
+   "skipped": "CLARIFY"
+  },
+  {
+   "q": "5 year SIP XIRR of Parag Parikh ELSS with 2000 a month",
+   "skipped": "CLARIFY"
+  }
+ ]
+}

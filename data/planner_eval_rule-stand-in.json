@@ -1,0 +1,405 @@
+{
+ "planner": "rule-stand-in",
+ "summary": {
+  "CORRECT": 17,
+  "WRONG_ANSWER": 0,
+  "SAFE_MISS": 7
+ },
+ "rows": [
+  {
+   "q": "What is the 3 year CAGR of SBI Small Cap?",
+   "expect": "ANSWER",
+   "got": "ANSWERED",
+   "verdict": "CORRECT",
+   "facts": [
+    [
+     125497,
+     "cagr",
+     3
+    ]
+   ],
+   "want": [
+    [
+     125497,
+     "cagr",
+     3
+    ]
+   ]
+  },
+  {
+   "q": "sbi small cap 5y annualised return",
+   "expect": "ANSWER",
+   "got": "ANSWERED",
+   "verdict": "CORRECT",
+   "facts": [
+    [
+     125497,
+     "cagr",
+     5
+    ]
+   ],
+   "want": [
+    [
+     125497,
+     "cagr",
+     5
+    ]
+   ]
+  },
+  {
+   "q": "How much did Parag Parikh Flexi Cap return in the last 1 year?",
+   "expect": "ANSWER",
+   "got": "ANSWERED",
+   "verdict": "CORRECT",
+   "facts": [
+    [
+     122639,
+     "total_return",
+     1
+    ]
+   ],
+   "want": [
+    [
+     122639,
+     "total_return",
+     1
+    ]
+   ]
+  },
+  {
+   "q": "Compare 5 year CAGR of parag parikh flexi cap vs hdfc flexi cap",
+   "expect": "ANSWER",
+   "got": "ANSWERED",
+   "verdict": "CORRECT",
+   "facts": [
+    [
+     118955,
+     "cagr",
+     5
+    ],
+    [
+     122639,
+     "cagr",
+     5
+    ]
+   ],
+   "want": [
+    [
+     118955,
+     "cagr",
+     5
+    ],
+    [
+     122639,
+     "cagr",
+     5
+    ]
+   ]
+  },
+  {
+   "q": "Which grew faster over 3 years: Mirae Asset Large Cap, HDFC Large Cap or Axis Large Cap? Use CAGR.",
+   "expect": "ANSWER",
+   "got": "CLARIFY",
+   "verdict": "SAFE_MISS",
+   "facts": [],
+   "want": [
+    [
+     118825,
+     "cagr",
+     3
+    ],
+    [
+     119018,
+     "cagr",
+     3
+    ],
+    [
+     120465,
+     "cagr",
+     3
+    ]
+   ]
+  },
+  {
+   "q": "If I had done a SIP of Rs 5000 on the 5th in quant small cap for 5 years, what is the XIRR?",
+   "expect": "ANSWER",
+   "got": "CLARIFY",
+   "verdict": "SAFE_MISS",
+   "facts": [],
+   "want": [
+    [
+     120828,
+     "sip_xirr",
+     5,
+     5000,
+     5
+    ]
+   ]
+  },
+  {
+   "q": "xirr for monthly sip of 10000 rupees in nippon india small cap, 3 years, on the 1st",
+   "expect": "ANSWER",
+   "got": "CLARIFY",
+   "verdict": "SAFE_MISS",
+   "facts": [],
+   "want": [
+    [
+     118778,
+     "sip_xirr",
+     3,
+     10000,
+     1
+    ]
+   ]
+  },
+  {
+   "q": "What was the worst fall (max drawdown) of Motilal Oswal Midcap since inception?",
+   "expect": "ANSWER",
+   "got": "ANSWERED",
+   "verdict": "CORRECT",
+   "facts": [
+    [
+     127042,
+     "max_drawdown",
+     "inception"
+    ]
+   ],
+   "want": [
+    [
+     127042,
+     "max_drawdown",
+     "inception"
+    ]
+   ]
+  },
+  {
+   "q": "How volatile has the UTI Nifty 50 index fund been over 3 years?",
+   "expect": "ANSWER",
+   "got": "CLARIFY",
+   "verdict": "SAFE_MISS",
+   "facts": [],
+   "want": [
+    [
+     120716,
+     "volatility",
+     3
+    ]
+   ]
+  },
+  {
+   "q": "Axis Bluechip 5 year CAGR",
+   "expect": "ANSWER",
+   "got": "ANSWERED",
+   "verdict": "CORRECT",
+   "facts": [
+    [
+     120465,
+     "cagr",
+     5
+    ]
+   ],
+   "want": [
+    [
+     120465,
+     "cagr",
+     5
+    ]
+   ]
+  },
+  {
+   "q": "hdfc top 100 returns over 3 years, annualised",
+   "expect": "ANSWER",
+   "got": "ANSWERED",
+   "verdict": "CORRECT",
+   "facts": [
+    [
+     119018,
+     "cagr",
+     3
+    ]
+   ],
+   "want": [
+    [
+     119018,
+     "cagr",
+     3
+    ]
+   ]
+  },
+  {
+   "q": "Risk of ICICI Prudential Balanced Advantage vs HDFC Balanced Advantage, 5 years",
+   "expect": "ANSWER",
+   "got": "ANSWERED",
+   "verdict": "CORRECT",
+   "facts": [
+    [
+     118968,
+     "volatility",
+     5
+    ],
+    [
+     120377,
+     "volatility",
+     5
+    ]
+   ],
+   "want": [
+    [
+     118968,
+     "volatility",
+     5
+    ],
+    [
+     120377,
+     "volatility",
+     5
+    ]
+   ]
+  },
+  {
+   "q": "SBI Contra drawdown in the last 3 years",
+   "expect": "ANSWER",
+   "got": "ANSWERED",
+   "verdict": "CORRECT",
+   "facts": [
+    [
+     119835,
+     "max_drawdown",
+     3
+    ]
+   ],
+   "want": [
+    [
+     119835,
+     "max_drawdown",
+     3
+    ]
+   ]
+  },
+  {
+   "q": "Total return of HDFC Liquid Fund over 1 year",
+   "expect": "ANSWER",
+   "got": "CLARIFY",
+   "verdict": "SAFE_MISS",
+   "facts": [],
+   "want": [
+    [
+     119091,
+     "total_return",
+     1
+    ]
+   ]
+  },
+  {
+   "q": "kotak flexicap cagr 10 years",
+   "expect": "ANSWER",
+   "got": "ANSWERED",
+   "verdict": "CORRECT",
+   "facts": [
+    [
+     120166,
+     "cagr",
+     10
+    ]
+   ],
+   "want": [
+    [
+     120166,
+     "cagr",
+     10
+    ]
+   ]
+  },
+  {
+   "q": "Axis ELSS and Parag Parikh ELSS, 3 year CAGR each",
+   "expect": "ANSWER",
+   "got": "CLARIFY",
+   "verdict": "SAFE_MISS",
+   "facts": [],
+   "want": [
+    [
+     120503,
+     "cagr",
+     3
+    ],
+    [
+     147481,
+     "cagr",
+     3
+    ]
+   ]
+  },
+  {
+   "q": "3 year return of a gold fund",
+   "expect": "CLARIFY",
+   "got": "CLARIFY",
+   "verdict": "CORRECT",
+   "facts": [],
+   "want": []
+  },
+  {
+   "q": "What is the 5 year CAGR of the nifty index fund?",
+   "expect": "CLARIFY",
+   "got": "CLARIFY",
+   "verdict": "CORRECT",
+   "facts": [],
+   "want": []
+  },
+  {
+   "q": "banking and psu fund 3 year return",
+   "expect": "CLARIFY",
+   "got": "CLARIFY",
+   "verdict": "CORRECT",
+   "facts": [],
+   "want": []
+  },
+  {
+   "q": "10 year CAGR of Zerodha Silver ETF FoF",
+   "expect": "WITHHELD",
+   "got": "WITHHELD",
+   "verdict": "CORRECT",
+   "facts": [],
+   "want": []
+  },
+  {
+   "q": "5 year SIP XIRR of Parag Parikh ELSS with 2000 a month",
+   "expect": "ANSWER",
+   "got": "CLARIFY",
+   "verdict": "SAFE_MISS",
+   "facts": [],
+   "want": [
+    [
+     147481,
+     "sip_xirr",
+     5,
+     2000,
+     1
+    ]
+   ]
+  },
+  {
+   "q": "Should I buy SBI Small Cap now?",
+   "expect": "NOFACT",
+   "got": "NOPLAN",
+   "verdict": "CORRECT",
+   "facts": [],
+   "want": []
+  },
+  {
+   "q": "Will quant small cap go up next year?",
+   "expect": "NOFACT",
+   "got": "NOPLAN",
+   "verdict": "CORRECT",
+   "facts": [],
+   "want": []
+  },
+  {
+   "q": "Which fund is the best to invest in right now?",
+   "expect": "NOFACT",
+   "got": "NOPLAN",
+   "verdict": "CORRECT",
+   "facts": [],
+   "want": []
+  }
+ ]
+}

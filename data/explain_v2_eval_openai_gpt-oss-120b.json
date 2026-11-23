@@ -1,0 +1,151 @@
+{
+ "model": "openai/gpt-oss-120b",
+ "accepted": 3,
+ "n": 16,
+ "rows": [
+  {
+   "q": "Mirae Asset Large Cap 5 year CAGR",
+   "metrics": [
+    "cagr"
+   ],
+   "accepted": false,
+   "reason": "refers to particular funds: 'the investment'",
+   "raw": "CAGR, or compound annual growth rate, tells you the smooth, average speed at which an investment has grown each year over a set period, such as five years. Think of it as the steady pace you\u2019d need to maintain every year to turn the starting amount into the current value, ignoring the ups and downs that happened along the way. When you look at this figure, a higher number simply means the investment has moved faster on average, while a lower number indicates a slower pace of growth. It\u2019s a handy way to compare how quickly different investments have progressed over the same length of time."
+  },
+  {
+   "q": "How much has ICICI Prudential Value Fund returned in 2 years?",
+   "metrics": [
+    "total_return"
+   ],
+   "accepted": false,
+   "reason": "refers to particular funds: 'both'",
+   "raw": "Total return tells you the overall change in the value of an investment over a chosen time span, combining both the movement in its market price and any income it has generated, such as dividends. When you look at this figure, a higher number means the investment has grown more, while a lower number indicates less growth or a decline. It lets you see the complete picture of how the investment performed, rather than just the price alone, making it easier to compare results across different periods or options."
+  },
+  {
+   "q": "Annualised return of Kotak Flexicap over 7 years",
+   "metrics": [
+    "cagr"
+   ],
+   "accepted": false,
+   "reason": "refers to particular funds: 'the investment'",
+   "raw": "CAGR, or the compound annual growth rate, shows the smooth, average increase you\u2019d see each year if the investment\u2019s growth were spread out evenly over the whole period. Think of it as the steady pace at which the money would have to grow every year to reach the final amount, ignoring the ups and downs along the way. When you look at this figure, a higher number simply means the investment has moved faster on average, while a lower number indicates a slower pace of growth. It\u2019s a handy way to compare how quickly different investments have built value over the same length of time."
+  },
+  {
+   "q": "max drawdown of nippon india small cap over 5 years",
+   "metrics": [
+    "max_drawdown"
+   ],
+   "accepted": false,
+   "reason": "advice or prediction word: 'worst'",
+   "raw": "Maximum drawdown tells you how much the value of an investment fell from its highest point to its lowest point over a given time span. Think of it as the deepest dip you would have experienced if you had been holding the investment throughout that period. It\u2019s a way to gauge the worst\u2011case loss you might have faced, helping you understand how volatile or risky the investment can be during market downturns. When you see the figure, picture the peak value and then the lowest trough that followed; the difference between them is the maximum drawdown. This gives a simple snapshot of the investment\u2019s biggest historical setback."
+  },
+  {
+   "q": "Volatility of HDFC Balanced Advantage over 3 years",
+   "metrics": [
+    "volatility"
+   ],
+   "accepted": false,
+   "reason": "advice or prediction word: 'predictable'",
+   "raw": "Annualised volatility is a way of describing how much the value of an investment tends to move up and down over the course of a year. Think of it as the size of the roller\u2011coaster ride: a higher number means the price swings more wildly, while a lower number indicates a smoother, steadier ride. When you look at this figure, simply compare it with other numbers you see\u2014whichever is higher points to bigger fluctuations, and whichever is lower points to more calm, predictable changes. This helps you get a feel for how \u201cbouncy\u201d the investment can be."
+  },
+  {
+   "q": "SIP of 3000 rupees every month on the 10th in Parag Parikh Flexi Cap for 4 years: what XIRR?",
+   "metrics": [
+    "sip_xirr"
+   ],
+   "accepted": false,
+   "reason": "refers to particular funds: 'your investment'",
+   "raw": "The XIRR for a systematic investment plan shows the annual growth rate you\u2019ve earned, taking into account each monthly contribution and the exact dates they were made. It works like a speedometer for your investment, converting all the cash\u2011in and cash\u2011out moments into a single yearly figure that reflects how fast the money has been compounding. When you look at the number, a larger value indicates that the investment has been growing more quickly over the period, while a smaller value points to slower growth. This helps you compare the performance of different plans or time spans without worrying about the exact timing of each payment."
+  },
+  {
+   "q": "XIRR if I invested Rs 1,500 monthly in SBI Contra for 6 years",
+   "metrics": [
+    "sip_xirr"
+   ],
+   "accepted": false,
+   "reason": "a unit or currency appears",
+   "raw": "SIP XIRR is a way to show the average yearly growth you get when you put money in regularly, such as a fixed amount each month, over a period of time. It works by looking at every cash flow \u2013 when you add money and when you get it back \u2013 and calculates a single rate that would make the total of those flows equal to the final amount. The result is expressed as a percent and lets you compare how fast your investment has been growing, regardless of the exact dates of each contribution. A higher number simply indicates a faster pace of growth compared with a lower one."
+  },
+  {
+   "q": "SIP XIRR of SBI Small Cap over 3 years",
+   "metrics": [
+    "sip_xirr"
+   ],
+   "accepted": true,
+   "reason": "ok",
+   "raw": "SIP XIRR is a way to show the average yearly growth you\u2019ve earned from putting money in regularly, while taking into account exactly when each contribution was made. It smooths out the ups and downs of the market to give a single figure that reflects the overall performance of those periodic investments over the time you\u2019ve been contributing. When you look at it, a higher number means the money you put in has grown faster, while a lower number indicates slower growth, helping you compare how different regular\u2011investment plans have performed."
+  },
+  {
+   "q": "Compare 3 year CAGR: Axis ELSS vs Mirae Asset Large Cap",
+   "metrics": [
+    "cagr"
+   ],
+   "accepted": true,
+   "reason": "ok",
+   "raw": "CAGR, or compound annual growth rate, tells you the smooth, average speed at which an investment has grown each year over a set period, such as three years. It rolls up all the ups and downs into a single, easy\u2011to\u2011compare figure, so you can see how fast the money would have expanded if it had grown at the same pace every year. When you look at this number, think of it as the steady yearly growth you\u2019d need to reach the same end result, making it handy for comparing different investment options side by side."
+  },
+  {
+   "q": "Deepest fall since inception for HDFC Mid Cap Fund",
+   "metrics": [
+    "max_drawdown"
+   ],
+   "accepted": false,
+   "reason": "refers to particular funds: 'the investment'",
+   "raw": "Maximum drawdown tells you how far the investment\u2019s value has slipped from its highest point before it started climbing again. Think of it as the steepest dip you\u2019d see on a roller\u2011coaster track, showing the biggest loss you could have faced if you had been holding it during that period. When you look at this figure, a larger dip means the investment experienced a tougher stretch, while a smaller dip indicates it stayed relatively steadier. It helps you gauge the level of volatility you might have endured during the toughest phase."
+  },
+  {
+   "q": "UTI Nifty 50 index fund total return in the last 1 year",
+   "metrics": [
+    "total_return"
+   ],
+   "accepted": false,
+   "reason": "refers to particular funds: 'the investment'",
+   "raw": "Total return tells you the overall performance by adding together two parts: the change in the market price of the investment and any cash payouts such as dividends that were received during the period. When you look at this figure, a higher value means the investment grew more when both price movement and payouts are considered, while a lower value indicates less growth. It gives a single snapshot of how much the investment has added to your wealth over the chosen time span."
+  },
+  {
+   "q": "Total return since inception of Motilal Oswal Midcap",
+   "metrics": [
+    "total_return"
+   ],
+   "accepted": false,
+   "reason": "refers to particular funds: 'the investment'",
+   "raw": "Total return tells you how much an investment has grown overall, combining any rise or fall in its market price with the income it has paid out, such as dividends. It is expressed as a percentage of the amount you originally put in, so a larger figure means the investment has added more value since it began. When you look at this number, think of it as the full picture of performance, not just the price change, and use it to compare how different investments have fared over the same period."
+  },
+  {
+   "q": "SBI Small Cap vs Nippon India Small Cap vs quant small cap, 5 year volatility",
+   "metrics": [
+    "volatility"
+   ],
+   "accepted": false,
+   "reason": "advice or prediction word: 'predictable'",
+   "raw": "Annualised volatility shows how much the value of an investment tends to swing up and down over a year. A higher figure means the price moves around a lot, indicating more risk and the chance of bigger gains or losses, while a lower figure suggests steadier, more predictable performance. When you compare several options, look for the one with the lower volatility if you prefer smoother changes, and the one with the higher volatility if you\u2019re comfortable with larger fluctuations. This measure helps you gauge the typical size of price swings you might experience over time."
+  },
+  {
+   "q": "dsp equity opportunities 3 year cagr",
+   "metrics": [
+    "cagr"
+   ],
+   "accepted": false,
+   "reason": "refers to particular funds: 'the investment'",
+   "raw": "CAGR, or compound annual growth rate, is a way of smoothing out the ups and downs in a portfolio\u2019s performance to show what the average yearly increase would look like if the growth had been steady. Think of it as the speed you\u2019d need to travel on a straight road to cover the same distance that the actual, sometimes bumpy, journey covered over the three\u2011year stretch. When you see a higher number, it simply means the investment grew faster on average each year, while a lower number indicates a slower average pace. This figure helps you compare different options by putting them on the same, easy\u2011to\u2011understand scale."
+  },
+  {
+   "q": "ICICI Pru Balanced Advantage annualised return over 10 years",
+   "metrics": [
+    "cagr"
+   ],
+   "accepted": true,
+   "reason": "ok",
+   "raw": "The compound annual growth rate, often called CAGR, tells you the smooth, average speed at which an investment would have grown each year if it had risen steadily, ignoring the ups and downs along the way. Think of it as the steady\u2011as\u2011a\u2011clock pace that would turn the starting amount into the ending amount over the whole period, such as a decade. When you see this figure, picture it as the consistent yearly growth you\u2019d need to achieve the same result without the volatility of year\u2011by\u2011year changes. This helps you compare how fast different investments have moved over the same length of time."
+  },
+  {
+   "q": "Axis Large Cap total return over 1 year",
+   "metrics": [
+    "total_return"
+   ],
+   "accepted": false,
+   "reason": "refers to particular funds: 'both'",
+   "raw": "Total return tells you the overall change in value over a set period, combining both the movement in price and any income such as dividends that were paid out. When you look at it, a larger figure means the investment has added more to its worth, while a smaller figure indicates less growth or even a decline. It\u2019s a handy way to see the full picture of how an investment performed, rather than just looking at price changes alone."
+  }
+ ]
+}
