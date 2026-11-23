@@ -124,3 +124,6 @@ USD/INR: RBI reference-rate archive, 2,447 days, 2013-01-01 to 2026-11-20. No ra
 - Correction 2026-11-23: on Windows the gold/silver and T-bill loaders listed every Excel file twice ('*.XLSX' and '*.xlsx' match the same files when names ignore case). Answers were unaffected (identical copies merge) but the build report double-counted. Found by test_real_tables_parse_and_cross_check on Ram's machine; fixed with one case-insensitive listing, plus a test.
 - 2026-11-23 09:47: Ram's Windows machine: 227 passed, 9 skipped, 0 failed (engine C not built there; skips not yet itemised; 9 warnings not yet reviewed).
 - 2026-11-23: all 9 skips on Ram's machine are engine C (not built). Warnings fixed: openpyxl read-only workbooks were never closed (on Windows an open file is locked); DataFrame.join lsuffix/rsuffix (deprecated in pandas 4) replaced with add_suffix; a test server socket was left open. Sandbox: 236 passed, 0 warnings.
+
+## 2026-11-23 (decision): Docker dropped
+The Dockerfile and .dockerignore were never built, so they are git-ignored and the CI docker job was removed. Everything else in CI is unchanged.

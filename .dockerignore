@@ -1,8 +1,0 @@
-data
-mutants
-.pytest_tmp
-**/__pycache__
-engine_c/target
-.git
-*.bak
-refresh_reports

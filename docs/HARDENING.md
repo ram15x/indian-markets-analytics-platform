@@ -77,10 +77,10 @@ mypy is clean on all 30 source files, including the bodies of functions without 
 - **ruff:** lint (syntax errors, pyflakes, bugbear).
 - **pip-audit:** no known vulnerabilities in the pinned dependencies.
 - **Property tests (hypothesis):** A and B agree on random series.
-- **CI (`.github/workflows/ci.yml`):** runs lint, types, the Rust tests, the engine C build, the audit and the tests. It also builds the Docker image. The data files are not published, so tests that need them are skipped in CI and the skip says why.
+- **CI (`.github/workflows/ci.yml`):** runs lint, types, the Rust tests, the engine C build, the audit and the tests. The data files are not published, so tests that need them are skipped in CI and the skip says why.
 
 ## Status
 
 - **Sandbox (Linux, Python 3.13):** 227 tests pass; ruff and mypy are clean; the full run shows 0 disagreements.
-- **Not yet built:** the Docker image (Docker Hub is blocked from the sandbox; CI will build it).
+- **Dropped:** Docker. A Dockerfile was written but never built, so it is not part of the published repository and CI does not build it.
 - **Not yet built or run on Ram's Windows machine:** engine C.

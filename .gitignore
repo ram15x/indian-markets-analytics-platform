@@ -23,3 +23,7 @@ data/published_check_hdfc.csv
 .mypy_cache/
 .ruff_cache/
 lab/results/*.parquet
+
+# Docker was dropped (never built)
+Dockerfile
+.dockerignore
