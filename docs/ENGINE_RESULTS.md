@@ -66,3 +66,7 @@ All read from the fund houses' own documents by automated fetch; nothing was tun
 - **XIRR:** both solvers reproduce Microsoft's documented example (0.373362535, tolerance 1e-8) and the lump-sum identity.
   This checks the solver, not the SIP dates used by any particular AMC or app.
 Still no outside check for volatility, max drawdown, Sharpe/Sortino, rolling returns, debt funds or Regular plans beyond HDFC.
+
+## Engine C on Windows (2026-11-24)
+On the author's Windows machine the existing wheel (imap_engine_c-0.1.0-cp310-abi3-win_amd64) was reinstalled and the full suite run with
+`python -m pytest -q -rs`: 280 passed, no skipped tests listed, so the engine-C tests ran and passed there. One machine, one run; not CI.

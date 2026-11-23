@@ -38,7 +38,7 @@ The language model only plans; it never writes a figure. Data checks run first: 
 ## Known limits
 - Survivorship bias: only funds still running (active Direct Growth plans) are in the data. No benchmark index data (not redistributable); peers are compared among funds with matching names, not official categories.
 - Gold and silver are RBI monthly averages ending months before fund NAVs; volatility and SIP are withheld for them. USD/INR has a gap from July 2018 to April 2022. Sharpe/Sortino start July 2015.
-- Engine C (Rust) is tested in a Linux sandbox; on Windows it is untested (`docs/ENGINE_C_WINDOWS.md`).
+- Engine C (Rust): tests pass on Linux and on the author's Windows machine (one run, 280 passed, `docs/ENGINE_RESULTS.md`); CI does not build it.
 - Reuse terms for AMFI-derived data are UNVERIFIED (`docs/FEASIBILITY.md`); NSE data must not be published; FBIL data is not used.
 - Full status list: `docs/STATUS.md`. Also a Dockerfile (image not yet built outside CI).
 

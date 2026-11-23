@@ -1,6 +1,6 @@
 # Engine C (Rust) on Windows
 
-Status: built and tested on Linux only. Not verified on Windows by the assistant (its shell is Linux). A Windows wheel
+Status: Linux, and one Windows run on 2026-11-24 (280 passed, nothing skipped). Original note: built and tested on Linux only. Not verified on Windows by the assistant (its shell is Linux). A Windows wheel
 is present in `engine_c/target/wheels/` (git-ignored), but no run of the 9 engine-C tests on Windows has been recorded.
 
 To check it yourself, in PowerShell from the project root:
