@@ -2,7 +2,7 @@
 
 An AI analyst for Indian mutual funds, gold, silver and USD/INR where **every number is computed by code, cross-checked by independent implementations, and verified, or the answer is withheld.** The language model only plans; it never writes a figure. Nothing here is investment advice, and nothing predicts.
 
-> Status: working locally; not yet published. Evidence for each claim is in `docs/`. Items marked UNVERIFIED have not been proven.
+> Status: working, run locally on Windows; CI (lint, types, Rust tests, tests) runs on GitHub. Evidence for each claim is in `docs/`. Items marked UNVERIFIED have not been proven.
 
 ## Why it is different
 | Most finance chatbots | This project |
