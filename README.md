@@ -2,7 +2,22 @@
 
 An AI analyst for Indian mutual funds, gold, silver and USD/INR where **every number is computed by code, cross-checked by independent implementations, and verified, or the answer is withheld.** The language model only plans; it never writes a figure. Nothing here is investment advice, and nothing predicts returns. The one model-based figure, an opt-in volatility estimate, is shown separately and labelled as not verified.
 
-> Status: working locally; not yet published. Evidence for each claim is in `docs/`. Items marked UNVERIFIED have not been proven.
+> Status: working locally and published. Evidence for each claim is in `docs/`. Items marked UNVERIFIED have not been proven.
+
+## What is verified, and what is not
+| Claim | Evidence | Status |
+|---|---|---|
+| Numpy and DuckDB engines (and the Rust engine) agree on every figure | 40,169 figures, 0 disagreements (`docs/HARDENING.md`) | Measured in the development sandbox |
+| CAGR matches published figures | HDFC funds, 12 of 12 at 2 decimals (`docs/ENGINE_RESULTS.md`) | Measured; one fund house, one date. Other metrics are not checked against outside sources |
+| Tests, lint, types | 250 tests pass in the sandbox; ruff and mypy clean; CI green on GitHub | Measured |
+| Runs on Windows | Full suite run on the author's machine earlier (227 passed, 9 skipped because Engine C is not built there) | Measured on one machine |
+| MCP server in Claude Desktop | A new chat called the tool and returned a 3-year CAGR of 10.89% for a small-cap fund (`docs/MCP.md`) | Tried once, one machine |
+| Local UI, screener, opt-in volatility estimate | Checked in a real Chrome on the author's machine | Checked by hand, not by automated browser tests |
+| Reading a real CAS statement | Fixture tests only | **UNVERIFIED on a real PDF** |
+| Groww holdings | Fixture tests only | **UNVERIFIED against the real API** |
+| Rust engine on Windows | Built and tested only in the sandbox | **UNVERIFIED on Windows** |
+| Volatility estimate (GARCH) | Shown separately, labelled not verified; its pre-registered test passed only modestly (`docs/LAB_1_VOLATILITY.md`) | Model estimate, not a verified figure |
+| Reuse terms for AMFI-derived data | `docs/FEASIBILITY.md` | **UNVERIFIED** |
 
 ## What it looks like
 A local, offline web terminal. The watchlist and ticker are verified answers computed when the page loads (end-of-day data, not live prices). Every figure shows both engines lighting up before it is shown; questions the data cannot support are withheld with the reason.
