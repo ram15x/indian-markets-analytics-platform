@@ -9,7 +9,7 @@ An AI analyst for Indian mutual funds, gold, silver and USD/INR where **every nu
 |---|---|---|
 | Numpy and DuckDB engines (and the Rust engine) agree on every figure | 40,169 figures, 0 disagreements (`docs/HARDENING.md`) | Measured in the development sandbox |
 | CAGR matches published figures | HDFC funds, 12 of 12 at 2 decimals (`docs/ENGINE_RESULTS.md`) | Measured; one fund house, one date. Other metrics are not checked against outside sources |
-| Tests, lint, types | 252 tests pass in the sandbox; ruff and mypy clean; CI green on GitHub | Measured |
+| Tests, lint, types | 267 tests pass in the sandbox; ruff and mypy clean; CI green on GitHub | Measured |
 | Runs on Windows | Full suite run on the author's machine earlier (227 passed, 9 skipped because Engine C is not built there) | Measured on one machine |
 | MCP server in Claude Desktop | A new chat called the tool and returned a 3-year CAGR of 10.89% for a small-cap fund (`docs/MCP.md`) | Tried once, one machine |
 | Local UI, screener, opt-in volatility estimate | Checked in a real Chrome on the author's machine | Checked by hand, not by automated browser tests |
@@ -42,7 +42,7 @@ The same verified engine runs as an MCP server, so an AI assistant calls it as a
 | "Trust me" | Hand-checked figures, mutation testing, pre-registered model evaluations |
 
 ## What it answers
-Total return, CAGR, max drawdown, volatility, SIP XIRR, rolling returns, **Sharpe and Sortino ratios** (risk-free rate from RBI 91-day T-bill yields), for 1,772 mutual-fund schemes (AMFI NAVs), Mumbai gold and silver (RBI), and USD/INR (RBI). Compare several in one question, use the **SIP calculator** (what a past monthly plan would have become), or **screen** funds: rank every fund whose name contains some words (such as "small cap") by one measure, with every row passing the same agreement gate. Optional: read your own CAS statement (in memory only).
+Total return, CAGR, max drawdown, volatility, SIP XIRR, rolling returns, **Sharpe and Sortino ratios** (risk-free rate from RBI 91-day T-bill yields), for 1,772 mutual-fund schemes (AMFI NAVs), Mumbai gold and silver (RBI), and USD/INR (RBI). Compare several in one question, use the **SIP calculator** (what a past monthly plan would have become), **compare funds, gold, silver and USD/INR over one shared period** (trimmed to where the shortest series ends, each figure checked twice), or **screen** funds: rank every fund whose name contains some words (such as "small cap") by one measure, with every row passing the same agreement gate. Optional: read your own CAS statement (in memory only).
 
 ## How it works
 ```
@@ -54,7 +54,7 @@ Data checks run first: a manifest of SHA-256 hashes (the app refuses to start on
 
 ## Evidence
 - **Three-engine agreement** over every series and window: 40,169 figures verified by all engines, 0 disagreements (`docs/HARDENING.md`, `scripts/run_agreement_abc.py`, `data/engine_agreement_abc.json`).
-- **Tests:** 252, plus ruff and mypy clean, pip-audit clean.
+- **Tests:** 267, plus ruff and mypy clean, pip-audit clean.
 - **Mutation testing** on the maths and the agreement gate: 88% of 1,746 mutants caught; it found two real bugs (`docs/HARDENING.md`).
 - **Published-figure check:** HDFC CAGR matches 12 of 12 published figures (`docs/ENGINE_RESULTS.md`).
 - **Planner evaluations:** locked sets, with failures kept on record. A first test of gold, silver and USD/INR questions failed (14 of 21), the prompt was fixed, and a new held-out set passed (15 of 17, 0 wrong answers): `docs/PLANNER_EVAL_V3.md`, `docs/PLANNER_EVAL_V4.md`.

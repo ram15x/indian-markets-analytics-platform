@@ -8,6 +8,9 @@ import numpy as np
 from .series import Series
 from . import metrics_a as A
 from .execute import _window
+from . import macro
+
+SHORT = {macro.GOLD: "Gold (RBI, Mumbai)", macro.SILVER: "Silver (RBI, Mumbai)", macro.USDINR: "USD/INR (RBI)"}   # chart labels only
 
 MAX_POINTS = 1500   # per series; thinning keeps every window's first, last, highest and lowest point
 
@@ -41,6 +44,17 @@ def indexed(series: dict[int, Series], names: dict[int, str], codes: list[int], 
         k = _thin(d, v)
         out.append(dict(code=c, name=names[c], dates=[str(d[x]) for x in k], values=[float(v[x]) for x in k], **_flags(s, d[0], d[-1])))
     return dict(kind="indexed", unit="index (start = 100)", start=min(x["dates"][0] for x in out), end=max(x["dates"][-1] for x in out), series=out)
+
+
+def indexed_window(series: dict[int, Series], names: dict[int, str], codes: list[int], start, end) -> dict:
+    """Each asset indexed to 100 at an explicit shared window start (same window as the verified figures)."""
+    out = []
+    for c in codes:
+        s = series[c]; i = A.asof(s, start); j = A.asof(s, end)
+        d = s.dates[i:j + 1]; v = s.nav[i:j + 1] / s.nav[i] * 100
+        k = _thin(d, v)
+        out.append(dict(code=c, name=SHORT.get(c, names[c]), dates=[str(d[x]) for x in k], values=[float(v[x]) for x in k], **_flags(s, d[0], d[-1])))
+    return dict(kind="indexed", unit="index (start = 100)", start=str(start), end=str(end), series=out)
 
 
 def drawdown(s: Series, name: str, years) -> dict:
@@ -81,6 +95,8 @@ def for_outcome(o, series: dict[int, Series]) -> dict | None:
         return None
     f0 = o.facts[0]; m = f0["metric"]; names = {f["code"]: f["fund"] for f in o.facts}
     codes = list(dict.fromkeys(f["code"] for f in o.facts))[:3]       # palette is validated for three series
+    if getattr(o, "window", None):
+        return indexed_window(series, names, codes, o.window[0], o.window[1])
     if m == "max_drawdown" and len(codes) == 1:
         return drawdown(series[codes[0]], names[codes[0]], f0["years"])
     if m == "rolling_return" and len(codes) == 1:

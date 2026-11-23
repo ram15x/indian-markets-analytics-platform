@@ -238,6 +238,11 @@
   #scrout table.rank th:nth-child(1){width:44px} #scrout table.rank th:nth-child(3){width:38%} #scrout table.rank th:nth-child(4){width:96px}
   #scrout tbody tr{cursor:pointer}
   .rk{color:var(--faint);font:600 .8rem var(--mono)}
+  /* shared-window comparison */
+  .cmpf{display:grid;grid-template-columns:1fr 1fr 1.4fr .9fr .6fr auto;gap:10px;align-items:end;padding:12px 14px}
+  .cmpf label{margin-bottom:4px} .cmpf .sum{grid-column:1/-1;margin:0}
+  .skip{margin:10px 0;padding:10px 14px;border:1px dashed var(--rule);border-radius:8px;color:var(--muted);font-size:.88rem} .skip b{color:var(--ink)}
+  @media (max-width:800px){ .cmpf{grid-template-columns:1fr 1fr} }
   /* SIP calculator */
   .sipf{display:grid;grid-template-columns:1.6fr .8fr .5fr .7fr auto;gap:10px;align-items:end;padding:12px 14px}
   .sipf label{margin-bottom:4px} .sipf .sum{grid-column:1/-1;margin:0}
@@ -342,6 +347,18 @@
         <div><label for="sipyrs">Period</label><select id="sipyrs"><option value="1">1 year</option><option value="3">3 years</option><option value="5" selected>5 years</option><option value="7">7 years</option><option value="10">10 years</option></select></div>
         <button id="siprun" type="button">Calculate</button>
         <p class="hint sum" id="siphint">Looks backwards only: the instalments, what they would have been worth, and the yearly return (XIRR). It is not a forecast. Both engines must agree.</p>
+      </div>
+    </section>
+    <section class="panel" aria-label="Compare assets over one period">
+      <div class="hd"><span>COMPARE ASSETS · FUNDS, GOLD, SILVER, USD/INR ON ONE SHARED PERIOD</span></div>
+      <div class="cmpf">
+        <div><label for="ca1">Asset 1</label><input id="ca1" value="gold" autocomplete="off" spellcheck="false"></div>
+        <div><label for="ca2">Asset 2</label><input id="ca2" value="silver" autocomplete="off" spellcheck="false"></div>
+        <div><label for="ca3">Asset 3 (optional)</label><input id="ca3" value="SBI Small Cap Direct Growth" autocomplete="off" spellcheck="false"></div>
+        <div><label for="cmet">Measure</label><select id="cmet"><option value="total_return">Total return</option><option value="cagr" selected>CAGR</option><option value="max_drawdown">Max drawdown</option><option value="volatility">Volatility</option></select></div>
+        <div><label for="cyrs">Period</label><select id="cyrs"><option value="1">1 year</option><option value="3" selected>3 years</option><option value="5">5 years</option><option value="7">7 years</option><option value="10">10 years</option></select></div>
+        <button id="crun" type="button">Compare</button>
+        <p class="hint sum" id="chint">Gold and silver (RBI monthly) end months before fund prices, so the shared period ends where the shortest series ends, and every figure is computed twice on that same period. Type gold, silver, usd/inr or a fund name.</p>
       </div>
     </section>
     <section id="out" aria-live="polite"><div class="empty"><b>Ask a question, or click a row in the watchlist.</b>Every figure is computed twice by separate code and shown only if both agree.</div></section>
@@ -481,7 +498,7 @@ async function ask(question, keepPicks){
   const q = (question ?? $("q").value).trim();
   if (q.length < 3) { $("q").focus(); return; }
   if (!keepPicks) S.picks = {};
-  S.lastQ = q; $("go").disabled = true; $("go").textContent = "Checking…"; S.chart = null;
+  S.mode = "ask"; S.lastQ = q; $("go").disabled = true; $("go").textContent = "Checking…"; S.chart = null;
   $("out").innerHTML = `<div class="skel" aria-label="Working"><i style="width:38%"></i><i style="width:24%"></i><i class="big"></i><i style="width:80%"></i><i style="width:62%"></i></div>`;
   try {
     const {ok, j} = await post("/api/ask", {question: q, model: $("model").value, picks: S.picks});
@@ -526,7 +543,7 @@ let rzT; addEventListener("resize", () => { clearTimeout(rzT); rzT = setTimeout(
 
 function drawChart(c, host, animate = true){
   const T = P(), hidden = new Set();
-  const title = c.kind === "indexed" ? (c.series.length > 1 ? "Growth of each fund, same start = 100" : "NAV growth, start = 100")
+  const title = c.kind === "indexed" ? (c.series.length > 1 ? "Growth of each asset, same start = 100" : "NAV growth, start = 100")
               : c.kind === "drawdown" ? "Fall from previous high" : c.kind === "rolling" ? "Rolling returns: each period's yearly return, by when it ended" : "SIP: value against amount invested";
   const box = document.createElement("div"); box.className = "chart"; host.appendChild(box);
   box.innerHTML = `<h2>${title}</h2><p class="sub">${niceDate(c.start)} to ${niceDate(c.end)} · ${esc(c.unit)} · drawn from the same adjusted NAVs; the checked figures are in the cards above.</p>
@@ -647,6 +664,7 @@ function show(r){
       h += `<div class="tablebox"><div class="hd"><h2>Ranking</h2><button class="quiet" type="button" data-copyrank style="padding:5px 10px;font-size:.82rem">Copy as CSV</button></div><table class="rank"><caption class="hint" style="text-align:left;caption-side:top">Ordered from highest to lowest value</caption><thead><tr><th>Fund</th><th></th><th style="text-align:right">Value</th></tr></thead><tbody>` +
         r.ranking.map((x, k) => `<tr><td>${esc(x.fund)}</td><td class="meter"><i class="${x.value < 0 ? "neg" : ""}" style="width:${(Math.abs(x.value) / mx * 100).toFixed(1)}%;animation-delay:${(k * 70)}ms"></i></td><td class="n">${fm(x.value)}</td></tr>`).join("") + `</tbody></table></div>`;
     }
+    if (r.skipped && r.skipped.length) h += `<div class="skip"><b>Left out of this comparison:</b><ul>${r.skipped.map(x => `<li>${esc(x.fund)}: ${esc(x.reason)}</li>`).join("")}</ul></div>`;
     h += `<div id="chartHost"></div>`;
     h += `<p class="matched">Matched: ${r.facts.map(f => `${esc(f.fund)} (${f.code < 0 ? "RBI series" : "scheme " + f.code})`).join("; ")}. Check these are what you meant.</p>`;
     h += `<div class="glossary"><h2>What ${r.glossary.entries.length > 1 ? "these measures mean" : "this measure means"}</h2><dl>` +
@@ -680,7 +698,7 @@ function show(r){
     } catch (e) { box.innerHTML = `<p>could not reach the local server</p>`; }
     b.disabled = false; });
   o.querySelectorAll("[data-copyrank]").forEach(b => b.onclick = () => copy("fund,value\n" + r.ranking.map(x => `"${String(x.fund).replace(/"/g, '""')}",${x.value}`).join("\n"), "Ranking copied"));
-  o.querySelectorAll("[data-pick]").forEach(b => b.onclick = () => { S.picks[b.dataset.query.toLowerCase()] = +b.dataset.pick; ask(S.lastQ, true); });
+  o.querySelectorAll("[data-pick]").forEach(b => b.onclick = () => { S.picks[b.dataset.query.toLowerCase()] = +b.dataset.pick; if (S.mode === "common") runCommon(true); else ask(S.lastQ, true); });
   o.querySelectorAll("[data-metric]").forEach(b => b.onclick = () => { const q = `${S.lastQ} Use ${b.dataset.metric}.`; $("q").value = q; ask(q); });
   if ((r.status === "ANSWERED" || r.status === "WITHHELD") && o.getBoundingClientRect().top > innerHeight * 0.6) o.scrollIntoView({behavior: REDUCED ? "auto" : "smooth", block: "start"});
 }
@@ -750,6 +768,23 @@ function runSip(){
 }
 $("siprun").onclick = runSip;
 for (const id of ["sipfund","sipamt","sipday"]) $(id).addEventListener("keydown", e => { if (e.key === "Enter") runSip(); });
+
+/* ---------- shared-window comparison ---------- */
+async function runCommon(keepPicks){
+  const assets = ["ca1","ca2","ca3"].map(id => $(id).value.trim()).filter(Boolean), h = $("chint");
+  if (assets.length < 2) { h.textContent = "Name at least two assets."; $("ca1").focus(); return; }
+  if (!keepPicks) S.picks = {};
+  S.mode = "common"; S.lastQ = `Compare ${assets.join(" vs ")} · ${$("cmet").selectedOptions[0].text} · ${$("cyrs").value}y`;
+  $("crun").disabled = true; $("crun").textContent = "Checking…";
+  $("out").innerHTML = `<div class="skel" aria-label="Working"><i style="width:38%"></i><i style="width:24%"></i><i class="big"></i><i style="width:80%"></i><i style="width:62%"></i></div>`;
+  try {
+    const {ok, j} = await post("/api/common", {assets, metric: $("cmet").value, years: Number($("cyrs").value), picks: S.picks});
+    show(ok ? j : {status: "ERROR", error: j.error});
+  } catch (e) { show({status: "ERROR", error: "could not reach the local server"}); }
+  finally { $("crun").disabled = false; $("crun").textContent = "Compare"; }
+}
+$("crun").onclick = () => runCommon(false);
+for (const id of ["ca1","ca2","ca3"]) $(id).addEventListener("keydown", e => { if (e.key === "Enter") runCommon(false); });
 
 const WATCH = [
   {name: "Gold", sub: "RBI Mumbai, monthly avg", q: "1 year CAGR of gold"},

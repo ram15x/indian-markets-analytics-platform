@@ -155,3 +155,13 @@ def test_sip_without_amount_states_the_assumed_default(base):
     code, j = post(base, "/api/ask", {"question": "SIP in SBI Small Cap Fund - Direct Plan - Growth for 5 years"})
     assert code == 200 and j["status"] == "ANSWERED"
     assert "amount assumed" in j["facts"][0]["sentence"] and "Rs 5,000" in j["facts"][0]["sentence"]
+
+
+def test_common_endpoint(base):
+    code, j = post(base, "/api/common", {"assets": ["gold", "silver"], "metric": "cagr", "years": 3})
+    assert code == 200 and j["status"] == "ANSWERED" and j["window"] == {"start": "2023-04-01", "end": "2026-04-01"}
+    assert len(j["facts"]) == 2 and j["chart"]["kind"] == "indexed" and "no model" in j["planner"] and j["skipped"] == []
+    code, j = post(base, "/api/common", {"assets": ["gold"], "metric": "cagr", "years": 3})
+    assert code == 400 and "assets" in j["error"]
+    code, j = post(base, "/api/common", {"assets": ["gold", "small cap"], "metric": "cagr", "years": 3})
+    assert code == 200 and j["status"] == "CLARIFY"

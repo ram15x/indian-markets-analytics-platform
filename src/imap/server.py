@@ -11,7 +11,7 @@ from pathlib import Path
 from .app import App
 from .planners import RulePlanner, ChatPlanner
 from .plan import PlanError
-from . import execute
+from . import execute, common
 from .answer import LABEL, NOTICE, WARN, render, sentence
 from .explain import GLOSSARY, GLOSSARY_VERSION
 from . import screen as screener
@@ -47,6 +47,8 @@ def outcome_json(o, planner_name: str, plan, series=None) -> dict:
                 d["chart"] = charts.for_outcome(o, series)
             except ValueError:
                 d["chart"] = None
+        if getattr(o, "window", None):
+            d["window"] = dict(start=o.window[0], end=o.window[1]); d["skipped"] = o.skipped
     elif o.status == "CLARIFY":
         d["clarify"] = o.clarify
     elif o.status == "ASK":
@@ -136,6 +138,8 @@ def make_handler(app: App):
                 return self._estimate(req)
             if self.path == "/api/screen":
                 return self._screen(req)
+            if self.path == "/api/common":
+                return self._common(req)
             if self.path == "/api/models":
                 return self._models(key)
             if self.path == "/api/holdings":
@@ -184,6 +188,17 @@ def make_handler(app: App):
             except screener.ScreenError as e:
                 return self._json(400, dict(error=str(e)))
             out["warning"] = WARN
+            self._json(200, out)
+
+        def _common(self, req):
+            try:
+                with _COMPUTE:
+                    o = common.compare(app.engine, app.resolver, req.get("assets"), str(req.get("metric") or ""), req.get("years"), req.get("picks"))
+                    out = outcome_json(o, "shared-window comparison (code only; no model)",
+                                       dict(assets=req.get("assets"), metric=req.get("metric"), years=req.get("years"),
+                                            window=dict(start=o.window[0], end=o.window[1]) if o.window else None), app.engine.series)
+            except (common.CommonError, ValueError, TypeError) as e:
+                return self._json(400, dict(error=str(e)))
             self._json(200, out)
 
         def _holdings(self, token):

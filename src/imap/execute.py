@@ -22,6 +22,8 @@ class Outcome:
     ranking: list = field(default_factory=list)
     clarify: dict | None = None
     reason: str = ""
+    window: tuple | None = None                      # (start, end) when every asset was put on one shared window
+    skipped: list = field(default_factory=list)       # assets left out of a shared-window comparison, with the reason
 
 
 RF_COVER_DAYS = 7      # the last published weekly T-bill yield is taken to cover the following week only
