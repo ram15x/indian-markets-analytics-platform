@@ -44,7 +44,7 @@ Data checks run first: a manifest of SHA-256 hashes (the app refuses to start on
     pip install -r requirements.txt
     python -m pytest -q
     cd src && python -m imap.server        # then open http://127.0.0.1:8765
-A Groq key can be pasted on the page (kept in memory only); without one a scripted parser reads questions. Also: an **MCP server** for Claude Desktop (`docs/MCP.md`) and a Dockerfile (`docs/HARDENING.md`; the image has not been built yet, so CI will be its first build: UNVERIFIED).
+A Groq key can be pasted on the page (kept in memory only); without one a scripted parser reads questions. Also: an **MCP server** for Claude Desktop (`docs/MCP.md`) (tried in Claude Desktop on Windows, one machine). Docker was dropped, never built (`docs/HARDENING.md`).
 
 ## Data
 Built locally by the pipeline; sources: AMFI NAV archive, RBI (Handbook, reference rate archive, T-bill yields), optional NSE prices for personal use. **Reuse terms for AMFI-derived data are UNVERIFIED (`docs/FEASIBILITY.md`), and NSE data must not be published, so the repository does not include data files.** FBIL data is not used (its terms bar commercial use without permission).
