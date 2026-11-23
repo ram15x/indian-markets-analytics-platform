@@ -31,7 +31,7 @@ The language model only plans; it never writes a figure. Data checks run first: 
 
 ## Evidence, and what it does not show
 - **Engines agree:** 40,169 figures verified by all engines, 0 disagreements (`docs/HARDENING.md`). Agreement shows the arithmetic is consistent, not that the definition or the data is right.
-- **Checked against fund houses' own documents:** CAGR matches HDFC 12/12, Nippon India 9/9 (plus 3/3 NAVs), Axis 3 of 4 returns (all 4 rupee values match; the 1y percentage differs by 0.09). XIRR solver matches a documented example. Volatility, drawdown, Sharpe and Sortino have no outside check yet. Details: `docs/ENGINE_RESULTS.md`.
+- **Checked against fund houses' own documents:** CAGR matches HDFC 12/12, Nippon India 9/9 (plus 3/3 NAVs), Axis 3 of 4 returns (all 4 rupee values match; the 1y percentage differs by 0.09). XIRR solver matches a documented example. Volatility is consistent with one factsheet figure (9.90% vs 9.93%, one fund, secondary source) and Sharpe is close (0.775 vs 0.80, risk-free rate unknown); drawdown and Sortino have no outside check. Details: `docs/ENGINE_RESULTS.md`.
 - **Tests:** 280, plus ruff, mypy and pip-audit clean; mutation testing caught 88% of 1,746 mutants and found two real bugs. CI runs only the tests that do not need the real data (about half); the rest run locally.
 - **Planner evaluations** on locked sets, failures kept on record: `docs/PLANNER_EVAL_V3.md`, `docs/PLANNER_EVAL_V4.md`. Experimental forecasting models: `docs/LAB.md` (mostly negative results).
 

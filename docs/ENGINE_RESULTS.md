@@ -67,6 +67,13 @@ All read from the fund houses' own documents by automated fetch; nothing was tun
   This checks the solver, not the SIP dates used by any particular AMC or app.
 Still no outside check for volatility, max drawdown, Sharpe/Sortino, rolling returns, debt funds or Regular plans beyond HDFC.
 
+## Weak outside check of volatility and Sharpe (2026-11-24; scripts/check_published_ppfas.py)
+Parag Parikh Flexi Cap, 3 years to 31 Aug 2026. The August 2026 factsheet figures, as relayed by a secondary source (taxguru.in),
+are standard deviation 9.93% and Sharpe 0.80. Ours: volatility 9.90% (daily returns; 9.94% from month-end returns), Sharpe 0.775.
+Volatility is within 0.03 points of the published figure. Sharpe differs by 0.025, plausibly the risk-free rate (the factsheet's is unknown to us).
+Caveats: one fund, one date; the factsheet's window, frequency and risk-free rate were not read from the factsheet itself; the source is
+secondary. This is consistency, not proof. Maximum drawdown and Sortino still have no outside check (factsheets do not publish them).
+
 ## Engine C on Windows (2026-11-24)
 On the author's Windows machine the existing wheel (imap_engine_c-0.1.0-cp310-abi3-win_amd64) was reinstalled and the full suite run with
 `python -m pytest -q -rs`: 280 passed, no skipped tests listed, so the engine-C tests ran and passed there. One machine, one run; not CI.
