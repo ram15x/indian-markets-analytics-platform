@@ -4,7 +4,7 @@ An AI analyst for Indian mutual funds, gold, silver and USD/INR where **every nu
 
 > A personal project. Evidence for each claim is in `docs/`; items marked UNVERIFIED have not been proven.
 
-## Try it in two minutes (no data needed)
+## Try it  (no data needed)
     pip install -r requirements.txt
     python serve.py --demo          # then open http://127.0.0.1:8765
 
